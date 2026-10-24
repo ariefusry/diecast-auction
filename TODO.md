@@ -28,10 +28,10 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Index `auctions(status, end_time)`, `bids(auction_id, amount DESC)`, `items(seller_id)`, `wallet_transactions(user_id)`, dan foreign keys
 
 ## Phase 3: Authentication & Virtual Wallet APIs
-- [ ] Implementasi register, login dengan bcrypt & JWT di `internal/service/auth.go`
-- [ ] Buat auth middleware untuk proteksi endpoint di `internal/middleware/auth.go`
-- [ ] Implementasi endpoint `GET /wallet` dan `POST /wallet/deposit` (tulis ledger `deposit`)
-- [ ] Test transaksi deposit, kalkulasi saldo, dan baris ledger
+- [x] Implementasi register, login dengan bcrypt & JWT di `internal/service/auth.go` (`POST /auth/register`, `POST /auth/login`, JWT HS256 24 jam, `JWT_SECRET` >= 32 byte)
+- [x] Buat auth middleware untuk proteksi endpoint di `internal/middleware/auth.go`
+- [x] Implementasi endpoint `GET /wallet` dan `POST /wallet/deposit` (tulis ledger `deposit`, maks Rp10.000.000 per top-up)
+- [x] Test transaksi deposit, kalkulasi saldo, baris ledger, dan 50 deposit paralel
 
 ## Phase 4: Auction Engine, Anti-Sniping & Bidding Logic
 - [ ] CRUD lelang: buat draf (simpan `duration`), publish (`start_time = now()`, `end_time = now() + duration`), cancel hanya jika `highest_bidder_id IS NULL`

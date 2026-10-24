@@ -61,6 +61,8 @@ Platform lelang online khusus koleksi diecast skala 1:64 multi-brand (Hot Wheels
 
 ## 4. Repository Structure
 
+Tidak ada lapisan repository terpisah: service menjalankan SQL langsung agar operasi multi-row bisa memegang transaksi dan urutan lock sendiri.
+
 ```
 LelangHotwheels/
 ├── cmd/
@@ -72,8 +74,8 @@ LelangHotwheels/
 │   ├── handler/      # HTTP handlers & ServeMux routes
 │   ├── middleware/   # Auth JWT, Rate limit, CORS, Logging
 │   ├── model/        # Domain entities & structs
-│   ├── repository/   # Database queries via pgx (raw SQL)
-│   ├── service/      # Business logic (wallet, auction, bidding)
+│   ├── service/      # Business logic + raw SQL via pgx (auth, wallet, auction, bidding)
+│   ├── testutil/     # Helper test integrasi (pool testdb, data unik)
 │   └── worker/       # Background expiration ticker
 ├── migrations/       # SQL migration files (di-embed ke binary)
 ├── data/             # seeds.json (di-commit)

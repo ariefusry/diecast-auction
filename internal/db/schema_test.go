@@ -14,16 +14,18 @@ import (
 )
 
 // seed is a minimal valid dataset: a seller, a funded bidder, one item,
-// one draft auction, and one ledger row.
+// one draft auction, and one ledger row. IDs are negative because sequences
+// never produce them, so the rows cannot collide with rows other test
+// packages create in the shared test database at the same time.
 const seed = `
 INSERT INTO users (id, email, username, password_hash) VALUES
-  (1, 'seller@x.io', 'seller', 'h'), (2, 'bidder@x.io', 'bidder', 'h');
-INSERT INTO wallets (user_id, available_balance) VALUES (1, 0), (2, 100000);
+  (-1, 'seller@x.io', 'seller', 'h'), (-2, 'bidder@x.io', 'bidder', 'h');
+INSERT INTO wallets (user_id, available_balance) VALUES (-1, 0), (-2, 100000);
 INSERT INTO items (id, seller_id, brand, model_name, condition)
-  VALUES (1, 1, 'Mini GT', 'Nissan GT-R R35', 'mint_on_card');
+  VALUES (-1, -1, 'Mini GT', 'Nissan GT-R R35', 'mint_on_card');
 INSERT INTO auctions (id, item_id, start_price, min_increment, duration)
-  VALUES (1, 1, 50000, 5000, interval '1 day');
-INSERT INTO wallet_transactions (id, user_id, type, amount) VALUES (1, 2, 'deposit', 100000);
+  VALUES (-1, -1, 50000, 5000, interval '1 day');
+INSERT INTO wallet_transactions (id, user_id, type, amount) VALUES (-1, -2, 'deposit', 100000);
 `
 
 func schemaConn(t *testing.T) *pgx.Conn {
@@ -69,21 +71,21 @@ func TestSchemaSeedIsValid(t *testing.T) {
 func TestSchemaRejectsInvalidData(t *testing.T) {
 	conn := schemaConn(t)
 	cases := map[string]string{
-		"negative available balance": "UPDATE wallets SET available_balance = -1 WHERE user_id = 2",
-		"negative locked balance":    "UPDATE wallets SET locked_balance = -1 WHERE user_id = 2",
-		"second wallet for user":     "INSERT INTO wallets (user_id) VALUES (2)",
+		"negative available balance": "UPDATE wallets SET available_balance = -1 WHERE user_id = -2",
+		"negative locked balance":    "UPDATE wallets SET locked_balance = -1 WHERE user_id = -2",
+		"second wallet for user":     "INSERT INTO wallets (user_id) VALUES (-2)",
 		"duplicate email any case":   "INSERT INTO users (email, username, password_hash) VALUES ('SELLER@x.io', 'other', 'h')",
-		"unknown item condition":     "UPDATE items SET condition = 'like_new' WHERE id = 1",
-		"unknown auction status":     "UPDATE auctions SET status = 'paused' WHERE id = 1",
-		"non-positive start price":   "UPDATE auctions SET start_price = 0 WHERE id = 1",
-		"non-positive increment":     "UPDATE auctions SET min_increment = 0 WHERE id = 1",
-		"buy-now not above start":    "UPDATE auctions SET buy_now_price = 50000 WHERE id = 1",
-		"highest bid without bidder": "UPDATE auctions SET current_highest_bid = 60000 WHERE id = 1",
-		"non-positive bid":           "INSERT INTO bids (auction_id, bidder_id, amount) VALUES (1, 2, 0)",
-		"unknown ledger type":        "INSERT INTO wallet_transactions (user_id, type, amount) VALUES (2, 'gift', 1)",
-		"non-positive ledger amount": "INSERT INTO wallet_transactions (user_id, type, amount) VALUES (2, 'deposit', 0)",
-		"ledger update":              "UPDATE wallet_transactions SET amount = 1 WHERE id = 1",
-		"ledger delete":              "DELETE FROM wallet_transactions WHERE id = 1",
+		"unknown item condition":     "UPDATE items SET condition = 'like_new' WHERE id = -1",
+		"unknown auction status":     "UPDATE auctions SET status = 'paused' WHERE id = -1",
+		"non-positive start price":   "UPDATE auctions SET start_price = 0 WHERE id = -1",
+		"non-positive increment":     "UPDATE auctions SET min_increment = 0 WHERE id = -1",
+		"buy-now not above start":    "UPDATE auctions SET buy_now_price = 50000 WHERE id = -1",
+		"highest bid without bidder": "UPDATE auctions SET current_highest_bid = 60000 WHERE id = -1",
+		"non-positive bid":           "INSERT INTO bids (auction_id, bidder_id, amount) VALUES (-1, -2, 0)",
+		"unknown ledger type":        "INSERT INTO wallet_transactions (user_id, type, amount) VALUES (-2, 'gift', 1)",
+		"non-positive ledger amount": "INSERT INTO wallet_transactions (user_id, type, amount) VALUES (-2, 'deposit', 0)",
+		"ledger update":              "UPDATE wallet_transactions SET amount = 1 WHERE id = -1",
+		"ledger delete":              "DELETE FROM wallet_transactions WHERE id = -1",
 	}
 	for name, stmt := range cases {
 		t.Run(name, func(t *testing.T) {

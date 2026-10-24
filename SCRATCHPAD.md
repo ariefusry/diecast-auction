@@ -3,7 +3,7 @@
 ## Current Status
 - Project Name: Scale 1:64 Diecast Auction Platform (Hot Wheels, Mini GT, Inno64)
 - Phase: Keputusan arsitektur dikunci (spec Section 6)
-- Active Focus: Phase 2 selesai, siap Phase 3 (auth & wallet API)
+- Active Focus: Phase 3 selesai, siap Phase 4 (auction engine & bidding)
 
 ---
 
@@ -59,3 +59,4 @@ Migrasi tidak punya perintah terpisah: di-embed dan dijalankan saat API start.
 - 2026-10-25: Default builder dikunci di spec Section 6: uang BIGINT + CHECK, lock lelang lalu dompet `user_id` naik, waktu dari `now()` DB, `SKIP LOCKED` di worker, migrasi embed, items `color`/`tags` tanpa `scale`, polling frontend. Fase diurutkan ulang: dompet, bid, worker sebelum seeder dan scraper.
 - 2026-10-25: Phase 1 selesai. `internal/config` (DATABASE_URL wajib, PORT default 8080), `internal/db.Migrate` (golang-migrate + pgx5, idempoten), compose `db` + `testdb` (tmpfs) + `test` (golang:1.27, -race). Test DB di-skip jika `TEST_DATABASE_URL` kosong. Embed migrasi dan wiring `cmd/api` ditunda ke Phase 2 karena `//go:embed *.sql` butuh minimal satu file SQL.
 - 2026-10-25: Phase 2 selesai. Satu migrasi `000001_init_schema` (6 tabel). `wallets` memakai `user_id` sebagai PK (lebih sederhana dari rencana `id` + `user_id UNIQUE`, cocok dengan aturan lock), ledger merujuk `user_id`. Ledger append-only ditegakkan trigger. Test skema hanya menerima SQLSTATE 23xxx/P0001, dan sudah dibuktikan dengan uji mutasi (hapus CHECK + trigger lalu test gagal). Catatan: `testdb` persisten antar run, jadi edit migrasi lama butuh `down` + `-count=1`.
+- 2026-10-25: Phase 3 selesai. Auth (bcrypt, JWT HS256 dikunci via WithValidMethods, dummy hash untuk login email tak dikenal), wallet Get/Deposit + ledger, middleware Bearer, handler dengan envelope `{"error": ...}` dan 500 generik. Tidak ada package repository: service menjalankan SQL langsung. Regresi ditemukan: fixture skema Phase 2 memakai ID tetap 1/2 yang bentrok dengan user dari package lain, diperbaiki dengan ID negatif (aturan CLAUDE.md #10).

@@ -70,3 +70,6 @@ cd frontend && npm install && npm run dev
 
 9. **`data/seeds.json` Adalah Kontrak Data Seeder, Bid Seed Lewat Service**  
    *Alasan:* File kecil manual dipakai sampai fase scraper, lalu diganti data riil agar demo menampilkan katalog otentik. Bid simulasi lewat service bid agar invariant dompet dan ledger tetap benar.
+
+10. **Data Test Selalu Unik, Jangan TRUNCATE**  
+   *Alasan:* `go test ./...` menjalankan package secara paralel terhadap satu `testdb`. Pakai `testutil.Unique()` untuk email/username, dan ID negatif untuk fixture ber-ID tetap (sequence tidak pernah menghasilkan ID negatif), supaya test antar package tidak saling bentrok.
