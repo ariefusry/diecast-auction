@@ -41,6 +41,7 @@ func sampleAuction() NewAuction {
 		Item: Item{
 			Brand: "Mini GT", ModelName: "Nissan Skyline GT-R R34", Series: "MGT", Year: 2023,
 			Color: "Bayside Blue", Tags: []string{"jdm"}, Condition: "sealed_box",
+			SourceURL: "https://minigt.fandom.com/wiki/Nissan_Skyline",
 		},
 		StartPrice: 100_000, MinIncrement: 10_000, DurationMinutes: 60,
 	}
@@ -100,7 +101,8 @@ func TestCreateAuctionStartsAsDraft(t *testing.T) {
 	if a.ID == 0 || a.SellerID != seller || a.Status != "draft" || a.StartTime != nil || a.EndTime != nil {
 		t.Fatalf("draft = %+v", a)
 	}
-	if a.DurationMinutes != 60 || a.Item.ModelName != "Nissan Skyline GT-R R34" || a.Item.Tags[0] != "jdm" {
+	if a.DurationMinutes != 60 || a.Item.ModelName != "Nissan Skyline GT-R R34" || a.Item.Tags[0] != "jdm" ||
+		a.Item.SourceURL != "https://minigt.fandom.com/wiki/Nissan_Skyline" {
 		t.Fatalf("draft fields = %+v", a)
 	}
 	got, err := e.auctions.Get(context.Background(), a.ID)

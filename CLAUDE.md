@@ -33,7 +33,7 @@ go test ./...
 # Scraping data riil diecast ke data/seeds.json
 go run cmd/scraper/main.go
 
-# Isi database dengan katalog dan akun demo
+# Isi database dengan katalog dan akun demo (butuh DATABASE_URL, idempoten)
 go run cmd/seed/main.go
 
 # Jalankan frontend secara lokal

@@ -16,15 +16,16 @@ import (
 const MaxDurationMinutes = 30 * 24 * 60
 
 type Item struct {
-	ID          int64    `json:"id"`
+	ID          int64    `json:"id,omitempty"`
 	Brand       string   `json:"brand"`
 	ModelName   string   `json:"model_name"`
 	Series      string   `json:"series"`
 	Year        int      `json:"year"`
 	Color       string   `json:"color"`
 	Tags        []string `json:"tags"`
-	Condition   string   `json:"condition"`
+	Condition   string   `json:"condition,omitempty"`
 	ImageURL    string   `json:"image_url"`
+	SourceURL   string   `json:"source_url"` // attribution for wiki-sourced items
 	Description string   `json:"description"`
 }
 
@@ -87,10 +88,10 @@ func (s *Auctions) Create(ctx context.Context, sellerID int64, in NewAuction) (A
 	err := pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
 		var itemID int64
 		err := tx.QueryRow(ctx,
-			`INSERT INTO items (seller_id, brand, model_name, series, year, color, tags, condition, image_url, description)
-			 VALUES ($1, $2, $3, NULLIF($4, ''), NULLIF($5, 0), NULLIF($6, ''), $7, $8, NULLIF($9, ''), $10)
+			`INSERT INTO items (seller_id, brand, model_name, series, year, color, tags, condition, image_url, source_url, description)
+			 VALUES ($1, $2, $3, NULLIF($4, ''), NULLIF($5, 0), NULLIF($6, ''), $7, $8, NULLIF($9, ''), NULLIF($10, ''), $11)
 			 RETURNING id`,
-			sellerID, it.Brand, it.ModelName, it.Series, it.Year, it.Color, it.Tags, it.Condition, it.ImageURL, it.Description).
+			sellerID, it.Brand, it.ModelName, it.Series, it.Year, it.Color, it.Tags, it.Condition, it.ImageURL, it.SourceURL, it.Description).
 			Scan(&itemID)
 		if err != nil {
 			return err
@@ -115,12 +116,12 @@ func (s *Auctions) Get(ctx context.Context, id int64) (Auction, error) {
 	var a Auction
 	err := s.pool.QueryRow(ctx,
 		`SELECT a.id, i.seller_id, i.id, i.brand, i.model_name, coalesce(i.series, ''), coalesce(i.year, 0),
-		        coalesce(i.color, ''), i.tags, i.condition, coalesce(i.image_url, ''), i.description,
+		        coalesce(i.color, ''), i.tags, i.condition, coalesce(i.image_url, ''), coalesce(i.source_url, ''), i.description,
 		        a.start_price, a.min_increment, a.buy_now_price, a.current_highest_bid, a.highest_bidder_id,
 		        a.status, extract(epoch FROM a.duration)::int / 60, a.start_time, a.end_time, a.winner_id
 		 FROM auctions a JOIN items i ON i.id = a.item_id WHERE a.id = $1`, id).
 		Scan(&a.ID, &a.SellerID, &a.Item.ID, &a.Item.Brand, &a.Item.ModelName, &a.Item.Series, &a.Item.Year,
-			&a.Item.Color, &a.Item.Tags, &a.Item.Condition, &a.Item.ImageURL, &a.Item.Description,
+			&a.Item.Color, &a.Item.Tags, &a.Item.Condition, &a.Item.ImageURL, &a.Item.SourceURL, &a.Item.Description,
 			&a.StartPrice, &a.MinIncrement, &a.BuyNowPrice, &a.CurrentHighestBid, &a.HighestBidderID,
 			&a.Status, &a.DurationMinutes, &a.StartTime, &a.EndTime, &a.WinnerID)
 	if errors.Is(err, pgx.ErrNoRows) {

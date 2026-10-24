@@ -49,10 +49,10 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Graceful shutdown pada `cmd/api/main.go` untuk menangani SIGINT/SIGTERM
 
 ## Phase 6: Seeder & Data Scraper
-- [ ] Tulis `data/seeds.json` kecil secara manual (beberapa item per brand) sebagai kontrak data
-- [ ] Buat seeder `cmd/seed/main.go`: akun demo, saldo awal, katalog, bid simulasi lewat service bid
-- [ ] Buat CLI scraper `cmd/scraper/main.go` via MediaWiki API (`api.php`) di hotwheels/minigt/inno64.fandom.com, rate limit sopan + User-Agent jelas
-- [ ] Simpan atribusi CC-BY-SA (URL halaman sumber) per item, lengkapi Inno64 secara manual (wiki-nya tipis), lalu commit `data/seeds.json`
+- [x] Kontrak data `data/seeds.json`: array `service.Item` (JSON). Tahap file manual dilewati karena scraper dikerjakan di sesi yang sama
+- [x] Buat seeder `cmd/seed/main.go`: akun demo, saldo awal, katalog, bid simulasi lewat service bid (idempoten)
+- [x] Buat CLI scraper `cmd/scraper/main.go` via MediaWiki API (`api.php`) di hotwheels/minigt/inno64.fandom.com, rate limit sopan + User-Agent jelas
+- [x] Simpan atribusi CC-BY-SA (`items.source_url`, migrasi 000002) per item, lalu commit `data/seeds.json` (103 item). Inno64 tidak perlu ditambah manual: wiki memberi 23 casting lengkap dengan foto, tahun, dan warna
 
 ## Phase 7: AI Natural Language Search
 - [ ] Integrasi client LLM (Gemini Flash atau Groq) dengan format response JSON terstruktur
