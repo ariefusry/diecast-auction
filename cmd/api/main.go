@@ -28,7 +28,7 @@ func main() {
 	}
 	defer pool.Close()
 
-	api := handler.New(service.NewAuth(pool, cfg.JWTSecret), service.NewWallets(pool))
+	api := handler.New(service.NewAuth(pool, cfg.JWTSecret), service.NewWallets(pool), service.NewAuctions(pool))
 
 	log.Printf("api listening on :%s", cfg.Port)
 	// ponytail: plain ListenAndServe, graceful shutdown lands in Phase 5.

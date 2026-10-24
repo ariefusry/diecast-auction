@@ -34,13 +34,13 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Test transaksi deposit, kalkulasi saldo, baris ledger, dan 50 deposit paralel
 
 ## Phase 4: Auction Engine, Anti-Sniping & Bidding Logic
-- [ ] CRUD lelang: buat draf (simpan `duration`), publish (`start_time = now()`, `end_time = now() + duration`), cancel hanya jika `highest_bidder_id IS NULL`
-- [ ] Transaksi bid atomik: lock row lelang dulu, lalu dompet dengan `user_id` naik
-- [ ] Validasi bid: lelang aktif, `now()` DB `< end_time`, bid pertama `>= start_price`, berikutnya `>= current_highest_bid + min_increment`, bukan penjual, bukan penawar tertinggi, saldo cukup
-- [ ] Escrow: kunci saldo penawar baru, lepas saldo penawar lama, tulis ledger `lock`/`release`, semua dalam satu transaksi
-- [ ] Anti-sniping: bid di 2 menit terakhir membuat `end_time = end_time + 2 menit`
-- [ ] Endpoint `POST /auctions/{id}/buy-now`, hanya saat `highest_bidder_id IS NULL`, tanpa refund, ledger `buy_now`
-- [ ] Concurrency test (via service compose `test` dengan `-race`) untuk membuktikan tidak ada race condition dan saldo tidak pernah negatif
+- [x] CRUD lelang: buat draf (simpan `duration`), publish (`start_time = now()`, `end_time = now() + duration`), cancel hanya jika `highest_bidder_id IS NULL`
+- [x] Transaksi bid atomik: lock row lelang dulu, lalu dompet dengan `user_id` naik
+- [x] Validasi bid: lelang aktif, `now()` DB `< end_time`, bid pertama `>= start_price`, berikutnya `>= current_highest_bid + min_increment`, bukan penjual, bukan penawar tertinggi, saldo cukup
+- [x] Escrow: kunci saldo penawar baru, lepas saldo penawar lama, tulis ledger `lock`/`release`, semua dalam satu transaksi
+- [x] Anti-sniping: bid di 2 menit terakhir membuat `end_time = end_time + 2 menit`
+- [x] Endpoint `POST /auctions/{id}/buy-now`, hanya saat `highest_bidder_id IS NULL`, tanpa refund, ledger `buy_now`
+- [x] Concurrency test (via service compose `test` dengan `-race`) untuk membuktikan tidak ada race condition dan saldo tidak pernah negatif
 
 ## Phase 5: Background Expiration Worker & Graceful Shutdown
 - [ ] Buat background worker di `internal/worker/auction_worker.go` dengan `time.Ticker`

@@ -7,7 +7,8 @@ import "errors"
 // Sentinel errors that handlers map to HTTP status codes.
 var (
 	ErrInvalidInput       = errors.New("invalid input")
-	ErrConflict           = errors.New("already exists")
+	ErrConflict           = errors.New("conflict")
+	ErrForbidden          = errors.New("forbidden")
 	ErrInvalidCredentials = errors.New("invalid email or password")
 	ErrNotFound           = errors.New("not found")
 )

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -45,12 +46,30 @@ func (c *client) do(method, path string, body any, out any) int {
 	return resp.StatusCode
 }
 
-func TestAuthAndWalletFlow(t *testing.T) {
+func newServer(t *testing.T) string {
 	pool := testutil.Pool(t)
 	secret := []byte(strings.Repeat("k", 32))
-	srv := httptest.NewServer(New(service.NewAuth(pool, secret), service.NewWallets(pool)))
+	srv := httptest.NewServer(New(service.NewAuth(pool, secret), service.NewWallets(pool), service.NewAuctions(pool)))
 	t.Cleanup(srv.Close)
-	c := &client{t: t, base: srv.URL}
+	return srv.URL
+}
+
+// signup registers and logs in a fresh user, returning an authenticated client.
+func signup(t *testing.T, base string) *client {
+	t.Helper()
+	c := &client{t: t, base: base}
+	u := testutil.Unique()
+	creds := map[string]string{"email": u + "@x.io", "username": "u_" + u, "password": "correct-horse"}
+	var login struct{ Token string }
+	if c.do("POST", "/auth/register", creds, nil) != http.StatusCreated || c.do("POST", "/auth/login", creds, &login) != http.StatusOK {
+		t.Fatal("signup failed")
+	}
+	c.token = login.Token
+	return c
+}
+
+func TestAuthAndWalletFlow(t *testing.T) {
+	c := &client{t: t, base: newServer(t)}
 
 	u := testutil.Unique()
 	creds := map[string]string{"email": u + "@x.io", "username": "u_" + u, "password": "correct-horse"}
@@ -88,5 +107,52 @@ func TestAuthAndWalletFlow(t *testing.T) {
 	}
 	if code := c.do("GET", "/wallet", nil, &wallet); code != http.StatusOK || wallet != (service.Wallet{Available: 250_000}) {
 		t.Fatalf("wallet = %d %+v", code, wallet)
+	}
+}
+
+func TestAuctionFlow(t *testing.T) {
+	base := newServer(t)
+	seller, bidder := signup(t, base), signup(t, base)
+	bidder.do("POST", "/wallet/deposit", map[string]int64{"amount": 500_000}, nil)
+
+	body := map[string]any{
+		"item":             map[string]any{"brand": "Hot Wheels", "model_name": "Datsun 510", "condition": "mint_on_card"},
+		"start_price":      100_000,
+		"min_increment":    10_000,
+		"duration_minutes": 60,
+	}
+	var a service.Auction
+	if code := seller.do("POST", "/auctions", body, &a); code != http.StatusCreated || a.Status != "draft" {
+		t.Fatalf("create = %d %+v", code, a)
+	}
+	id := strconv.FormatInt(a.ID, 10)
+	if code := (&client{t: t, base: base}).do("POST", "/auctions", body, nil); code != http.StatusUnauthorized {
+		t.Fatalf("create without token = %d", code)
+	}
+	if code := bidder.do("POST", "/auctions/"+id+"/publish", nil, nil); code != http.StatusForbidden {
+		t.Fatalf("publish by bidder = %d", code)
+	}
+	if code := seller.do("POST", "/auctions/"+id+"/publish", nil, &a); code != http.StatusOK || a.Status != "active" {
+		t.Fatalf("publish = %d %+v", code, a)
+	}
+	if code := bidder.do("POST", "/auctions/"+id+"/bids", map[string]int64{"amount": 50_000}, nil); code != http.StatusConflict {
+		t.Fatalf("low bid = %d", code)
+	}
+	if code := bidder.do("POST", "/auctions/"+id+"/bids", map[string]int64{"amount": 120_000}, &a); code != http.StatusOK || *a.CurrentHighestBid != 120_000 {
+		t.Fatalf("bid = %d %+v", code, a)
+	}
+	if code := (&client{t: t, base: base}).do("GET", "/auctions/"+id, nil, &a); code != http.StatusOK || *a.HighestBidderID == 0 {
+		t.Fatalf("get = %d %+v", code, a)
+	}
+	if code := seller.do("POST", "/auctions/"+id+"/cancel", nil, nil); code != http.StatusConflict {
+		t.Fatalf("cancel with bid = %d", code)
+	}
+	if code := bidder.do("POST", "/auctions/"+id+"/buy-now", nil, nil); code != http.StatusConflict {
+		t.Fatalf("buy-now with bid = %d", code)
+	}
+	for _, path := range []string{"/auctions/-1", "/auctions/abc"} {
+		if code := bidder.do("GET", path, nil, nil); code != http.StatusNotFound {
+			t.Fatalf("GET %s = %d", path, code)
+		}
 	}
 }
