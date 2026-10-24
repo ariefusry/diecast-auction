@@ -43,10 +43,10 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Concurrency test (via service compose `test` dengan `-race`) untuk membuktikan tidak ada race condition dan saldo tidak pernah negatif
 
 ## Phase 5: Background Expiration Worker & Graceful Shutdown
-- [ ] Buat background worker di `internal/worker/auction_worker.go` dengan `time.Ticker`
-- [ ] Tutup lelang yang melewati `end_time` dengan `FOR UPDATE SKIP LOCKED`
-- [ ] Pindahkan dana terkunci pemenang ke saldo aktif penjual (ledger `settle`)
-- [ ] Graceful shutdown pada `cmd/api/main.go` untuk menangani SIGINT/SIGTERM
+- [x] Buat background worker di `internal/worker/auction_worker.go` dengan `time.Ticker`
+- [x] Tutup lelang yang melewati `end_time` dengan `FOR UPDATE SKIP LOCKED`
+- [x] Pindahkan dana terkunci pemenang ke saldo aktif penjual (ledger `settle`)
+- [x] Graceful shutdown pada `cmd/api/main.go` untuk menangani SIGINT/SIGTERM
 
 ## Phase 6: Seeder & Data Scraper
 - [ ] Tulis `data/seeds.json` kecil secara manual (beberapa item per brand) sebagai kontrak data

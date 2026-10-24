@@ -58,8 +58,6 @@ type Auction struct {
 // auction row first (serializing all writes to one auction), then the
 // wallets it touches by ascending user_id. Time comes from the database now().
 //
-// Phase 5 settle belongs here too, reusing lockWallets and move.
-//
 // Ledger direction for buy_now and settle rows: the auction's seller is
 // credited, anyone else is debited. This is unambiguous because a seller can
 // never bid on or buy their own auction.
@@ -254,6 +252,61 @@ func (s *Auctions) BuyNow(ctx context.Context, buyerID, id int64) (Auction, erro
 			"UPDATE auctions SET status = 'completed', winner_id = $2, end_time = now() WHERE id = $1", id, buyerID)
 		return err
 	})
+}
+
+// CloseExpired completes every active auction past end_time, one transaction
+// each, and returns how many it closed. A winner's escrow moves to the seller
+// (ledger settle). SKIP LOCKED lets several instances run this at once without
+// settling twice, and skips auctions a bid is holding; the next pass gets them.
+// An auction that fails to settle is rolled back and skipped for the rest of
+// the pass so it cannot block the ones behind it; its error is returned.
+func (s *Auctions) CloseExpired(ctx context.Context) (int, error) {
+	var n int
+	failed := []int64{} // not nil: pgx sends nil as NULL, and id <> ALL(NULL) matches nothing
+	var errs error
+	for {
+		var id int64
+		err := pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
+			var sellerID int64
+			var bid, winner *int64
+			err := tx.QueryRow(ctx,
+				`SELECT a.id, i.seller_id, a.current_highest_bid, a.highest_bidder_id
+				 FROM auctions a JOIN items i ON i.id = a.item_id
+				 WHERE a.status = 'active' AND a.end_time <= now() AND a.id <> ALL($1)
+				 ORDER BY a.end_time LIMIT 1
+				 FOR UPDATE OF a SKIP LOCKED`, failed).Scan(&id, &sellerID, &bid, &winner)
+			if errors.Is(err, pgx.ErrNoRows) {
+				return nil
+			}
+			if err != nil {
+				return err
+			}
+			if winner != nil {
+				if _, err := lockWallets(ctx, tx, []int64{*winner, sellerID}); err != nil {
+					return err
+				}
+				if err := move(ctx, tx, *winner, id, "settle", *bid, 0, -*bid); err != nil {
+					return err
+				}
+				if err := move(ctx, tx, sellerID, id, "settle", *bid, *bid, 0); err != nil {
+					return err
+				}
+			}
+			_, err = tx.Exec(ctx, "UPDATE auctions SET status = 'completed', winner_id = $2 WHERE id = $1", id, winner)
+			return err
+		})
+		switch {
+		case err != nil && id != 0 && ctx.Err() == nil:
+			failed = append(failed, id)
+			errs = errors.Join(errs, fmt.Errorf("settle auction %d: %w", id, err))
+		case err != nil:
+			return n, errors.Join(errs, err)
+		case id == 0:
+			return n, errs
+		default:
+			n++
+		}
+	}
 }
 
 // locked is the auction state read under its row lock.
