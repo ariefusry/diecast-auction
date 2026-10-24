@@ -55,10 +55,10 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Simpan atribusi CC-BY-SA (`items.source_url`, migrasi 000002) per item, lalu commit `data/seeds.json` (103 item). Inno64 tidak perlu ditambah manual: wiki memberi 23 casting lengkap dengan foto, tahun, dan warna
 
 ## Phase 7: AI Natural Language Search
-- [ ] Integrasi client LLM (Gemini Flash atau Groq) dengan format response JSON terstruktur
-- [ ] Parser kalimat query ke struct filter (brand, series, color, tags, condition, harga, sort)
-- [ ] Dynamic query builder SQL aman dengan parameterized filter dan logika fallback
-- [ ] Implementasi endpoint `POST /auctions/search/ai`
+- [x] Integrasi client LLM (Gemini `gemini-3.8-flash`, `responseFormat` + schema) dengan format response JSON terstruktur, opsional via `GEMINI_API_KEY`
+- [x] Parser kalimat query ke struct filter (brand, series, color, tags, condition, harga, sort)
+- [x] Dynamic query builder SQL aman dengan parameterized filter dan logika fallback
+- [x] Implementasi endpoint `POST /auctions/search/ai` (plus `GET /auctions` katalog dengan builder yang sama)
 
 ## Phase 8: Swagger Documentation & Middleware Quality
 - [ ] Anotasi Swagger OpenAPI pada semua handler API

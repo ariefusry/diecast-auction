@@ -2,7 +2,9 @@ package handler
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -47,9 +49,13 @@ func (c *client) do(method, path string, body any, out any) int {
 }
 
 func newServer(t *testing.T) string {
+	return newServerWithParser(t, nil)
+}
+
+func newServerWithParser(t *testing.T, parse ParseFunc) string {
 	pool := testutil.Pool(t)
 	secret := []byte(strings.Repeat("k", 32))
-	srv := httptest.NewServer(New(service.NewAuth(pool, secret), service.NewWallets(pool), service.NewAuctions(pool)))
+	srv := httptest.NewServer(New(service.NewAuth(pool, secret), service.NewWallets(pool), service.NewAuctions(pool), parse))
 	t.Cleanup(srv.Close)
 	return srv.URL
 }
@@ -153,6 +159,54 @@ func TestAuctionFlow(t *testing.T) {
 	for _, path := range []string{"/auctions/-1", "/auctions/abc"} {
 		if code := bidder.do("GET", path, nil, nil); code != http.StatusNotFound {
 			t.Fatalf("GET %s = %d", path, code)
+		}
+	}
+}
+
+func TestSearchEndpoints(t *testing.T) {
+	token := "Zq" + testutil.Unique()
+	var parsed string
+	parse := func(_ context.Context, q string) (service.Filter, error) {
+		parsed = q
+		if q == "llm down" {
+			return service.Filter{}, errors.New("timeout")
+		}
+		return service.Filter{Text: token, Brand: "hot wheels", Condition: "made-up"}, nil
+	}
+	base := newServerWithParser(t, parse)
+	seller := signup(t, base)
+	for _, brand := range []string{"Hot Wheels", "Mini GT"} {
+		body := map[string]any{
+			"item":        map[string]any{"brand": brand, "model_name": token + " Civic", "condition": "loose_mint"},
+			"start_price": 50_000, "min_increment": 5_000, "duration_minutes": 60,
+		}
+		var a service.Auction
+		seller.do("POST", "/auctions", body, &a)
+		seller.do("POST", "/auctions/"+strconv.FormatInt(a.ID, 10)+"/publish", nil, nil)
+	}
+	anon := &client{t: t, base: base}
+
+	var res struct {
+		AI bool
+		service.SearchResult
+	}
+	if code := anon.do("GET", "/auctions?q="+token+"&brand=Mini+GT", nil, &res); code != http.StatusOK ||
+		len(res.Auctions) != 1 || res.Auctions[0].Item.Brand != "Mini GT" {
+		t.Fatalf("GET /auctions = %d %+v", code, res)
+	}
+
+	// The LLM filter is normalized: brand casing fixed, unknown condition dropped.
+	if code := anon.do("POST", "/auctions/search/ai", map[string]string{"query": "hw civic loose"}, &res); code != http.StatusOK ||
+		!res.AI || parsed != "hw civic loose" || len(res.Auctions) != 1 || res.Filter.Brand != "Hot Wheels" || res.Filter.Condition != "" {
+		t.Fatalf("AI search = %d %+v", code, res)
+	}
+	// An LLM failure degrades to keyword search instead of an error.
+	if code := anon.do("POST", "/auctions/search/ai", map[string]string{"query": "llm down"}, &res); code != http.StatusOK || res.AI {
+		t.Fatalf("AI search with LLM down = %d %+v", code, res)
+	}
+	for _, q := range []string{"", strings.Repeat("x", 201)} {
+		if code := anon.do("POST", "/auctions/search/ai", map[string]string{"query": q}, nil); code != http.StatusBadRequest {
+			t.Fatalf("query len %d = %d", len(q), code)
 		}
 	}
 }

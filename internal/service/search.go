@@ -1,0 +1,172 @@
+package service
+
+import (
+	"context"
+	"fmt"
+	"reflect"
+	"slices"
+	"strings"
+	"unicode/utf8"
+)
+
+// Brands are the catalog's brands, as stored in items.brand.
+var Brands = []string{"Hot Wheels", "Mini GT", "Inno64"}
+
+// Conditions mirrors the items.condition CHECK constraint.
+var Conditions = []string{"mint_on_card", "sealed_box", "acrylic_case", "loose_mint", "damaged_packaging"}
+
+// Sorts are the accepted Filter.Sort values; empty means ending soonest first.
+var Sorts = map[string]string{
+	"":            "a.end_time ASC",
+	"ending_soon": "a.end_time ASC",
+	"newest":      "a.start_time DESC",
+	"price_asc":   currentPrice + " ASC",
+	"price_desc":  currentPrice + " DESC",
+}
+
+// currentPrice is what a buyer would pay now: the leading bid, or the start price before any bid.
+const currentPrice = "coalesce(a.current_highest_bid, a.start_price)"
+
+const searchLimit = 50
+
+// Filter is a catalog search. It may come from an LLM, so it is untrusted:
+// Normalize it, and it only ever reaches SQL as bind parameters.
+type Filter struct {
+	Brand     string   `json:"brand"`
+	Series    string   `json:"series"`
+	Color     string   `json:"color"`
+	Tags      []string `json:"tags"`
+	Condition string   `json:"condition"`
+	MinPrice  int64    `json:"min_price"`
+	MaxPrice  int64    `json:"max_price"`
+	Text      string   `json:"text"`
+	Sort      string   `json:"sort"`
+}
+
+type SearchResult struct {
+	Filter   Filter    `json:"filter"`
+	Relaxed  bool      `json:"relaxed"` // true when strict filters matched nothing and some were dropped
+	Auctions []Auction `json:"auctions"`
+}
+
+// Normalize drops values outside the allowed sets instead of failing, since
+// a hallucinated field should narrow nothing rather than break the search.
+func (f Filter) Normalize() Filter {
+	short := func(s string) string {
+		s = strings.Join(strings.Fields(s), " ")
+		for utf8.RuneCountInString(s) > 100 {
+			s = s[:len(s)-1]
+		}
+		return strings.ToValidUTF8(s, "")
+	}
+	out := Filter{Series: short(f.Series), Color: strings.ToLower(short(f.Color)), Text: short(f.Text)}
+	for _, b := range Brands {
+		if strings.EqualFold(b, strings.TrimSpace(f.Brand)) {
+			out.Brand = b
+		}
+	}
+	if slices.Contains(Conditions, f.Condition) {
+		out.Condition = f.Condition
+	}
+	if _, ok := Sorts[f.Sort]; ok {
+		out.Sort = f.Sort
+	}
+	out.MinPrice, out.MaxPrice = max(f.MinPrice, 0), max(f.MaxPrice, 0)
+	if out.MaxPrice > 0 && out.MinPrice > out.MaxPrice {
+		out.MaxPrice = 0
+	}
+	for _, t := range f.Tags {
+		t = strings.ToLower(short(t))
+		if t != "" && !slices.Contains(out.Tags, t) && len(out.Tags) < 5 {
+			out.Tags = append(out.Tags, t)
+		}
+	}
+	return out
+}
+
+// Search returns active auctions matching f. When nothing matches it relaxes
+// in two steps: first color, series, tags and condition, then price. Brand and
+// text keywords always stay, since they carry what the user is looking for.
+func (s *Auctions) Search(ctx context.Context, f Filter) (SearchResult, error) {
+	f = f.Normalize()
+	soft := f
+	soft.Color, soft.Series, soft.Tags, soft.Condition = "", "", nil, ""
+	loose := soft
+	loose.MinPrice, loose.MaxPrice = 0, 0
+
+	tries := []Filter{f}
+	for _, next := range []Filter{soft, loose} {
+		if !reflect.DeepEqual(next, tries[len(tries)-1]) {
+			tries = append(tries, next)
+		}
+	}
+	for i, try := range tries {
+		found, err := s.find(ctx, try)
+		if err != nil {
+			return SearchResult{}, err
+		}
+		if len(found) > 0 || i == len(tries)-1 {
+			return SearchResult{Filter: f, Relaxed: i > 0, Auctions: found}, nil
+		}
+	}
+	return SearchResult{}, nil // unreachable: tries is never empty
+}
+
+func (s *Auctions) find(ctx context.Context, f Filter) ([]Auction, error) {
+	var where []string
+	var args []any
+	arg := func(v any) string {
+		args = append(args, v)
+		return fmt.Sprintf("$%d", len(args))
+	}
+	where = append(where, "a.status = 'active'")
+	if f.Brand != "" {
+		where = append(where, "i.brand = "+arg(f.Brand))
+	}
+	if f.Series != "" {
+		where = append(where, "i.series ILIKE '%' || "+arg(escapeLike(f.Series))+" || '%'")
+	}
+	if f.Color != "" {
+		where = append(where, "i.color ILIKE '%' || "+arg(escapeLike(f.Color))+" || '%'")
+	}
+	if len(f.Tags) > 0 {
+		where = append(where, "i.tags @> "+arg(f.Tags))
+	}
+	if f.Condition != "" {
+		where = append(where, "i.condition = "+arg(f.Condition))
+	}
+	if f.MinPrice > 0 {
+		where = append(where, currentPrice+" >= "+arg(f.MinPrice))
+	}
+	if f.MaxPrice > 0 {
+		where = append(where, currentPrice+" <= "+arg(f.MaxPrice))
+	}
+	// Every word must appear somewhere in the item's searchable text.
+	for _, w := range strings.Fields(f.Text) {
+		where = append(where, "concat_ws(' ', i.brand, i.model_name, i.series, i.color, array_to_string(i.tags, ' ')) ILIKE '%' || "+
+			arg(escapeLike(w))+" || '%'")
+	}
+
+	// The ORDER BY comes from the Sorts allowlist, never from input text.
+	query := auctionSelect + " WHERE " + strings.Join(where, " AND ") +
+		" ORDER BY " + Sorts[f.Sort] + ", a.id LIMIT " + fmt.Sprint(searchLimit)
+	rows, err := s.pool.Query(ctx, query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := []Auction{}
+	for rows.Next() {
+		a, err := scanAuction(rows)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, a)
+	}
+	return out, rows.Err()
+}
+
+// escapeLike makes user text match literally inside an ILIKE pattern.
+func escapeLike(s string) string {
+	return strings.NewReplacer(`\`, `\\`, `%`, `\%`, `_`, `\_`).Replace(s)
+}

@@ -112,18 +112,24 @@ func (s *Auctions) Create(ctx context.Context, sellerID int64, in NewAuction) (A
 	return s.Get(ctx, id)
 }
 
-func (s *Auctions) Get(ctx context.Context, id int64) (Auction, error) {
+// auctionSelect lists the columns scanAuction reads, in order.
+const auctionSelect = `SELECT a.id, i.seller_id, i.id, i.brand, i.model_name, coalesce(i.series, ''), coalesce(i.year, 0),
+	coalesce(i.color, ''), i.tags, i.condition, coalesce(i.image_url, ''), coalesce(i.source_url, ''), i.description,
+	a.start_price, a.min_increment, a.buy_now_price, a.current_highest_bid, a.highest_bidder_id,
+	a.status, extract(epoch FROM a.duration)::int / 60, a.start_time, a.end_time, a.winner_id
+	FROM auctions a JOIN items i ON i.id = a.item_id`
+
+func scanAuction(row pgx.Row) (Auction, error) {
 	var a Auction
-	err := s.pool.QueryRow(ctx,
-		`SELECT a.id, i.seller_id, i.id, i.brand, i.model_name, coalesce(i.series, ''), coalesce(i.year, 0),
-		        coalesce(i.color, ''), i.tags, i.condition, coalesce(i.image_url, ''), coalesce(i.source_url, ''), i.description,
-		        a.start_price, a.min_increment, a.buy_now_price, a.current_highest_bid, a.highest_bidder_id,
-		        a.status, extract(epoch FROM a.duration)::int / 60, a.start_time, a.end_time, a.winner_id
-		 FROM auctions a JOIN items i ON i.id = a.item_id WHERE a.id = $1`, id).
-		Scan(&a.ID, &a.SellerID, &a.Item.ID, &a.Item.Brand, &a.Item.ModelName, &a.Item.Series, &a.Item.Year,
-			&a.Item.Color, &a.Item.Tags, &a.Item.Condition, &a.Item.ImageURL, &a.Item.SourceURL, &a.Item.Description,
-			&a.StartPrice, &a.MinIncrement, &a.BuyNowPrice, &a.CurrentHighestBid, &a.HighestBidderID,
-			&a.Status, &a.DurationMinutes, &a.StartTime, &a.EndTime, &a.WinnerID)
+	err := row.Scan(&a.ID, &a.SellerID, &a.Item.ID, &a.Item.Brand, &a.Item.ModelName, &a.Item.Series, &a.Item.Year,
+		&a.Item.Color, &a.Item.Tags, &a.Item.Condition, &a.Item.ImageURL, &a.Item.SourceURL, &a.Item.Description,
+		&a.StartPrice, &a.MinIncrement, &a.BuyNowPrice, &a.CurrentHighestBid, &a.HighestBidderID,
+		&a.Status, &a.DurationMinutes, &a.StartTime, &a.EndTime, &a.WinnerID)
+	return a, err
+}
+
+func (s *Auctions) Get(ctx context.Context, id int64) (Auction, error) {
+	a, err := scanAuction(s.pool.QueryRow(ctx, auctionSelect+" WHERE a.id = $1", id))
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Auction{}, ErrNotFound
 	}

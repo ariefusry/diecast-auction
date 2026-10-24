@@ -5,23 +5,29 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/ariefusry/diecast-auction/internal/middleware"
 	"github.com/ariefusry/diecast-auction/internal/service"
 )
 
+// ParseFunc turns a natural language query into a search filter (the LLM).
+type ParseFunc func(ctx context.Context, query string) (service.Filter, error)
+
 type handler struct {
 	auth     *service.Auth
 	wallets  *service.Wallets
 	auctions *service.Auctions
+	parse    ParseFunc
 }
 
-// New returns the API router.
-func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auctions) http.Handler {
-	h := &handler{auth: auth, wallets: wallets, auctions: auctions}
+// New returns the API router. parse may be nil, then AI search is keyword search.
+func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auctions, parse ParseFunc) http.Handler {
+	h := &handler{auth: auth, wallets: wallets, auctions: auctions, parse: parse}
 	authed := middleware.RequireAuth(auth.ParseToken)
 
 	mux := http.NewServeMux()
@@ -33,6 +39,8 @@ func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auction
 	mux.Handle("GET /wallet", authed(http.HandlerFunc(h.getWallet)))
 	mux.Handle("POST /wallet/deposit", authed(http.HandlerFunc(h.deposit)))
 	mux.Handle("POST /auctions", authed(http.HandlerFunc(h.createAuction)))
+	mux.HandleFunc("GET /auctions", h.listAuctions)
+	mux.HandleFunc("POST /auctions/search/ai", h.searchAI)
 	mux.HandleFunc("GET /auctions/{id}", h.getAuction)
 	mux.Handle("POST /auctions/{id}/publish", authed(http.HandlerFunc(h.auctionAction(h.auctions.Publish))))
 	mux.Handle("POST /auctions/{id}/cancel", authed(http.HandlerFunc(h.auctionAction(h.auctions.Cancel))))
@@ -109,6 +117,55 @@ func (h *handler) getAuction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, a)
+}
+
+// listAuctions is the catalog: GET /auctions?q=&brand=&condition=&color=&tags=a,b&min_price=&max_price=&sort=
+func (h *handler) listAuctions(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
+	price := func(k string) int64 { n, _ := strconv.ParseInt(q.Get(k), 10, 64); return n }
+	f := service.Filter{
+		Text: q.Get("q"), Brand: q.Get("brand"), Series: q.Get("series"), Color: q.Get("color"),
+		Condition: q.Get("condition"), MinPrice: price("min_price"), MaxPrice: price("max_price"), Sort: q.Get("sort"),
+	}
+	if tags := q.Get("tags"); tags != "" {
+		f.Tags = strings.Split(tags, ",")
+	}
+	h.search(w, r, f, false)
+}
+
+// searchAI parses a free-text query with the LLM. If there is no LLM or it
+// fails, the whole query becomes a keyword search so the endpoint stays up.
+func (h *handler) searchAI(w http.ResponseWriter, r *http.Request) {
+	var req struct{ Query string }
+	if !decode(w, r, &req) {
+		return
+	}
+	req.Query = strings.TrimSpace(req.Query)
+	if req.Query == "" || len(req.Query) > 200 {
+		writeError(w, fmt.Errorf("%w: query must be 1-200 bytes", service.ErrInvalidInput))
+		return
+	}
+	if h.parse != nil {
+		f, err := h.parse(r.Context(), req.Query)
+		if err == nil {
+			h.search(w, r, f, true)
+			return
+		}
+		log.Printf("ai search fell back to keywords: %v", err)
+	}
+	h.search(w, r, service.Filter{Text: req.Query}, false)
+}
+
+func (h *handler) search(w http.ResponseWriter, r *http.Request, f service.Filter, ai bool) {
+	res, err := h.auctions.Search(r.Context(), f)
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, struct {
+		AI bool `json:"ai"` // whether the LLM produced the filter
+		service.SearchResult
+	}{ai, res})
 }
 
 // auctionAction adapts a body-less (user, auction) service call such as publish or cancel.

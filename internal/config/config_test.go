@@ -55,3 +55,14 @@ func TestLoadRejectsShortJWTSecret(t *testing.T) {
 		t.Fatal("want error when JWT_SECRET is shorter than 32 bytes")
 	}
 }
+
+func TestLoadGeminiIsOptionalWithDefaultModel(t *testing.T) {
+	setValidEnv(t)
+	t.Setenv("GEMINI_API_KEY", "")
+	t.Setenv("GEMINI_MODEL", "")
+
+	cfg, err := Load()
+	if err != nil || cfg.GeminiAPIKey != "" || cfg.GeminiModel != "gemini-3.8-flash" {
+		t.Fatalf("got %+v, %v", cfg, err)
+	}
+}

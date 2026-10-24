@@ -15,6 +15,7 @@ import (
 	"github.com/ariefusry/diecast-auction/internal/config"
 	"github.com/ariefusry/diecast-auction/internal/db"
 	"github.com/ariefusry/diecast-auction/internal/handler"
+	"github.com/ariefusry/diecast-auction/internal/llm"
 	"github.com/ariefusry/diecast-auction/internal/service"
 	"github.com/ariefusry/diecast-auction/internal/worker"
 	"github.com/ariefusry/diecast-auction/migrations"
@@ -44,9 +45,15 @@ func main() {
 		close(workerDone)
 	}()
 
+	var parse handler.ParseFunc
+	if cfg.GeminiAPIKey != "" {
+		parse = llm.NewGemini(cfg.GeminiAPIKey, cfg.GeminiModel).ParseQuery
+	} else {
+		log.Print("GEMINI_API_KEY not set: AI search uses keyword search")
+	}
 	srv := &http.Server{
 		Addr:    ":" + cfg.Port,
-		Handler: handler.New(service.NewAuth(pool, cfg.JWTSecret), service.NewWallets(pool), auctions),
+		Handler: handler.New(service.NewAuth(pool, cfg.JWTSecret), service.NewWallets(pool), auctions, parse),
 	}
 	go func() {
 		log.Printf("api listening on :%s", cfg.Port)
