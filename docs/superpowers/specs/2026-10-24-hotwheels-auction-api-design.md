@@ -1,4 +1,4 @@
-# Hot Wheels Auction REST API - Design Document
+# Hot Wheels Auction Platform - Design Document
 
 **Date:** 2026-10-24  
 **Author:** AI Assistant & ariefusry  
@@ -9,16 +9,17 @@
 ## 1. Intent & The Why
 
 ### Background & Motivation
-The user is a fullstack developer with cum laude graduation from Telkom University whose existing portfolio heavily leverages serverless stacks (Next.js, Vercel, Supabase). To target competitive backend engineering roles, the user wants a production-grade backend built with **Go** and **Docker**.
+The user is a fullstack developer with cum laude graduation from Telkom University whose existing portfolio heavily leverages serverless stacks (Next.js, Vercel, Supabase). To target competitive backend and fullstack engineering roles, the user wants a production-grade system featuring a **Go** backend, a separate **React** frontend, and unified **Docker** orchestration.
 
 ### Problem Domain
-Collectible auctions (specifically Hot Wheels) present classic, non-trivial backend engineering problems:
+Collectible auctions (specifically Hot Wheels) present classic, non-trivial backend and frontend engineering challenges:
 1. High concurrency and race conditions when multiple users bid simultaneously in closing seconds.
-- **Financial consistency and bid integrity:** Virtual wallet escrow, atomic bid validation, and instant outbid refunds.
-3. Lifecycle state management (scheduled expiration and winner finalization).
+2. Financial consistency via a virtual wallet with escrow holds, atomic transfers, and instant outbid refunds.
+3. Lifecycle state management (manual publish, scheduled expiration, and winner finalization).
 4. Containerization and cloud deployment readiness using GitHub Student Developer Pack resources (DigitalOcean / Heroku).
+5. Functional collector-oriented user interface for listing, bidding, and tracking wallet balances.
 
-This project showcases clean Go architecture, idiomatic database transactions, Docker multi-stage builds, and thorough OpenAPI/Swagger documentation.
+This project showcases clean Go architecture, idiomatic database transactions, Docker multi-stage builds, clean React component design, and thorough OpenAPI/Swagger documentation.
 
 ---
 
@@ -46,9 +47,13 @@ This project showcases clean Go architecture, idiomatic database transactions, D
   - Immediately ends the auction, charges buyer wallet, refunds previous highest bidder (if any), and marks status as `completed`.
 - **Background Expiration Worker:**
   - A background Go worker (goroutine with `time.Ticker`) scanning for expired active auctions (`end_time <= now()`), locking them, setting status to `completed`, and assigning `winner_id` (or `NULL` if zero bids). If a winner exists, the escrow funds are transferred to the seller's wallet balance.
+- **Functional React Frontend:**
+  - Dedicated SPA in `/frontend` built with React + Vite + Tailwind CSS.
+  - Screens: Auth (Login/Register), Catalog listing with condition/price filters, Auction detail with countdown timer and bid placement form, Create auction form with image upload, and Wallet management (view balance, locked escrow, deposit simulation).
 - **Containerization & Local Dev:**
-  - Multi-stage `Dockerfile` (builder stage compiling static Go binary, runner stage on Alpine/Distroless).
-  - `docker-compose.yml` spinning up PostgreSQL and the Go API service with automated migrations and health checks.
+  - Multi-stage `Dockerfile` for backend (Go binary on Alpine).
+  - Multi-stage `Dockerfile` for frontend (Node build stage, Nginx production server).
+  - `docker-compose.yml` spinning up PostgreSQL, Go API, and React frontend with automated migrations and health checks.
 - **API Documentation & Quality:**
   - Interactive Swagger / OpenAPI documentation served at `/swagger/index.html`.
   - Structured logging, standardized JSON error envelopes, and environment-based configuration (12-Factor App).
@@ -56,10 +61,10 @@ This project showcases clean Go architecture, idiomatic database transactions, D
   - GitHub Actions workflow running tests, linting, and Docker container build, ready for deployment to Heroku Eco Dynos or DigitalOcean App Platform.
 
 ### Non-Goals
-- **No Frontend UI:** Strict focus on a clean, production-grade REST API. Testing and verification occur via Swagger UI, Postman/cURL, and automated tests.
-- **No Real Payment Gateway:** Use simulated virtual balance/credits or mock checkout status to keep the core auction logic isolated and reliable without third-party sandbox friction.
-- **No Real-Time WebSockets in Phase 1:** Keep the API strictly RESTful as chosen by the user. WebSocket or SSE for live bid streams is intentionally deferred to Phase 2.
-- **No Complex Microservices:** Single modular monolith repository.
+- **No Complex Mobile App:** Web browser responsive UI only.
+- **No Real Third-Party Payment Gateway:** Uses virtual wallet escrow to avoid external sandbox friction while demonstrating financial ledger integrity.
+- **No Real-Time WebSockets in Phase 1:** Keep the API strictly RESTful with countdown on frontend. WebSocket or SSE for live bid streams is intentionally deferred to Phase 2.
+- **No Complex Microservices:** Single monorepo containing `/backend` and `/frontend`.
 
 ### Anti-Goals
 - **Over-engineering with Distributed Queues (Kafka/RabbitMQ) or Kubernetes:** Unnecessary operational overhead for this project scale.
@@ -80,10 +85,10 @@ This project showcases clean Go architecture, idiomatic database transactions, D
 ## 4. User-Decided Decisions
 
 1. **Domain:** Hot Wheels collector auction platform.
-2. **Architecture:** Pure REST API with interactive Swagger UI (no WebSockets initially).
+2. **Architecture:** Decoupled architecture with Go REST API and separate React frontend (Vite + Tailwind CSS).
 3. **Role Structure:** Unified account model. A single user account can act as both seller and bidder, but is strictly prohibited from bidding on their own listings.
 4. **Financial Model:** Virtual wallet system with escrow holds during active bids and automated refunds when outbid.
-5. **Target Deployment:** Dockerized cloud container deployment leveraging GitHub Student benefits.
+5. **Target Deployment:** Dockerized multi-container deployment (backend, frontend, PostgreSQL) leveraging GitHub Student benefits.
 
 ---
 
