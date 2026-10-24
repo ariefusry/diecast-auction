@@ -76,6 +76,7 @@ func TestSearchAppliesFilters(t *testing.T) {
 		{"price uses current bid", Filter{Text: token, MinPrice: 250_000}, []string{"red-mgt"}},
 		{"max price", Filter{Text: token, MaxPrice: 160_000, Sort: "price_asc"}, []string{"red-hw", "blue-mgt"}},
 		{"words match in any order", Filter{Text: "blue-mgt " + token}, []string{"blue-mgt"}},
+		{"punctuation ignored", Filter{Text: token + " bluemgt"}, []string{"blue-mgt"}},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -122,4 +123,14 @@ func assertIDs(t *testing.T, got []Auction, ids map[string]int64, want []string)
 	if !reflect.DeepEqual(gotIDs, wantIDs) {
 		t.Fatalf("got ids %v, want %v (%v)", gotIDs, wantIDs, want)
 	}
+}
+
+// A raw sentence (the no-LLM fallback) still finds items through any one word.
+func TestSearchFallsBackToAnyWord(t *testing.T) {
+	e, token, ids := searchEnv(t)
+	res, err := e.auctions.Search(context.Background(), Filter{Text: "carikan " + token + " di bawah", Sort: "price_asc"})
+	if err != nil || !res.Relaxed {
+		t.Fatalf("Search = %+v, %v; want relaxed", res, err)
+	}
+	assertIDs(t, res.Auctions, ids, []string{"red-hw", "blue-mgt", "red-mgt"})
 }

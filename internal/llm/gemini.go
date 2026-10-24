@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"slices"
 	"strings"
 	"time"
 
@@ -100,5 +101,19 @@ func (g *Gemini) ParseQuery(ctx context.Context, query string) (service.Filter, 
 	if err := json.Unmarshal([]byte(strings.TrimSpace(out.Candidates[0].Content.Parts[0].Text)), &f); err != nil {
 		return service.Filter{}, fmt.Errorf("gemini: reply is not a filter: %w", err)
 	}
+	f.Text = fromQuery(f.Text, query)
 	return f, nil
+}
+
+// fromQuery keeps only the words of text that the user actually typed, so a
+// chatty model cannot turn its own prose into search keywords.
+func fromQuery(text, query string) string {
+	typed := strings.Fields(strings.ToLower(query))
+	var kept []string
+	for _, w := range strings.Fields(text) {
+		if slices.Contains(typed, strings.ToLower(w)) {
+			kept = append(kept, w)
+		}
+	}
+	return strings.Join(kept, " ")
 }

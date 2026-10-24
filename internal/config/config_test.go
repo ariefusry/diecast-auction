@@ -62,7 +62,7 @@ func TestLoadGeminiIsOptionalWithDefaultModel(t *testing.T) {
 	t.Setenv("GEMINI_MODEL", "")
 
 	cfg, err := Load()
-	if err != nil || cfg.GeminiAPIKey != "" || cfg.GeminiModel != "gemini-3.8-flash" {
+	if err != nil || cfg.GeminiAPIKey != "" || cfg.GeminiModel != "gemini-3.5-flash-lite" {
 		t.Fatalf("got %+v, %v", cfg, err)
 	}
 }

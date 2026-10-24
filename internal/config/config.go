@@ -34,7 +34,7 @@ func Load() (Config, error) {
 		cfg.Port = "8080"
 	}
 	if cfg.GeminiModel == "" {
-		cfg.GeminiModel = "gemini-3.8-flash"
+		cfg.GeminiModel = "gemini-3.5-flash-lite"
 	}
 	return cfg, nil
 }

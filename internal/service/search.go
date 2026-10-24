@@ -85,8 +85,9 @@ func (f Filter) Normalize() Filter {
 }
 
 // Search returns active auctions matching f. When nothing matches it relaxes
-// in two steps: first color, series, tags and condition, then price. Brand and
-// text keywords always stay, since they carry what the user is looking for.
+// step by step: first color, series, tags and condition, then price, and
+// finally any single text word may match instead of all of them. Brand always
+// stays, since it carries what the user is looking for.
 func (s *Auctions) Search(ctx context.Context, f Filter) (SearchResult, error) {
 	f = f.Normalize()
 	soft := f
@@ -94,14 +95,21 @@ func (s *Auctions) Search(ctx context.Context, f Filter) (SearchResult, error) {
 	loose := soft
 	loose.MinPrice, loose.MaxPrice = 0, 0
 
-	tries := []Filter{f}
+	type try struct {
+		f       Filter
+		anyWord bool
+	}
+	tries := []try{{f: f}}
 	for _, next := range []Filter{soft, loose} {
-		if !reflect.DeepEqual(next, tries[len(tries)-1]) {
-			tries = append(tries, next)
+		if !reflect.DeepEqual(next, tries[len(tries)-1].f) {
+			tries = append(tries, try{f: next})
 		}
 	}
-	for i, try := range tries {
-		found, err := s.find(ctx, try)
+	if len(strings.Fields(f.Text)) > 1 {
+		tries = append(tries, try{f: loose, anyWord: true})
+	}
+	for i, t := range tries {
+		found, err := s.find(ctx, t.f, t.anyWord)
 		if err != nil {
 			return SearchResult{}, err
 		}
@@ -112,7 +120,9 @@ func (s *Auctions) Search(ctx context.Context, f Filter) (SearchResult, error) {
 	return SearchResult{}, nil // unreachable: tries is never empty
 }
 
-func (s *Auctions) find(ctx context.Context, f Filter) ([]Auction, error) {
+// find runs one query. Text words must all match, or with anyWord at least
+// one word of 3+ letters must (short words like "di" match almost anything).
+func (s *Auctions) find(ctx context.Context, f Filter, anyWord bool) ([]Auction, error) {
 	var where []string
 	var args []any
 	arg := func(v any) string {
@@ -141,10 +151,22 @@ func (s *Auctions) find(ctx context.Context, f Filter) ([]Auction, error) {
 	if f.MaxPrice > 0 {
 		where = append(where, currentPrice+" <= "+arg(f.MaxPrice))
 	}
-	// Every word must appear somewhere in the item's searchable text.
+	// Text compares letters and digits only, so "gtr" finds "GT-R" and "r34" finds "(R34)".
+	var words []string
 	for _, w := range strings.Fields(f.Text) {
-		where = append(where, "concat_ws(' ', i.brand, i.model_name, i.series, i.color, array_to_string(i.tags, ' ')) ILIKE '%' || "+
-			arg(escapeLike(w))+" || '%'")
+		w = alnum(w)
+		if w != "" && (!anyWord || len(w) >= 3) {
+			words = append(words, "regexp_replace(lower(concat_ws(' ', i.brand, i.model_name, i.series, i.color, "+
+				"array_to_string(i.tags, ' '))), '[^a-z0-9]', '', 'g') LIKE '%' || "+arg(w)+" || '%'")
+		}
+	}
+	switch {
+	case anyWord && len(words) > 0:
+		where = append(where, "("+strings.Join(words, " OR ")+")")
+	case anyWord:
+		return []Auction{}, nil // only short words: matching on them would return noise
+	default:
+		where = append(where, words...)
 	}
 
 	// The ORDER BY comes from the Sorts allowlist, never from input text.
@@ -164,6 +186,17 @@ func (s *Auctions) find(ctx context.Context, f Filter) ([]Auction, error) {
 		out = append(out, a)
 	}
 	return out, rows.Err()
+}
+
+// alnum lowercases s and keeps only ASCII letters and digits, which also
+// leaves nothing for LIKE to treat as a wildcard.
+func alnum(s string) string {
+	return strings.Map(func(r rune) rune {
+		if r >= 'a' && r <= 'z' || r >= '0' && r <= '9' {
+			return r
+		}
+		return -1
+	}, strings.ToLower(s))
 }
 
 // escapeLike makes user text match literally inside an ILIKE pattern.

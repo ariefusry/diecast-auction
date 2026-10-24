@@ -75,3 +75,15 @@ func TestParseQueryFailsOnBadReplies(t *testing.T) {
 		})
 	}
 }
+
+// The model may only pick text keywords out of the query, never invent them.
+func TestParseQueryKeepsOnlyTextWordsFromTheQuery(t *testing.T) {
+	filter := `{"text":"skyline R34 or R32/R33 model context assumed"}`
+	reply, _ := json.Marshal(map[string]any{"candidates": []any{
+		map[string]any{"content": map[string]any{"parts": []any{map[string]any{"text": filter}}}},
+	}})
+	got, err := fakeGemini(t, http.StatusOK, string(reply)).ParseQuery(context.Background(), "jdm merah Skyline r34")
+	if err != nil || got.Text != "skyline R34" {
+		t.Fatalf("Text = %q, %v", got.Text, err)
+	}
+}
