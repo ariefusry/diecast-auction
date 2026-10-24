@@ -22,6 +22,11 @@ docker compose up --build
 # Alasan: -race butuh CGO + gcc, dan mesin dev Windows tidak punya gcc.
 docker compose --profile test run --rm test
 
+# Reset testdb setelah mengedit migrasi yang sudah ada, lalu jalankan tanpa cache
+# Alasan: testdb tetap hidup antar run, jadi skema lama tidak diterapkan ulang.
+docker compose --profile test down
+docker compose --profile test run --rm test go test -race -count=1 ./...
+
 # Loop test cepat lokal tanpa race detector
 go test ./...
 

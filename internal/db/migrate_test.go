@@ -19,10 +19,12 @@ func TestMigrateAppliesAndIsIdempotent(t *testing.T) {
 	if err != nil {
 		t.Fatalf("connect: %v", err)
 	}
-	defer conn.Close(ctx)
 	t.Cleanup(func() {
-		conn.Exec(ctx, "DROP TABLE IF EXISTS migrate_probe, schema_migrations")
+		conn.Exec(ctx, "DROP TABLE IF EXISTS migrate_probe, probe_migrations")
+		conn.Close(ctx)
 	})
+	// Own version table so this probe never collides with the real schema's migration state.
+	migrateURL := url + "&x-migrations-table=probe_migrations"
 
 	src := fstest.MapFS{
 		"000001_probe.up.sql":   {Data: []byte("CREATE TABLE migrate_probe (id int);")},
@@ -30,7 +32,7 @@ func TestMigrateAppliesAndIsIdempotent(t *testing.T) {
 	}
 
 	for i := range 2 {
-		if err := Migrate(url, src); err != nil {
+		if err := Migrate(migrateURL, src); err != nil {
 			t.Fatalf("Migrate run %d: %v", i+1, err)
 		}
 	}
