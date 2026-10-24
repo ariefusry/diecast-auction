@@ -15,10 +15,11 @@ The user is a fullstack developer with cum laude graduation from Telkom Universi
 Collectible diecast scale 1:64 auctions (Hot Wheels, Mini GT, Inno64) present classic, non-trivial backend and frontend engineering challenges:
 1. High concurrency and race conditions when multiple users bid simultaneously in closing seconds.
 2. Financial consistency via a virtual wallet with escrow holds, atomic transfers, and instant outbid refunds.
-3. Multi-brand diecast metadata and collector condition nuances (blister card, sealed box, acrylic case, loose).
-4. Lifecycle state management (manual publish, scheduled expiration, and winner finalization).
-5. Containerization and cloud deployment readiness using GitHub Student Developer Pack resources (Heroku Eco Dynos atau DigitalOcean Droplet VPS).
-6. Functional collector-oriented user interface for listing, bidding, and tracking wallet balances.
+3. Anti-sniping dynamic time extension when bids land in the final minutes of an auction.
+4. Multi-brand diecast metadata and collector condition nuances (blister card, sealed box, acrylic case, loose).
+5. Lifecycle state management (manual publish, scheduled expiration, and winner finalization).
+6. Containerization and cloud deployment readiness using GitHub Student Developer Pack resources (Heroku Eco Dynos atau DigitalOcean Droplet VPS).
+7. Functional collector-oriented user interface for listing, bidding, and tracking wallet balances.
 
 This project showcases clean Go architecture, idiomatic database transactions, Docker multi-stage builds, clean React component design, and thorough OpenAPI/Swagger documentation.
 
@@ -44,9 +45,10 @@ This project showcases clean Go architecture, idiomatic database transactions, D
   - Manual publication: `POST /auctions/{id}/publish` activates a draft auction.
   - Safe cancellation: `POST /auctions/{id}/cancel` allowed only when bid count is zero.
   - Configurable duration with strict `start_time` and `end_time`.
-- **Atomic Bidding Mechanism:**
+- **Atomic Bidding Mechanism & Anti-Sniping:**
   - Bids must be validated atomically inside a PostgreSQL transaction using row-level locking (`SELECT ... FOR UPDATE`) on the auction and wallet rows to eliminate race conditions.
   - Validation rules: auction must be `active`, current time must be `< end_time`, bid amount must be `>= current_highest_bid + min_increment`, bidder cannot be the item seller, bidder must have sufficient wallet balance.
+  - Anti-sniping rule: If a valid bid arrives within the final 2 minutes before `end_time`, automatically extend `end_time` by 2 minutes in the same transaction to guarantee fair bidding.
 - **Instant Buy-Now Option:**
   - Dedicated endpoint `POST /auctions/{id}/buy-now` if `buy_now_price` is configured.
   - Immediately ends the auction, charges buyer wallet, refunds previous highest bidder (if any), and marks status as `completed`.
@@ -67,9 +69,11 @@ This project showcases clean Go architecture, idiomatic database transactions, D
   - Multi-stage `Dockerfile` for backend (Go binary on Alpine).
   - Multi-stage `Dockerfile` for frontend (Node build stage, Nginx production server).
   - `docker-compose.yml` spinning up PostgreSQL, Go API, and React frontend with automated migrations and health checks.
-- **API Documentation & Quality:**
+- **API Documentation & Quality Engineering:**
   - Interactive Swagger / OpenAPI documentation served at `/swagger/index.html`.
   - Structured logging, standardized JSON error envelopes, and environment-based configuration (12-Factor App).
+  - Graceful shutdown intercepting OS signals (SIGINT, SIGTERM) to allow in-flight database transactions to finish cleanly before process exit.
+  - In-memory rate limiting using Go stdlib token bucket to prevent bot spam on bidding and authentication endpoints.
 - **CI/CD Pipeline:**
   - GitHub Actions workflow running tests, linting, and Docker container build, ready for deployment to Heroku Eco Dynos or DigitalOcean Droplet VPS.
 
@@ -103,7 +107,8 @@ This project showcases clean Go architecture, idiomatic database transactions, D
 4. **Financial Model:** Virtual wallet system with escrow holds during active bids and automated refunds when outbid.
 5. **AI Integration:** Natural language auction search via LLM structured output mapping to PostgreSQL queries.
 6. **Data Pipeline:** CLI scraper in Go targeting authentic diecast collector catalogs (Hot Wheels, Mini GT, Inno64) feeding an automated database seeder.
-7. **Target Deployment:** Dockerized multi-container deployment (backend, frontend, PostgreSQL) leveraging GitHub Student benefits (Heroku Eco / DigitalOcean Droplet VPS).
+7. Anti-Sniping Protection: Automatic 2-minute dynamic auction extension when valid bids arrive in the closing 2 minutes.
+8. Target Deployment: Dockerized multi-container deployment (backend, frontend, PostgreSQL) leveraging GitHub Student benefits (Heroku Eco / DigitalOcean Droplet VPS).
 
 ---
 
