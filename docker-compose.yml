@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-diecast}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-diecast}
+      POSTGRES_DB: ${POSTGRES_DB:-diecast}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  # Throwaway database for tests: tmpfs, never touches dev data.
+  testdb:
+    image: postgres:15-alpine
+    profiles: [test]
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d test"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  # go test -race needs cgo + gcc, which the golang image has and the Windows host lacks.
+  test:
+    image: golang:1.27
+    profiles: [test]
+    working_dir: /src
+    environment:
+      CGO_ENABLED: "1"
+      TEST_DATABASE_URL: postgres://test:test@testdb:5432/test?sslmode=disable
+    volumes:
+      - .:/src
+      - gomod:/go/pkg/mod
+      - gobuild:/root/.cache/go-build
+    depends_on:
+      testdb:
+        condition: service_healthy
+    command: go test -race ./...
+
+volumes:
+  pgdata:
+  gomod:
+  gobuild:

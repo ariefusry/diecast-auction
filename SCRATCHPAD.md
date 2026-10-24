@@ -3,7 +3,7 @@
 ## Current Status
 - Project Name: Scale 1:64 Diecast Auction Platform (Hot Wheels, Mini GT, Inno64)
 - Phase: Keputusan arsitektur dikunci (spec Section 6)
-- Active Focus: Siap Phase 1 Execution
+- Active Focus: Phase 1 selesai, siap Phase 2 (schema & migrations)
 
 ---
 
@@ -57,3 +57,4 @@ Migrasi tidak punya perintah terpisah: di-embed dan dijalankan saat API start.
 - 2026-10-25: Review dokumen. Keputusan user: upgrade Go + race test di Docker, buy-now hanya saat 0 bid, tambah ledger `wallet_transactions`, deploy ke VPS generik. Heroku dicoret (dyno tidur menghentikan worker, filesystem ephemeral). Kredit DigitalOcean di Student Pack dilaporkan berakhir 2026-07-31.
 - 2026-10-25: Module path `github.com/ariefusry/diecast-auction`. Sumber scraper: MediaWiki API Fandom (hotwheels ~wiki besar, minigt 699 artikel, inno64 hanya 24 artikel), lisensi CC-BY-SA. Halaman HTML Fandom diblok Cloudflare, API tidak.
 - 2026-10-25: Default builder dikunci di spec Section 6: uang BIGINT + CHECK, lock lelang lalu dompet `user_id` naik, waktu dari `now()` DB, `SKIP LOCKED` di worker, migrasi embed, items `color`/`tags` tanpa `scale`, polling frontend. Fase diurutkan ulang: dompet, bid, worker sebelum seeder dan scraper.
+- 2026-10-25: Phase 1 selesai. `internal/config` (DATABASE_URL wajib, PORT default 8080), `internal/db.Migrate` (golang-migrate + pgx5, idempoten), compose `db` + `testdb` (tmpfs) + `test` (golang:1.27, -race). Test DB di-skip jika `TEST_DATABASE_URL` kosong. Embed migrasi dan wiring `cmd/api` ditunda ke Phase 2 karena `//go:embed *.sql` butuh minimal satu file SQL.

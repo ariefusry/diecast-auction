@@ -10,13 +10,14 @@ Urutan fase sengaja menaruh inti paling berisiko (dompet, bid, worker) sebelum s
 ## Phase 1: Environment & Project Scaffolding
 - [x] Upgrade Go lokal ke versi stabil terbaru (1.27.0, dari 1.19.1)
 - [x] Buat repo GitHub `ariefusry/diecast-auction` (private) dan set git remote
-- [ ] Inisialisasi Go module (`go mod init github.com/ariefusry/diecast-auction`), kunci versi Go di `go.mod`
-- [ ] Buat file konfigurasi `.env.example` dan loader konfigurasi di `internal/config/config.go`
-- [ ] Buat `docker-compose.yml` untuk PostgreSQL 15 dengan healthcheck
-- [ ] Tambah service compose `test` (profile `test`, image `golang` sesuai versi `go.mod`, `CGO_ENABLED=1`) untuk `go test -race ./...` terhadap service `db`
-- [ ] Siapkan migrasi `golang-migrate` (library + `embed`) yang dijalankan saat API start
+- [x] Inisialisasi Go module (`go mod init github.com/ariefusry/diecast-auction`), kunci versi Go di `go.mod` (1.27.0)
+- [x] Buat file konfigurasi `.env.example` dan loader konfigurasi di `internal/config/config.go`
+- [x] Buat `docker-compose.yml` untuk PostgreSQL 15 dengan healthcheck
+- [x] Tambah service compose `test` (profile `test`, image `golang:1.27`, `CGO_ENABLED=1`) untuk `go test -race ./...` terhadap service `testdb` (tmpfs, terpisah dari data dev)
+- [x] Siapkan runner migrasi `golang-migrate` di `internal/db/migrate.go` (`Migrate(url, fs.FS)`, idempoten)
 
 ## Phase 2: Database Schema & Migrations
+- [ ] Buat `migrations/embed.go` (`//go:embed *.sql`) bersama migrasi pertama, lalu panggil `db.Migrate` saat start di `cmd/api/main.go`
 - [ ] Tabel `users` (id, email, password_hash, username, created_at)
 - [ ] Tabel `wallets` (id, user_id UNIQUE, available_balance BIGINT, locked_balance BIGINT, CHECK keduanya >= 0)
 - [ ] Tabel `wallet_transactions` append-only (id, wallet_id, type, amount BIGINT, auction_id NULL, created_at), type: deposit, lock, release, settle, buy_now
