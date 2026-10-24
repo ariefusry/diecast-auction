@@ -67,12 +67,12 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Middleware CORS, structured logging, dan error handler seragam
 
 ## Phase 9: React Frontend (SPA)
-- [ ] Inisialisasi frontend dengan Vite + React + Tailwind CSS di folder `frontend/`
-- [ ] Halaman login dan register, JWT dikirim sebagai Bearer token
-- [ ] Halaman katalog dengan filter brand (Hot Wheels, Mini GT, Inno64), kondisi, dan AI search bar
-- [ ] Halaman detail lelang dengan countdown, polling sekitar 5 detik, dan form penawaran
-- [ ] Halaman dompet virtual untuk melihat saldo dan top-up simulasi
-- [ ] Halaman buat lelang baru beserta upload gambar
+- [x] Inisialisasi frontend dengan Vite + React + Tailwind CSS di folder `frontend/`
+- [x] Halaman login dan register, JWT dikirim sebagai Bearer token
+- [x] Halaman katalog dengan filter brand (Hot Wheels, Mini GT, Inno64), kondisi, dan AI search bar
+- [x] Halaman detail lelang dengan countdown, polling sekitar 5 detik, dan form penawaran
+- [x] Halaman dompet virtual untuk melihat saldo dan top-up simulasi
+- [x] Halaman buat lelang baru beserta upload gambar (backend `POST /uploads`, disimpan di `UPLOAD_DIR`)
 
 ## Phase 10: Docker Production & Deployment
 - [ ] Buat multi-stage `Dockerfile.backend` (Go build -> Alpine runner)

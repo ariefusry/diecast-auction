@@ -39,8 +39,11 @@ go run cmd/seed/main.go
 # Regenerasi dokumentasi Swagger setelah mengubah anotasi handler atau tipe service
 swag init -g handler.go -d internal/handler,internal/service -o internal/apidocs --ot go,json
 
-# Jalankan frontend secara lokal
+# Jalankan frontend secara lokal (API di :8080, CORS default mengizinkan :5173)
 cd frontend && npm install && npm run dev
+
+# Test dan build frontend
+cd frontend && npm test && npm run build
 ```
 
 ---
