@@ -1,0 +1,105 @@
+# Hot Wheels Auction REST API - Design Document
+
+**Date:** 2026-10-24  
+**Author:** AI Assistant & ariefusry  
+**Status:** In Review (Brainstorming Stage)  
+
+---
+
+## 1. Intent & The Why
+
+### Background & Motivation
+The user is a fullstack developer with cum laude graduation from Telkom University whose existing portfolio heavily leverages serverless stacks (Next.js, Vercel, Supabase). To target competitive backend engineering roles, the user wants a production-grade backend built with **Go** and **Docker**.
+
+### Problem Domain
+Collectible auctions (specifically Hot Wheels) present classic, non-trivial backend engineering problems:
+1. High concurrency and race conditions when multiple users bid simultaneously in closing seconds.
+- **Financial consistency and bid integrity:** Virtual wallet escrow, atomic bid validation, and instant outbid refunds.
+3. Lifecycle state management (scheduled expiration and winner finalization).
+4. Containerization and cloud deployment readiness using GitHub Student Developer Pack resources (DigitalOcean / Heroku).
+
+This project showcases clean Go architecture, idiomatic database transactions, Docker multi-stage builds, and thorough OpenAPI/Swagger documentation.
+
+---
+
+## 2. Goals, Non-Goals & Anti-Goals
+
+### Goals
+- **Unified User Management:** Secure registration, authentication (JWT + bcrypt), and profile retrieval. Any authenticated user can list Hot Wheels items for auction and bid on others' items.
+- **Hot Wheels Catalog & Item Metadata:** Rich item attributes tailored to collector terminology (model name, series, release year, scale 1:64, packaging condition: mint on card / loose / blister crack, opening bid, minimum increment, optional buy-now price).
+- **Virtual Wallet & Escrow Ledger:**
+  - Each user has a virtual wallet balance.
+  - Endpoints: `GET /wallet`, `POST /wallet/deposit` (mock top-up).
+  - Escrow hold: When a bid is placed, the bid amount is locked in escrow from the user's available balance.
+  - Outbid refund: When a higher bid arrives, the previous highest bidder's locked funds are immediately released back to their available balance in the same database transaction.
+  - Strict resource ordering during transactions (e.g. order by resource ID) to prevent database deadlocks.
+- **Auction Engine & Lifecycle:**
+  - States: `draft`, `active`, `completed`, `cancelled`.
+  - Manual publication: `POST /auctions/{id}/publish` activates a draft auction.
+  - Safe cancellation: `POST /auctions/{id}/cancel` allowed only when bid count is zero.
+  - Configurable duration with strict `start_time` and `end_time`.
+- **Atomic Bidding Mechanism:**
+  - Bids must be validated atomically inside a PostgreSQL transaction using row-level locking (`SELECT ... FOR UPDATE`) on the auction and wallet rows to eliminate race conditions.
+  - Validation rules: auction must be `active`, current time must be `< end_time`, bid amount must be `>= current_highest_bid + min_increment`, bidder cannot be the item seller, bidder must have sufficient wallet balance.
+- **Instant Buy-Now Option:**
+  - Dedicated endpoint `POST /auctions/{id}/buy-now` if `buy_now_price` is configured.
+  - Immediately ends the auction, charges buyer wallet, refunds previous highest bidder (if any), and marks status as `completed`.
+- **Background Expiration Worker:**
+  - A background Go worker (goroutine with `time.Ticker`) scanning for expired active auctions (`end_time <= now()`), locking them, setting status to `completed`, and assigning `winner_id` (or `NULL` if zero bids). If a winner exists, the escrow funds are transferred to the seller's wallet balance.
+- **Containerization & Local Dev:**
+  - Multi-stage `Dockerfile` (builder stage compiling static Go binary, runner stage on Alpine/Distroless).
+  - `docker-compose.yml` spinning up PostgreSQL and the Go API service with automated migrations and health checks.
+- **API Documentation & Quality:**
+  - Interactive Swagger / OpenAPI documentation served at `/swagger/index.html`.
+  - Structured logging, standardized JSON error envelopes, and environment-based configuration (12-Factor App).
+- **CI/CD Pipeline:**
+  - GitHub Actions workflow running tests, linting, and Docker container build, ready for deployment to Heroku Eco Dynos or DigitalOcean App Platform.
+
+### Non-Goals
+- **No Frontend UI:** Strict focus on a clean, production-grade REST API. Testing and verification occur via Swagger UI, Postman/cURL, and automated tests.
+- **No Real Payment Gateway:** Use simulated virtual balance/credits or mock checkout status to keep the core auction logic isolated and reliable without third-party sandbox friction.
+- **No Real-Time WebSockets in Phase 1:** Keep the API strictly RESTful as chosen by the user. WebSocket or SSE for live bid streams is intentionally deferred to Phase 2.
+- **No Complex Microservices:** Single modular monolith repository.
+
+### Anti-Goals
+- **Over-engineering with Distributed Queues (Kafka/RabbitMQ) or Kubernetes:** Unnecessary operational overhead for this project scale.
+- **In-memory-only State:** Bids, auction states, and timers must be persisted and transactionally safe in PostgreSQL, not stored solely in RAM or Go memory.
+
+---
+
+## 3. Constraints
+
+- **Language:** Go (1.19+ standard library compatibility).
+- **Database:** PostgreSQL 15+.
+- **Portability:** Fully reproducible via Docker Compose (`docker compose up --build`).
+- **Deployment Budget:** GitHub Student Developer Pack eligible (Heroku Eco / DigitalOcean App Platform).
+- **Zero Em-Dash & Clean Tone:** Project documentation and comments adhere to clean, direct formatting.
+
+---
+
+## 4. User-Decided Decisions
+
+1. **Domain:** Hot Wheels collector auction platform.
+2. **Architecture:** Pure REST API with interactive Swagger UI (no WebSockets initially).
+3. **Role Structure:** Unified account model. A single user account can act as both seller and bidder, but is strictly prohibited from bidding on their own listings.
+4. **Financial Model:** Virtual wallet system with escrow holds during active bids and automated refunds when outbid.
+5. **Target Deployment:** Dockerized cloud container deployment leveraging GitHub Student benefits.
+
+---
+
+## 5. Builder Decisions (Resolved by Reviewer Check)
+
+1. **Escrow & Settlement:**
+   - Placing a bid locks `bid_amount` into `locked_balance`.
+   - When outbid, the previous bidder's `locked_balance` is refunded back to `available_balance` atomically.
+   - When auction completes, worker moves winner's `locked_balance` into seller's `available_balance`.
+2. **Buy-Now Mechanics:**
+   - `POST /auctions/{id}/buy-now` terminates the auction instantly, sets winner, transfers funds, and releases any previous bidder's escrow hold.
+3. **Lifecycle Rules:**
+   - Seller creates auction in `draft` state and triggers `POST /auctions/{id}/publish` to make it `active`.
+   - Seller can cancel with `POST /auctions/{id}/cancel` only if no bids have been placed yet.
+   - Zero-bid auctions transitioning past `end_time` are marked `completed` with `winner_id = NULL`.
+4. **Framework & Driver:**
+   - Router: Standard library compliant router (`chi` router recommended for idiomatic lightweight middleware).
+   - Database: `pgx` driver or `sqlx` with SQL migrations (`golang-migrate`).
+   - Image uploads: Local multipart upload stored in `./uploads` with static file serving, container volume mounted for persistence.
