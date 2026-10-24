@@ -16,7 +16,7 @@ Collectible auctions (specifically Hot Wheels) present classic, non-trivial back
 1. High concurrency and race conditions when multiple users bid simultaneously in closing seconds.
 2. Financial consistency via a virtual wallet with escrow holds, atomic transfers, and instant outbid refunds.
 3. Lifecycle state management (manual publish, scheduled expiration, and winner finalization).
-4. Containerization and cloud deployment readiness using GitHub Student Developer Pack resources (DigitalOcean / Heroku).
+4. Containerization and cloud deployment readiness using GitHub Student Developer Pack resources (Heroku Eco Dynos atau DigitalOcean Droplet VPS).
 5. Functional collector-oriented user interface for listing, bidding, and tracking wallet balances.
 
 This project showcases clean Go architecture, idiomatic database transactions, Docker multi-stage builds, clean React component design, and thorough OpenAPI/Swagger documentation.
@@ -66,7 +66,7 @@ This project showcases clean Go architecture, idiomatic database transactions, D
   - Interactive Swagger / OpenAPI documentation served at `/swagger/index.html`.
   - Structured logging, standardized JSON error envelopes, and environment-based configuration (12-Factor App).
 - **CI/CD Pipeline:**
-  - GitHub Actions workflow running tests, linting, and Docker container build, ready for deployment to Heroku Eco Dynos or DigitalOcean App Platform.
+  - GitHub Actions workflow running tests, linting, and Docker container build, ready for deployment to Heroku Eco Dynos or DigitalOcean Droplet VPS.
 
 ### Non-Goals
 - **No Complex Mobile App:** Web browser responsive UI only.
@@ -76,7 +76,7 @@ This project showcases clean Go architecture, idiomatic database transactions, D
 
 ### Anti-Goals
 - **Over-engineering with Distributed Queues (Kafka/RabbitMQ) or Kubernetes:** Unnecessary operational overhead for this project scale.
-- **In-memory-only State:** Bids, auction states, and timers must be persisted and transactionally safe in PostgreSQL, not stored solely in RAM or Go memory.
+- **In-memory-only State:** Bids, auction states, wallets, and timers must be persisted and transactionally safe in PostgreSQL.
 
 ---
 
@@ -85,7 +85,7 @@ This project showcases clean Go architecture, idiomatic database transactions, D
 - **Language:** Go (1.19+ standard library compatibility).
 - **Database:** PostgreSQL 15+.
 - **Portability:** Fully reproducible via Docker Compose (`docker compose up --build`).
-- **Deployment Budget:** GitHub Student Developer Pack eligible (Heroku Eco / DigitalOcean App Platform).
+- **Deployment Budget:** GitHub Student Developer Pack eligible (Heroku Eco Dynos / DigitalOcean Droplet VPS).
 - **Zero Em-Dash & Clean Tone:** Project documentation and comments adhere to clean, direct formatting.
 
 ---
