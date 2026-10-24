@@ -17,9 +17,9 @@
 - Architecture: `plan.md`
 
 ## Environment Notes (mesin dev Windows)
-- Go lokal masih 1.19.1, perlu upgrade di Phase 1.
+- Go lokal sudah 1.27.0 (upgrade dari 1.19.1 via winget, 2026-10-25).
 - `gcc` tidak terpasang, jadi `go test -race` dijalankan di container.
-- Belum ada git remote. Repo target: `github.com/ariefusry/diecast-auction` (username dicek via `gh`).
+- Remote: `github.com/ariefusry/diecast-auction` (private).
 
 ## Open Items
 - Provider VPS dipilih di Phase 10.

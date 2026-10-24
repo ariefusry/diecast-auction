@@ -8,8 +8,8 @@ Urutan fase sengaja menaruh inti paling berisiko (dompet, bid, worker) sebelum s
 ---
 
 ## Phase 1: Environment & Project Scaffolding
-- [ ] Upgrade Go lokal ke versi stabil terbaru (lokal masih 1.19.1)
-- [ ] Buat repo GitHub `ariefusry/diecast-auction` dan set git remote
+- [x] Upgrade Go lokal ke versi stabil terbaru (1.27.0, dari 1.19.1)
+- [x] Buat repo GitHub `ariefusry/diecast-auction` (private) dan set git remote
 - [ ] Inisialisasi Go module (`go mod init github.com/ariefusry/diecast-auction`), kunci versi Go di `go.mod`
 - [ ] Buat file konfigurasi `.env.example` dan loader konfigurasi di `internal/config/config.go`
 - [ ] Buat `docker-compose.yml` untuk PostgreSQL 15 dengan healthcheck
