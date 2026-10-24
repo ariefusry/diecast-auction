@@ -16,11 +16,15 @@ package handler
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -39,6 +43,12 @@ const (
 	bidBurst  = 5
 )
 
+// maxUpload caps one item photo at 5 MiB.
+const maxUpload = 5 << 20
+
+// imageTypes maps the sniffed content type of an accepted upload to its file extension.
+var imageTypes = map[string]string{"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp"}
+
 // ParseFunc turns a natural language query into a search filter (the LLM).
 type ParseFunc func(ctx context.Context, query string) (service.Filter, error)
 
@@ -47,6 +57,7 @@ type handler struct {
 	wallets  *service.Wallets
 	auctions *service.Auctions
 	parse    ParseFunc
+	uploads  string
 }
 
 type errorResponse struct {
@@ -76,14 +87,19 @@ type searchRequest struct {
 	Query string `json:"query" example:"jdm merah mint di bawah 100k"`
 }
 
+type uploadResponse struct {
+	URL string `json:"url" example:"/uploads/3f9c2a1b7e4d8c60.jpg"`
+}
+
 type searchResponse struct {
 	AI bool `json:"ai"` // whether the LLM produced the filter
 	service.SearchResult
 }
 
-// New returns the API router. parse may be nil, then AI search is keyword search.
-func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auctions, parse ParseFunc) http.Handler {
-	h := &handler{auth: auth, wallets: wallets, auctions: auctions, parse: parse}
+// New returns the API router. parse may be nil, then AI search is keyword
+// search. Uploaded photos are stored in and served from uploadDir.
+func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auctions, parse ParseFunc, uploadDir string) http.Handler {
+	h := &handler{auth: auth, wallets: wallets, auctions: auctions, parse: parse, uploads: uploadDir}
 	authed := func(f http.HandlerFunc) http.Handler { return middleware.RequireAuth(auth.ParseToken)(f) }
 	authLimit := middleware.RateLimit(rate.Every(6*time.Second), authBurst)
 	bidLimit := middleware.RateLimit(2, bidBurst)
@@ -108,6 +124,8 @@ func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auction
 	mux.Handle("POST /auctions/{id}/cancel", authed(h.cancel))
 	mux.Handle("POST /auctions/{id}/buy-now", authed(h.buyNow))
 	mux.Handle("POST /auctions/{id}/bids", bidLimit(authed(h.bid)))
+	mux.Handle("POST /uploads", bidLimit(authed(h.upload)))
+	mux.Handle("GET /uploads/", http.StripPrefix("/uploads/", files(uploadDir)))
 	return mux
 }
 
@@ -381,6 +399,57 @@ func (h *handler) bid(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, a)
+}
+
+// upload godoc
+// @Summary  Upload an item photo (JPEG, PNG or WebP, at most 5 MiB)
+// @Tags     auctions
+// @Accept   multipart/form-data
+// @Produce  json
+// @Security BearerAuth
+// @Param    image formData file true "Photo"
+// @Success  201   {object} uploadResponse "use url as item.image_url"
+// @Failure  400   {object} errorResponse
+// @Failure  401   {object} errorResponse
+// @Router   /uploads [post]
+func (h *handler) upload(w http.ResponseWriter, r *http.Request) {
+	r.Body = http.MaxBytesReader(w, r.Body, maxUpload+64<<10) // room for multipart headers
+	f, header, err := r.FormFile("image")
+	if err != nil {
+		writeError(w, fmt.Errorf("%w: send one image of at most 5 MiB in the \"image\" field", service.ErrInvalidInput))
+		return
+	}
+	defer f.Close()
+	data, err := io.ReadAll(io.LimitReader(f, maxUpload+1))
+	if err != nil || header.Size > maxUpload || len(data) > maxUpload {
+		writeError(w, fmt.Errorf("%w: image must be at most 5 MiB", service.ErrInvalidInput))
+		return
+	}
+	// Trust the bytes, not the file name or client Content-Type.
+	ext, ok := imageTypes[http.DetectContentType(data)]
+	if !ok {
+		writeError(w, fmt.Errorf("%w: image must be JPEG, PNG or WebP", service.ErrInvalidInput))
+		return
+	}
+	name := rand.Text() + ext
+	if err := os.WriteFile(filepath.Join(h.uploads, name), data, 0o644); err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, uploadResponse{URL: "/uploads/" + name})
+}
+
+// files serves uploaded photos without directory listings.
+func files(dir string) http.Handler {
+	fs := http.FileServer(http.Dir(dir))
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "" || strings.HasSuffix(r.URL.Path, "/") {
+			writeError(w, service.ErrNotFound)
+			return
+		}
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		fs.ServeHTTP(w, r)
+	})
 }
 
 // respond runs a body-less (user, auction) service call such as publish or cancel.

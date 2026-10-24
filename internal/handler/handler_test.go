@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -55,7 +56,7 @@ func newServer(t *testing.T) string {
 func newServerWithParser(t *testing.T, parse ParseFunc) string {
 	pool := testutil.Pool(t)
 	secret := []byte(strings.Repeat("k", 32))
-	srv := httptest.NewServer(New(service.NewAuth(pool, secret), service.NewWallets(pool), service.NewAuctions(pool), parse))
+	srv := httptest.NewServer(New(service.NewAuth(pool, secret), service.NewWallets(pool), service.NewAuctions(pool), parse, t.TempDir()))
 	t.Cleanup(srv.Close)
 	return srv.URL
 }
@@ -241,4 +242,50 @@ func TestUniformErrorsDocsAndRateLimit(t *testing.T) {
 		}
 	}
 	t.Fatal("never rate limited")
+}
+
+func TestUploadImage(t *testing.T) {
+	base := newServer(t)
+	user := signup(t, base)
+
+	upload := func(name string, data []byte) (int, string) {
+		var body bytes.Buffer
+		mw := multipart.NewWriter(&body)
+		fw, _ := mw.CreateFormFile("image", name)
+		fw.Write(data)
+		mw.Close()
+		req, _ := http.NewRequest("POST", base+"/uploads", &body)
+		req.Header.Set("Content-Type", mw.FormDataContentType())
+		req.Header.Set("Authorization", "Bearer "+user.token)
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer resp.Body.Close()
+		var out struct{ URL string }
+		json.NewDecoder(resp.Body).Decode(&out)
+		return resp.StatusCode, out.URL
+	}
+
+	png := append([]byte("\x89PNG\r\n\x1a\n"), make([]byte, 100)...)
+	code, url := upload("car.png", png)
+	if code != http.StatusCreated || !strings.HasPrefix(url, "/uploads/") || !strings.HasSuffix(url, ".png") {
+		t.Fatalf("upload = %d %q", code, url)
+	}
+	resp, err := http.Get(base + url)
+	if err != nil || resp.StatusCode != http.StatusOK {
+		t.Fatalf("GET %s = %v %v", url, resp.StatusCode, err)
+	}
+	resp.Body.Close()
+
+	// The sniffed content decides, not the file name.
+	if code, _ := upload("evil.png", []byte("<html><script>alert(1)</script></html>")); code != http.StatusBadRequest {
+		t.Fatalf("html upload = %d", code)
+	}
+	if code, _ := upload("big.png", append(png, make([]byte, maxUpload)...)); code != http.StatusBadRequest {
+		t.Fatalf("oversized upload = %d", code)
+	}
+	if resp, _ := http.Get(base + "/uploads/"); resp.StatusCode != http.StatusNotFound {
+		t.Fatalf("directory listing = %d", resp.StatusCode)
+	}
 }

@@ -16,6 +16,8 @@ type Config struct {
 	GeminiModel  string
 	// CORSOrigins are the browser origins allowed to call the API.
 	CORSOrigins []string
+	// UploadDir stores item photos (mount a volume there in production).
+	UploadDir string
 }
 
 func Load() (Config, error) {
@@ -43,6 +45,9 @@ func Load() (Config, error) {
 	}
 	if cfg.CORSOrigins == nil {
 		cfg.CORSOrigins = []string{"http://localhost:5173"} // Vite dev server
+	}
+	if cfg.UploadDir = os.Getenv("UPLOAD_DIR"); cfg.UploadDir == "" {
+		cfg.UploadDir = "uploads"
 	}
 	if cfg.GeminiModel == "" {
 		cfg.GeminiModel = "gemini-3.5-flash-lite"

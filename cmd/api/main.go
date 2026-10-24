@@ -34,6 +34,9 @@ func main() {
 	if err := db.Migrate(cfg.DatabaseURL, migrations.FS); err != nil {
 		log.Fatal(err)
 	}
+	if err := os.MkdirAll(cfg.UploadDir, 0o755); err != nil {
+		log.Fatal(err)
+	}
 	pool, err := pgxpool.New(context.Background(), cfg.DatabaseURL)
 	if err != nil {
 		log.Fatal(err)
@@ -59,7 +62,7 @@ func main() {
 	srv := &http.Server{
 		Addr: ":" + cfg.Port,
 		Handler: middleware.Log(slog.Default())(middleware.CORS(cfg.CORSOrigins)(
-			handler.New(service.NewAuth(pool, cfg.JWTSecret), service.NewWallets(pool), auctions, parse))),
+			handler.New(service.NewAuth(pool, cfg.JWTSecret), service.NewWallets(pool), auctions, parse, cfg.UploadDir))),
 	}
 	go func() {
 		log.Printf("api listening on :%s", cfg.Port)
