@@ -49,7 +49,15 @@ This project showcases clean Go architecture, idiomatic database transactions, D
   - A background Go worker (goroutine with `time.Ticker`) scanning for expired active auctions (`end_time <= now()`), locking them, setting status to `completed`, and assigning `winner_id` (or `NULL` if zero bids). If a winner exists, the escrow funds are transferred to the seller's wallet balance.
 - **Functional React Frontend:**
   - Dedicated SPA in `/frontend` built with React + Vite + Tailwind CSS.
-  - Screens: Auth (Login/Register), Catalog listing with condition/price filters, Auction detail with countdown timer and bid placement form, Create auction form with image upload, and Wallet management (view balance, locked escrow, deposit simulation).
+  - Screens: Auth (Login/Register), Catalog listing with condition/price filters and AI search bar, Auction detail with countdown timer and bid placement form, Create auction form with image upload, and Wallet management (view balance, locked escrow, deposit simulation).
+- **Natural Language Search (LLM Integration):**
+  - Endpoint `POST /auctions/search/ai` accepting freeform natural language query (e.g. "carikan jdm merah kondisi mint di bawah 100k").
+  - Backend Go invokes lightweight LLM (Google Gemini Flash / Groq) requesting strict JSON structured output representing query filters (series, color, condition, min/max price, sort).
+  - Go validates the parsed JSON and constructs parameterized SQL queries against PostgreSQL. Fallback logic automatically broadens search if zero results match strictly.
+- **Real Data Scraper & Auto-Seeder Pipeline:**
+  - Standalone Go CLI tool in `cmd/scraper` that crawls authentic Hot Wheels models, release years, series, and official photo URLs from the public Hot Wheels Wiki.
+  - Output stored as structured JSON in `data/seeds.json`.
+  - Database seeder tool in `cmd/seed` (and executed during Docker startup) that populates PostgreSQL with real item catalogs, demo seller/bidder accounts, and simulated initial bids.
 - **Containerization & Local Dev:**
   - Multi-stage `Dockerfile` for backend (Go binary on Alpine).
   - Multi-stage `Dockerfile` for frontend (Node build stage, Nginx production server).
@@ -88,7 +96,9 @@ This project showcases clean Go architecture, idiomatic database transactions, D
 2. **Architecture:** Decoupled architecture with Go REST API and separate React frontend (Vite + Tailwind CSS).
 3. **Role Structure:** Unified account model. A single user account can act as both seller and bidder, but is strictly prohibited from bidding on their own listings.
 4. **Financial Model:** Virtual wallet system with escrow holds during active bids and automated refunds when outbid.
-5. **Target Deployment:** Dockerized multi-container deployment (backend, frontend, PostgreSQL) leveraging GitHub Student benefits.
+5. **AI Integration:** Natural language auction search via LLM structured output mapping to PostgreSQL queries.
+6. **Data Pipeline:** CLI scraper in Go targeting authentic Hot Wheels wiki data feeding an automated database seeder.
+7. **Target Deployment:** Dockerized multi-container deployment (backend, frontend, PostgreSQL) leveraging GitHub Student benefits.
 
 ---
 
