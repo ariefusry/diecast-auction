@@ -6,8 +6,9 @@ Panduan ringkas untuk Claude Code CLI dalam mengembangkan platform lelang diecas
 
 ## Prinsip & Alur Kerja
 - Baca `TODO.md` sebelum mulai pengerjaan untuk mengambil tugas fase aktif dan perbarui status centang setelah selesai.
-- Rujuk `plan.md` untuk arsitektur detail dan `SCRATCHPAD.md` untuk log sesi.
+- Rujuk `plan.md` untuk arsitektur detail, spec Section 6 untuk keputusan final, dan `SCRATCHPAD.md` untuk log sesi.
 - Prioritaskan Test-Driven Development (TDD): tulis failing test sebelum menulis logika bisnis baru.
+- Dokumen dan komentar tanpa em-dash.
 
 ---
 
@@ -17,13 +18,17 @@ Panduan ringkas untuk Claude Code CLI dalam mengembangkan platform lelang diecas
 # Jalankan seluruh service (Postgres, Go API, React)
 docker compose up --build
 
-# Jalankan pengujian backend wajib dengan deteksi data race (kritis untuk fitur bid)
-go test -v -race ./...
+# Pengujian wajib dengan deteksi data race (service test dibuat di Phase 1)
+# Alasan: -race butuh CGO + gcc, dan mesin dev Windows tidak punya gcc.
+docker compose --profile test run --rm test
+
+# Loop test cepat lokal tanpa race detector
+go test ./...
 
 # Scraping data riil diecast ke data/seeds.json
 go run cmd/scraper/main.go
 
-# Isi database dengan katalog riil dan akun demo
+# Isi database dengan katalog dan akun demo
 go run cmd/seed/main.go
 
 # Jalankan frontend secara lokal
@@ -37,17 +42,26 @@ cd frontend && npm install && npm run dev
 1. **Gunakan Raw SQL via `pgx`, Hindari ORM Berat**  
    *Alasan:* Sistem lelang menuntut kontrol transaksi atomik tingkat rendah dan penguncian baris database eksplisit (`SELECT ... FOR UPDATE`). ORM menambah lapisan abstraksi yang mempersulit diagnosis query lambat dan rawan race condition.
 
-2. **Kunci Baris Berurutan Berdasarkan Resource ID**  
-   *Alasan:* Saat banyak penawar menaruh tawaran pada lelang dan dompet yang sama, mengunci row lelang dan row dompet dengan urutan ID yang konsisten mencegah terjadinya database deadlock.
+2. **Urutan Lock Tetap: Row Lelang Dulu, Lalu Dompet dengan `user_id` Naik**  
+   *Alasan:* Lock lelang menyerialkan semua bid pada satu lelang. Urutan dompet yang konsisten mencegah deadlock saat dua transaksi menyentuh dompet yang sama dari lelang berbeda.
 
-3. **Mekanisme Escrow Dompet Virtual**  
-   *Alasan:* Dana penawar dikunci pada `locked_balance` saat memasang bid agar saldo tidak bisa dipakai ganda di lelang lain. Jika tawaran terlampaui (outbid), dana otomatis dikembalikan ke `available_balance` dalam transaksi atomik yang sama agar saldo pengguna selalu akurat.
+3. **Mekanisme Escrow Dompet Virtual dengan Ledger**  
+   *Alasan:* Dana penawar dikunci pada `locked_balance` agar tidak bisa dipakai ganda di lelang lain, dan dikembalikan ke `available_balance` saat outbid dalam transaksi yang sama. Setiap mutasi juga menulis `wallet_transactions` di transaksi yang sama agar saldo bisa diaudit dan diuji terhadap riwayatnya.
 
-4. **Anti-Sniping Waktu Lelang**  
-   *Alasan:* Jika ada bid valid masuk di 2 menit terakhir sebelum lelang berakhir, perpanjang `end_time` sebanyak 2 menit di transaksi yang sama. Ini mencegah bot merebut lelang di detik terakhir dan memberi kesempatan adil bagi penawar manusia.
+4. **Uang Selalu `BIGINT` Rupiah dengan `CHECK (>= 0)`**  
+   *Alasan:* Float menghasilkan error pembulatan. CHECK constraint membuat database sendiri menolak saldo negatif, jadi bug di kode aplikasi tidak bisa merusak data.
 
-5. **LLM Hanya Menghasilkan JSON Terstruktur**  
-   *Alasan:* Model LLM (Gemini / Groq) hanya bertugas memecah kalimat pengguna menjadi parameter filter (brand, seri, kondisi, harga). Backend Go memvalidasi struct lalu menyusun parameterized query SQL ke PostgreSQL untuk mencegah halusinasi data dan ancaman SQL injection.
+5. **Waktu dari `now()` PostgreSQL di Dalam Transaksi**  
+   *Alasan:* Validasi `end_time` dan anti-sniping harus memakai satu jam yang sama. Jam aplikasi bisa melenceng antar instance.
 
-6. **Gunakan Data Riil Hasil Scraper untuk Seeder**  
-   *Alasan:* Mengisi database awal dari `data/seeds.json` memastikan portofolio langsung menampilkan katalog otentik dengan foto asli, seri rilisan nyata, dan terminologi kolektor yang valid saat didemokan.
+6. **Anti-Sniping Waktu Lelang**  
+   *Alasan:* Bid valid di 2 menit terakhir membuat `end_time = end_time + 2 menit` di transaksi yang sama. Ini mencegah bot merebut lelang di detik terakhir dan memberi kesempatan adil bagi penawar manusia.
+
+7. **Cancel dan Buy-Now Hanya Saat Belum Ada Bid (`highest_bidder_id IS NULL`)**  
+   *Alasan:* Tidak ada escrow penawar lain yang perlu dilepas, jadi jalur buy-now tetap sederhana dan bebas bug refund.
+
+8. **LLM Hanya Menghasilkan JSON Terstruktur**  
+   *Alasan:* Model LLM (Gemini / Groq) hanya memecah kalimat pengguna menjadi parameter filter (brand, seri, warna, tags, kondisi, harga). Backend Go memvalidasi struct lalu menyusun parameterized query SQL untuk mencegah halusinasi data dan SQL injection.
+
+9. **`data/seeds.json` Adalah Kontrak Data Seeder, Bid Seed Lewat Service**  
+   *Alasan:* File kecil manual dipakai sampai fase scraper, lalu diganti data riil agar demo menampilkan katalog otentik. Bid simulasi lewat service bid agar invariant dompet dan ledger tetap benar.
