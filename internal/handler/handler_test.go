@@ -39,7 +39,7 @@ func (c *client) do(method, path string, body any, out any) int {
 		c.t.Fatalf("%s %s: %v", method, path, err)
 	}
 	defer resp.Body.Close()
-	if ct := resp.Header.Get("Content-Type"); ct != "application/json" {
+	if ct := resp.Header.Get("Content-Type"); !strings.HasPrefix(ct, "application/json") {
 		c.t.Fatalf("%s %s: Content-Type = %q", method, path, ct)
 	}
 	if out != nil {
@@ -209,4 +209,36 @@ func TestSearchEndpoints(t *testing.T) {
 			t.Fatalf("query len %d = %d", len(q), code)
 		}
 	}
+}
+
+func TestUniformErrorsDocsAndRateLimit(t *testing.T) {
+	base := newServer(t)
+	anon := &client{t: t, base: base}
+
+	var errBody struct{ Error string }
+	if code := anon.do("GET", "/no-such-route", nil, &errBody); code != http.StatusNotFound || errBody.Error == "" {
+		t.Fatalf("unknown route = %d %+v", code, errBody)
+	}
+
+	var doc struct{ Paths map[string]any }
+	if code := anon.do("GET", "/swagger/doc.json", nil, &doc); code != http.StatusOK || doc.Paths["/auctions/{id}/bids"] == nil {
+		t.Fatalf("swagger doc = %d, paths %v", code, doc.Paths)
+	}
+
+	// bcrypt is slow under -race and the bucket refills over time, so allow a
+	// few extra attempts; a burst well past the limit must still hit 429.
+	login := map[string]string{"email": "nobody@x.io", "password": "wrong-horse"}
+	for i := range authBurst + 5 {
+		code := anon.do("POST", "/auth/login", login, nil)
+		if code == http.StatusTooManyRequests {
+			if i < authBurst {
+				t.Fatalf("limited after only %d logins", i)
+			}
+			return
+		}
+		if code != http.StatusUnauthorized {
+			t.Fatalf("login %d = %d", i, code)
+		}
+	}
+	t.Fatal("never rate limited")
 }

@@ -61,10 +61,10 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Implementasi endpoint `POST /auctions/search/ai` (plus `GET /auctions` katalog dengan builder yang sama)
 
 ## Phase 8: Swagger Documentation & Middleware Quality
-- [ ] Anotasi Swagger OpenAPI pada semua handler API
-- [ ] Setup route `/swagger/index.html` via `http-swagger`
-- [ ] Middleware rate limiting per IP (`golang.org/x/time/rate`) di endpoint bid dan auth
-- [ ] Middleware CORS, structured logging, dan error handler seragam
+- [x] Anotasi Swagger OpenAPI pada semua handler API
+- [x] Setup route `/swagger/index.html` via `http-swagger`
+- [x] Middleware rate limiting per IP (`golang.org/x/time/rate`) di endpoint bid dan auth
+- [x] Middleware CORS, structured logging, dan error handler seragam
 
 ## Phase 9: React Frontend (SPA)
 - [ ] Inisialisasi frontend dengan Vite + React + Tailwind CSS di folder `frontend/`

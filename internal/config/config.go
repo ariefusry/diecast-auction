@@ -4,6 +4,7 @@ package config
 import (
 	"errors"
 	"os"
+	"strings"
 )
 
 type Config struct {
@@ -13,6 +14,8 @@ type Config struct {
 	// GeminiAPIKey is optional: without it AI search falls back to keyword search.
 	GeminiAPIKey string
 	GeminiModel  string
+	// CORSOrigins are the browser origins allowed to call the API.
+	CORSOrigins []string
 }
 
 func Load() (Config, error) {
@@ -32,6 +35,14 @@ func Load() (Config, error) {
 	}
 	if cfg.Port == "" {
 		cfg.Port = "8080"
+	}
+	for _, o := range strings.Split(os.Getenv("CORS_ORIGINS"), ",") {
+		if o = strings.TrimSpace(o); o != "" {
+			cfg.CORSOrigins = append(cfg.CORSOrigins, o)
+		}
+	}
+	if cfg.CORSOrigins == nil {
+		cfg.CORSOrigins = []string{"http://localhost:5173"} // Vite dev server
 	}
 	if cfg.GeminiModel == "" {
 		cfg.GeminiModel = "gemini-3.5-flash-lite"

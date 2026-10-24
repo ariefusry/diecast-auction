@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,12 +17,16 @@ import (
 	"github.com/ariefusry/diecast-auction/internal/db"
 	"github.com/ariefusry/diecast-auction/internal/handler"
 	"github.com/ariefusry/diecast-auction/internal/llm"
+	"github.com/ariefusry/diecast-auction/internal/middleware"
 	"github.com/ariefusry/diecast-auction/internal/service"
 	"github.com/ariefusry/diecast-auction/internal/worker"
 	"github.com/ariefusry/diecast-auction/migrations"
 )
 
 func main() {
+	// JSON logs; slog.SetDefault also routes the standard log package through it.
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
+
 	cfg, err := config.Load()
 	if err != nil {
 		log.Fatal(err)
@@ -52,8 +57,9 @@ func main() {
 		log.Print("GEMINI_API_KEY not set: AI search uses keyword search")
 	}
 	srv := &http.Server{
-		Addr:    ":" + cfg.Port,
-		Handler: handler.New(service.NewAuth(pool, cfg.JWTSecret), service.NewWallets(pool), auctions, parse),
+		Addr: ":" + cfg.Port,
+		Handler: middleware.Log(slog.Default())(middleware.CORS(cfg.CORSOrigins)(
+			handler.New(service.NewAuth(pool, cfg.JWTSecret), service.NewWallets(pool), auctions, parse))),
 	}
 	go func() {
 		log.Printf("api listening on :%s", cfg.Port)

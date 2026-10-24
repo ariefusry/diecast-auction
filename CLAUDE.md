@@ -36,6 +36,9 @@ go run cmd/scraper/main.go
 # Isi database dengan katalog dan akun demo (butuh DATABASE_URL, idempoten)
 go run cmd/seed/main.go
 
+# Regenerasi dokumentasi Swagger setelah mengubah anotasi handler atau tipe service
+swag init -g handler.go -d internal/handler,internal/service -o internal/apidocs --ot go,json
+
 # Jalankan frontend secara lokal
 cd frontend && npm install && npm run dev
 ```

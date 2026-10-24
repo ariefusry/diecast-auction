@@ -17,9 +17,7 @@ func RequireAuth(parse func(token string) (int64, error)) func(http.Handler) htt
 			token, ok := strings.CutPrefix(r.Header.Get("Authorization"), "Bearer ")
 			id, err := parse(token)
 			if !ok || err != nil {
-				w.Header().Set("Content-Type", "application/json")
-				w.WriteHeader(http.StatusUnauthorized)
-				w.Write([]byte(`{"error":"unauthorized"}`))
+				writeError(w, http.StatusUnauthorized, "unauthorized")
 				return
 			}
 			next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), userIDKey{}, id)))

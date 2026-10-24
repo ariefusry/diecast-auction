@@ -3,7 +3,7 @@
 ## Current Status
 - Project Name: Scale 1:64 Diecast Auction Platform (Hot Wheels, Mini GT, Inno64)
 - Phase: Keputusan arsitektur dikunci (spec Section 6)
-- Active Focus: Phase 7 selesai, siap Phase 8 (Swagger & middleware)
+- Active Focus: Phase 8 selesai, siap Phase 9 (React frontend)
 
 ---
 
@@ -23,6 +23,8 @@
 
 ## Open Items
 - Provider VPS dipilih di Phase 10.
+- Phase 10: rate limit memakai `RemoteAddr`. Di belakang reverse proxy (nginx) semua request terlihat dari IP proxy, jadi baca `X-Real-IP` dari proxy tepercaya.
+- Phase 10: CI sebaiknya menjalankan `swag init` lalu `git diff --exit-code internal/apidocs` agar dokumentasi tidak basi.
 
 ---
 
@@ -65,3 +67,4 @@ Migrasi tidak punya perintah terpisah: di-embed dan dijalankan saat API start.
 - 2026-10-25: Phase 6 selesai. Scraper: satu item per halaman casting (HW `Category:JDM Cars` disampling merata, Mini GT `Category:Models`, Inno64 semua halaman), foto dari `pageimages`, tahun/seri dari infobox, warna dari baris pertama tabel versi (kolom Color/Livery, header = baris pertama yang punya sel), fallback warna dari kata di judul, tag = merek (alias seperti Skyline->nissan) + `jdm`. Hasil 103 item (HW 40, Mini GT 40, Inno64 23). Halaman Mini GT kebanyakan hanya galeri foto, jadi tahun kosong. `items.source_url` (migrasi 000002) menyimpan atribusi CC-BY-SA. PENTING untuk Phase 9: CDN Fandom (static.wikia.nocookie.net) membalas 404 jika Referer dari domain lain, pakai `<img referrerpolicy="no-referrer">`. Seeder: akun `demo_seller1-2`, `demo_bidder1-3` (password `demo-password`, Rp20.000.000 per bidder), harga dasar per brand, kondisi/durasi/buy-now bergantung indeks, tiap item ke-10 tetap draf, bid lewat `Auctions.Bid`. Idempoten: no-op jika `demo_seller1` sudah ada (kalau seeding gagal di tengah, reset DB lalu ulangi).
 - 2026-10-25: Phase 7 selesai. Provider Gemini (`internal/llm`), model default `gemini-3.8-flash` (dicek dari docs, bisa diganti via `GEMINI_MODEL`), REST `generationConfig.responseFormat.text` dengan `mimeType: APPLICATION_JSON` + schema berenum untuk brand/condition/sort. Prompt ada di bagian `contents` (tidak memakai systemInstruction). `service.Filter.Normalize` membuang nilai di luar allowlist, `Auctions.Search` menyusun SQL berparameter (ORDER BY dari map allowlist, LIKE di-escape), hanya lelang `active`, harga = `coalesce(current_highest_bid, start_price)`. Fallback: strict, lalu buang color/series/tags/condition, lalu buang harga; brand dan kata kunci selalu dipertahankan, respons memberi `relaxed`. Tanpa key atau saat LLM error, query utuh jadi pencarian kata kunci (respons `ai: false`). Belum diuji ke Gemini sungguhan karena belum ada API key; client diuji dengan server palsu.
 - 2026-10-25: Phase 7 diuji ke Gemini sungguhan (key di `.env`, gitignored; API tidak membaca `.env` sendiri, jadi export dulu). `gemini-3.8-flash` membalas 429 quota exceeded untuk key free tier ini, `gemini-2.5-flash-lite` 404 (tidak tersedia untuk user baru), `gemini-3.5-flash-lite` stabil 1-2 detik, jadi itu default baru. Perbaikan dari uji nyata: (1) teks dan kata kunci dibandingkan hanya huruf+angka (`gtr` cocok `GT-R`), (2) `text` dari LLM hanya boleh berisi kata yang memang diketik user (model sempat menulis prosa), (3) relaksasi terakhir: cukup satu kata (>= 3 huruf) cocok, supaya kalimat utuh pada fallback tanpa LLM tetap memberi hasil. Prompt injection ("abaikan instruksi...") hanya menghasilkan filter kosong, yaitu katalog publik.
+- 2026-10-25: Phase 8 selesai. `middleware.RateLimit` (token bucket per IP, `x/time/rate`, bucket idle > 10 menit dibersihkan, 429 + Retry-After): auth 1 per 6 detik burst 10 (register+login berbagi bucket), bid 2/detik burst 5. `middleware.CORS` dari `CORS_ORIGINS` (default Vite `http://localhost:5173`). `middleware.Log`: slog JSON satu baris per request, panic jadi JSON 500. `slog.SetDefault` juga menyalurkan `log.Printf` lama. Route tak dikenal: JSON 404 lewat catch-all `/` (method salah pada path yang ada juga jadi 404, bukan 405). Swagger: anotasi swaggo di semua handler, request/response bertipe nama, hasil generate di `internal/apidocs` (di-commit), UI di `/swagger/index.html`. Binary `swag` lokal melaporkan v1.16.4 meski install v1.16.6.

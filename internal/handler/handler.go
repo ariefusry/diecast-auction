@@ -1,4 +1,17 @@
 // Package handler maps HTTP requests to services and service errors to status codes.
+//
+// Swagger docs are generated from the annotations below into internal/apidocs:
+//
+//	swag init -g handler.go -d internal/handler,internal/service -o internal/apidocs --ot go,json
+//
+// @title                      Diecast Auction API
+// @version                    1.0
+// @description                Escrow auctions for 1:64 diecast (Hot Wheels, Mini GT, Inno64). Money is whole rupiah.
+// @BasePath                   /
+// @securityDefinitions.apikey BearerAuth
+// @in                         header
+// @name                       Authorization
+// @description                "Bearer <token>" from POST /auth/login
 package handler
 
 import (
@@ -6,13 +19,24 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
+	httpSwagger "github.com/swaggo/http-swagger/v2"
+	"golang.org/x/time/rate"
+
+	_ "github.com/ariefusry/diecast-auction/internal/apidocs" // registers the generated spec
 	"github.com/ariefusry/diecast-auction/internal/middleware"
 	"github.com/ariefusry/diecast-auction/internal/service"
+)
+
+// Per-IP limits against bots: auth refills one request per 6s (10/min), bids 2/s.
+const (
+	authBurst = 10
+	bidBurst  = 5
 )
 
 // ParseFunc turns a natural language query into a search filter (the LLM).
@@ -25,32 +49,81 @@ type handler struct {
 	parse    ParseFunc
 }
 
+type errorResponse struct {
+	Error string `json:"error" example:"conflict: bid must be at least 110000"`
+}
+
+type registerRequest struct {
+	Email    string `json:"email" example:"budi@example.com"`
+	Username string `json:"username" example:"budi_64"`
+	Password string `json:"password" example:"correct-horse"`
+}
+
+type loginRequest struct {
+	Email    string `json:"email" example:"demo_bidder1@demo.local"`
+	Password string `json:"password" example:"demo-password"`
+}
+
+type tokenResponse struct {
+	Token string `json:"token"`
+}
+
+type amountRequest struct {
+	Amount int64 `json:"amount" example:"110000"`
+}
+
+type searchRequest struct {
+	Query string `json:"query" example:"jdm merah mint di bawah 100k"`
+}
+
+type searchResponse struct {
+	AI bool `json:"ai"` // whether the LLM produced the filter
+	service.SearchResult
+}
+
 // New returns the API router. parse may be nil, then AI search is keyword search.
 func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auctions, parse ParseFunc) http.Handler {
 	h := &handler{auth: auth, wallets: wallets, auctions: auctions, parse: parse}
-	authed := middleware.RequireAuth(auth.ParseToken)
+	authed := func(f http.HandlerFunc) http.Handler { return middleware.RequireAuth(auth.ParseToken)(f) }
+	authLimit := middleware.RateLimit(rate.Every(6*time.Second), authBurst)
+	bidLimit := middleware.RateLimit(2, bidBurst)
 
 	mux := http.NewServeMux()
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		writeError(w, fmt.Errorf("%w: no route for %s %s", service.ErrNotFound, r.Method, r.URL.Path))
+	})
+	mux.Handle("GET /swagger/", httpSwagger.WrapHandler)
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 	})
-	mux.HandleFunc("POST /auth/register", h.register)
-	mux.HandleFunc("POST /auth/login", h.login)
-	mux.Handle("GET /wallet", authed(http.HandlerFunc(h.getWallet)))
-	mux.Handle("POST /wallet/deposit", authed(http.HandlerFunc(h.deposit)))
-	mux.Handle("POST /auctions", authed(http.HandlerFunc(h.createAuction)))
+	mux.Handle("POST /auth/register", authLimit(http.HandlerFunc(h.register)))
+	mux.Handle("POST /auth/login", authLimit(http.HandlerFunc(h.login)))
+	mux.Handle("GET /wallet", authed(h.getWallet))
+	mux.Handle("POST /wallet/deposit", authed(h.deposit))
+	mux.Handle("POST /auctions", authed(h.createAuction))
 	mux.HandleFunc("GET /auctions", h.listAuctions)
 	mux.HandleFunc("POST /auctions/search/ai", h.searchAI)
 	mux.HandleFunc("GET /auctions/{id}", h.getAuction)
-	mux.Handle("POST /auctions/{id}/publish", authed(http.HandlerFunc(h.auctionAction(h.auctions.Publish))))
-	mux.Handle("POST /auctions/{id}/cancel", authed(http.HandlerFunc(h.auctionAction(h.auctions.Cancel))))
-	mux.Handle("POST /auctions/{id}/buy-now", authed(http.HandlerFunc(h.auctionAction(h.auctions.BuyNow))))
-	mux.Handle("POST /auctions/{id}/bids", authed(http.HandlerFunc(h.bid)))
+	mux.Handle("POST /auctions/{id}/publish", authed(h.publish))
+	mux.Handle("POST /auctions/{id}/cancel", authed(h.cancel))
+	mux.Handle("POST /auctions/{id}/buy-now", authed(h.buyNow))
+	mux.Handle("POST /auctions/{id}/bids", bidLimit(authed(h.bid)))
 	return mux
 }
 
+// register godoc
+// @Summary  Create an account with an empty wallet
+// @Tags     auth
+// @Accept   json
+// @Produce  json
+// @Param    body body     registerRequest true "New account"
+// @Success  201  {object} service.User
+// @Failure  400  {object} errorResponse
+// @Failure  409  {object} errorResponse "email or username taken"
+// @Failure  429  {object} errorResponse
+// @Router   /auth/register [post]
 func (h *handler) register(w http.ResponseWriter, r *http.Request) {
-	var req struct{ Email, Username, Password string }
+	var req registerRequest
 	if !decode(w, r, &req) {
 		return
 	}
@@ -62,8 +135,18 @@ func (h *handler) register(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, user)
 }
 
+// login godoc
+// @Summary  Get a JWT valid for 24 hours
+// @Tags     auth
+// @Accept   json
+// @Produce  json
+// @Param    body body     loginRequest true "Credentials"
+// @Success  200  {object} tokenResponse
+// @Failure  401  {object} errorResponse
+// @Failure  429  {object} errorResponse
+// @Router   /auth/login [post]
 func (h *handler) login(w http.ResponseWriter, r *http.Request) {
-	var req struct{ Email, Password string }
+	var req loginRequest
 	if !decode(w, r, &req) {
 		return
 	}
@@ -72,9 +155,17 @@ func (h *handler) login(w http.ResponseWriter, r *http.Request) {
 		writeError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, map[string]string{"token": token})
+	writeJSON(w, http.StatusOK, tokenResponse{Token: token})
 }
 
+// getWallet godoc
+// @Summary  Available and escrow-locked balance
+// @Tags     wallet
+// @Produce  json
+// @Security BearerAuth
+// @Success  200 {object} service.Wallet
+// @Failure  401 {object} errorResponse
+// @Router   /wallet [get]
 func (h *handler) getWallet(w http.ResponseWriter, r *http.Request) {
 	wallet, err := h.wallets.Get(r.Context(), middleware.UserID(r.Context()))
 	if err != nil {
@@ -84,8 +175,19 @@ func (h *handler) getWallet(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, wallet)
 }
 
+// deposit godoc
+// @Summary  Mock top-up, at most Rp10.000.000 per call
+// @Tags     wallet
+// @Accept   json
+// @Produce  json
+// @Security BearerAuth
+// @Param    body body     amountRequest true "Amount in rupiah"
+// @Success  200  {object} service.Wallet
+// @Failure  400  {object} errorResponse
+// @Failure  401  {object} errorResponse
+// @Router   /wallet/deposit [post]
 func (h *handler) deposit(w http.ResponseWriter, r *http.Request) {
-	var req struct{ Amount int64 }
+	var req amountRequest
 	if !decode(w, r, &req) {
 		return
 	}
@@ -97,6 +199,17 @@ func (h *handler) deposit(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, wallet)
 }
 
+// createAuction godoc
+// @Summary  List an item as a draft auction
+// @Tags     auctions
+// @Accept   json
+// @Produce  json
+// @Security BearerAuth
+// @Param    body body     service.NewAuction true "Item and auction terms"
+// @Success  201  {object} service.Auction
+// @Failure  400  {object} errorResponse
+// @Failure  401  {object} errorResponse
+// @Router   /auctions [post]
 func (h *handler) createAuction(w http.ResponseWriter, r *http.Request) {
 	var req service.NewAuction
 	if !decode(w, r, &req) {
@@ -110,6 +223,14 @@ func (h *handler) createAuction(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, a)
 }
 
+// getAuction godoc
+// @Summary  One auction, including its current end_time (anti-sniping may move it)
+// @Tags     auctions
+// @Produce  json
+// @Param    id  path     int true "Auction ID"
+// @Success  200 {object} service.Auction
+// @Failure  404 {object} errorResponse
+// @Router   /auctions/{id} [get]
 func (h *handler) getAuction(w http.ResponseWriter, r *http.Request) {
 	a, err := h.auctions.Get(r.Context(), pathID(r))
 	if err != nil {
@@ -119,7 +240,21 @@ func (h *handler) getAuction(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, a)
 }
 
-// listAuctions is the catalog: GET /auctions?q=&brand=&condition=&color=&tags=a,b&min_price=&max_price=&sort=
+// listAuctions godoc
+// @Summary  Catalog of active auctions
+// @Tags     auctions
+// @Produce  json
+// @Param    q         query    string false "Keywords"
+// @Param    brand     query    string false "Hot Wheels, Mini GT or Inno64"
+// @Param    condition query    string false "mint_on_card, sealed_box, acrylic_case, loose_mint, damaged_packaging"
+// @Param    color     query    string false "Color substring"
+// @Param    series    query    string false "Series substring"
+// @Param    tags      query    string false "Comma separated, all must match (e.g. jdm,nissan)"
+// @Param    min_price query    int    false "Current price at least (rupiah)"
+// @Param    max_price query    int    false "Current price at most (rupiah)"
+// @Param    sort      query    string false "ending_soon (default), newest, price_asc, price_desc"
+// @Success  200       {object} searchResponse
+// @Router   /auctions [get]
 func (h *handler) listAuctions(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	price := func(k string) int64 { n, _ := strconv.ParseInt(q.Get(k), 10, 64); return n }
@@ -133,10 +268,19 @@ func (h *handler) listAuctions(w http.ResponseWriter, r *http.Request) {
 	h.search(w, r, f, false)
 }
 
-// searchAI parses a free-text query with the LLM. If there is no LLM or it
-// fails, the whole query becomes a keyword search so the endpoint stays up.
+// searchAI godoc
+// @Summary      Natural language search
+// @Description  An LLM turns the query into a filter. Without an LLM, or when it fails, the query is used as keywords (ai=false).
+// @Description  When nothing matches, filters are relaxed step by step (relaxed=true).
+// @Tags         auctions
+// @Accept       json
+// @Produce      json
+// @Param        body body     searchRequest true "Query, 1-200 bytes"
+// @Success      200  {object} searchResponse
+// @Failure      400  {object} errorResponse
+// @Router       /auctions/search/ai [post]
 func (h *handler) searchAI(w http.ResponseWriter, r *http.Request) {
-	var req struct{ Query string }
+	var req searchRequest
 	if !decode(w, r, &req) {
 		return
 	}
@@ -151,7 +295,7 @@ func (h *handler) searchAI(w http.ResponseWriter, r *http.Request) {
 			h.search(w, r, f, true)
 			return
 		}
-		log.Printf("ai search fell back to keywords: %v", err)
+		slog.Warn("ai search fell back to keywords", "err", err)
 	}
 	h.search(w, r, service.Filter{Text: req.Query}, false)
 }
@@ -162,30 +306,86 @@ func (h *handler) search(w http.ResponseWriter, r *http.Request, f service.Filte
 		writeError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, struct {
-		AI bool `json:"ai"` // whether the LLM produced the filter
-		service.SearchResult
-	}{ai, res})
+	writeJSON(w, http.StatusOK, searchResponse{AI: ai, SearchResult: res})
 }
 
-// auctionAction adapts a body-less (user, auction) service call such as publish or cancel.
-func (h *handler) auctionAction(fn func(ctx context.Context, userID, id int64) (service.Auction, error)) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		a, err := fn(r.Context(), middleware.UserID(r.Context()), pathID(r))
-		if err != nil {
-			writeError(w, err)
-			return
-		}
-		writeJSON(w, http.StatusOK, a)
-	}
+// publish godoc
+// @Summary  Open a draft for bidding (end_time = now + duration)
+// @Tags     auctions
+// @Produce  json
+// @Security BearerAuth
+// @Param    id  path     int true "Auction ID"
+// @Success  200 {object} service.Auction
+// @Failure  403 {object} errorResponse "not the seller"
+// @Failure  404 {object} errorResponse
+// @Failure  409 {object} errorResponse "not a draft"
+// @Router   /auctions/{id}/publish [post]
+func (h *handler) publish(w http.ResponseWriter, r *http.Request) {
+	h.respond(w, r, h.auctions.Publish)
 }
 
+// cancel godoc
+// @Summary  Cancel a draft or active auction that has no bids
+// @Tags     auctions
+// @Produce  json
+// @Security BearerAuth
+// @Param    id  path     int true "Auction ID"
+// @Success  200 {object} service.Auction
+// @Failure  403 {object} errorResponse "not the seller"
+// @Failure  404 {object} errorResponse
+// @Failure  409 {object} errorResponse "already has bids or closed"
+// @Router   /auctions/{id}/cancel [post]
+func (h *handler) cancel(w http.ResponseWriter, r *http.Request) {
+	h.respond(w, r, h.auctions.Cancel)
+}
+
+// buyNow godoc
+// @Summary  Buy at buy_now_price, only before the first bid
+// @Tags     auctions
+// @Produce  json
+// @Security BearerAuth
+// @Param    id  path     int true "Auction ID"
+// @Success  200 {object} service.Auction
+// @Failure  403 {object} errorResponse "own auction"
+// @Failure  404 {object} errorResponse
+// @Failure  409 {object} errorResponse "closed, no buy-now price, has bids, or insufficient balance"
+// @Router   /auctions/{id}/buy-now [post]
+func (h *handler) buyNow(w http.ResponseWriter, r *http.Request) {
+	h.respond(w, r, h.auctions.BuyNow)
+}
+
+// bid godoc
+// @Summary      Place a bid
+// @Description  Escrows the amount, releases the previous leader, and extends end_time by 2 minutes when placed in the final 2 minutes.
+// @Tags         auctions
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Param        id   path     int           true "Auction ID"
+// @Param        body body     amountRequest true "Bid in rupiah"
+// @Success      200  {object} service.Auction
+// @Failure      400  {object} errorResponse
+// @Failure      403  {object} errorResponse "own auction"
+// @Failure      404  {object} errorResponse
+// @Failure      409  {object} errorResponse "closed, too low, already leading, or insufficient balance"
+// @Failure      429  {object} errorResponse
+// @Router       /auctions/{id}/bids [post]
 func (h *handler) bid(w http.ResponseWriter, r *http.Request) {
-	var req struct{ Amount int64 }
+	var req amountRequest
 	if !decode(w, r, &req) {
 		return
 	}
 	a, err := h.auctions.Bid(r.Context(), middleware.UserID(r.Context()), pathID(r), req.Amount)
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, a)
+}
+
+// respond runs a body-less (user, auction) service call such as publish or cancel.
+func (h *handler) respond(w http.ResponseWriter, r *http.Request, fn func(ctx context.Context, userID, id int64) (service.Auction, error)) {
+	a, err := fn(r.Context(), middleware.UserID(r.Context()), pathID(r))
 	if err != nil {
 		writeError(w, err)
 		return
@@ -202,7 +402,7 @@ func pathID(r *http.Request) int64 {
 // decode reads a JSON body capped at 1 MiB; on failure it writes 400 and returns false.
 func decode(w http.ResponseWriter, r *http.Request, dst any) bool {
 	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<20)).Decode(dst); err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid JSON body"})
+		writeJSON(w, http.StatusBadRequest, errorResponse{Error: "invalid JSON body"})
 		return false
 	}
 	return true
@@ -232,8 +432,8 @@ func writeError(w http.ResponseWriter, err error) {
 	}
 	msg := err.Error()
 	if status == http.StatusInternalServerError {
-		log.Printf("internal error: %v", err)
+		slog.Error("internal error", "err", err)
 		msg = "internal server error"
 	}
-	writeJSON(w, status, map[string]string{"error": msg})
+	writeJSON(w, status, errorResponse{Error: msg})
 }

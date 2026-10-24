@@ -1,6 +1,7 @@
 package config
 
 import (
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -64,5 +65,17 @@ func TestLoadGeminiIsOptionalWithDefaultModel(t *testing.T) {
 	cfg, err := Load()
 	if err != nil || cfg.GeminiAPIKey != "" || cfg.GeminiModel != "gemini-3.5-flash-lite" {
 		t.Fatalf("got %+v, %v", cfg, err)
+	}
+}
+
+func TestLoadCORSOrigins(t *testing.T) {
+	setValidEnv(t)
+	t.Setenv("CORS_ORIGINS", "")
+	if cfg, _ := Load(); !reflect.DeepEqual(cfg.CORSOrigins, []string{"http://localhost:5173"}) {
+		t.Fatalf("default = %v", cfg.CORSOrigins)
+	}
+	t.Setenv("CORS_ORIGINS", "https://a.example, https://b.example")
+	if cfg, _ := Load(); !reflect.DeepEqual(cfg.CORSOrigins, []string{"https://a.example", "https://b.example"}) {
+		t.Fatalf("list = %v", cfg.CORSOrigins)
 	}
 }
