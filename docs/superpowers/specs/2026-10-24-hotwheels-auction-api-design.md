@@ -1,4 +1,4 @@
-# Hot Wheels Auction Platform - Design Document
+# Scale 1:64 Diecast Auction Platform - Design Document
 
 **Date:** 2026-10-24  
 **Author:** AI Assistant & ariefusry  
@@ -12,12 +12,13 @@
 The user is a fullstack developer with cum laude graduation from Telkom University whose existing portfolio heavily leverages serverless stacks (Next.js, Vercel, Supabase). To target competitive backend and fullstack engineering roles, the user wants a production-grade system featuring a **Go** backend, a separate **React** frontend, and unified **Docker** orchestration.
 
 ### Problem Domain
-Collectible auctions (specifically Hot Wheels) present classic, non-trivial backend and frontend engineering challenges:
+Collectible diecast scale 1:64 auctions (Hot Wheels, Mini GT, Inno64) present classic, non-trivial backend and frontend engineering challenges:
 1. High concurrency and race conditions when multiple users bid simultaneously in closing seconds.
 2. Financial consistency via a virtual wallet with escrow holds, atomic transfers, and instant outbid refunds.
-3. Lifecycle state management (manual publish, scheduled expiration, and winner finalization).
-4. Containerization and cloud deployment readiness using GitHub Student Developer Pack resources (Heroku Eco Dynos atau DigitalOcean Droplet VPS).
-5. Functional collector-oriented user interface for listing, bidding, and tracking wallet balances.
+3. Multi-brand diecast metadata and collector condition nuances (blister card, sealed box, acrylic case, loose).
+4. Lifecycle state management (manual publish, scheduled expiration, and winner finalization).
+5. Containerization and cloud deployment readiness using GitHub Student Developer Pack resources (Heroku Eco Dynos atau DigitalOcean Droplet VPS).
+6. Functional collector-oriented user interface for listing, bidding, and tracking wallet balances.
 
 This project showcases clean Go architecture, idiomatic database transactions, Docker multi-stage builds, clean React component design, and thorough OpenAPI/Swagger documentation.
 
@@ -26,8 +27,12 @@ This project showcases clean Go architecture, idiomatic database transactions, D
 ## 2. Goals, Non-Goals & Anti-Goals
 
 ### Goals
-- **Unified User Management:** Secure registration, authentication (JWT + bcrypt), and profile retrieval. Any authenticated user can list Hot Wheels items for auction and bid on others' items.
-- **Hot Wheels Catalog & Item Metadata:** Rich item attributes tailored to collector terminology (model name, series, release year, scale 1:64, packaging condition: mint on card / loose / blister crack, opening bid, minimum increment, optional buy-now price).
+- **Unified User Management:** Secure registration, authentication (JWT + bcrypt), and profile retrieval. Any authenticated user can list diecast items for auction and bid on others' items.
+- **Multi-Brand Diecast Catalog & Metadata:** Rich item attributes tailored to 1:64 diecast collector terminology:
+  - Brand: Hot Wheels, Mini GT, Inno64, or custom maker.
+  - Model name, series (e.g. Kaido House, Car Culture, Special Edition), release year, casting details.
+  - Packaging condition: mint on card / blister card, sealed box, acrylic case, loose mint, damaged packaging.
+  - Financial parameters: opening bid, minimum increment, optional buy-now price.
 - **Virtual Wallet & Escrow Ledger:**
   - Each user has a virtual wallet balance.
   - Endpoints: `GET /wallet`, `POST /wallet/deposit` (mock top-up).
@@ -55,7 +60,7 @@ This project showcases clean Go architecture, idiomatic database transactions, D
   - Backend Go invokes lightweight LLM (Google Gemini Flash / Groq) requesting strict JSON structured output representing query filters (series, color, condition, min/max price, sort).
   - Go validates the parsed JSON and constructs parameterized SQL queries against PostgreSQL. Fallback logic automatically broadens search if zero results match strictly.
 - **Real Data Scraper & Auto-Seeder Pipeline:**
-  - Standalone Go CLI tool in `cmd/scraper` that crawls authentic Hot Wheels models, release years, series, and official photo URLs from the public Hot Wheels Wiki.
+  - Standalone Go CLI tool in `cmd/scraper` that crawls authentic diecast models across major brands (Hot Wheels, Mini GT, Inno64) with release years, series, and official photo URLs from collector reference catalogs.
   - Output stored as structured JSON in `data/seeds.json`.
   - Database seeder tool in `cmd/seed` (and executed during Docker startup) that populates PostgreSQL with real item catalogs, demo seller/bidder accounts, and simulated initial bids.
 - **Containerization & Local Dev:**
@@ -92,13 +97,13 @@ This project showcases clean Go architecture, idiomatic database transactions, D
 
 ## 4. User-Decided Decisions
 
-1. **Domain:** Hot Wheels collector auction platform.
+1. **Domain:** Multi-brand scale 1:64 diecast auction platform (Hot Wheels, Mini GT, Inno64).
 2. **Architecture:** Decoupled architecture with Go REST API and separate React frontend (Vite + Tailwind CSS).
 3. **Role Structure:** Unified account model. A single user account can act as both seller and bidder, but is strictly prohibited from bidding on their own listings.
 4. **Financial Model:** Virtual wallet system with escrow holds during active bids and automated refunds when outbid.
 5. **AI Integration:** Natural language auction search via LLM structured output mapping to PostgreSQL queries.
-6. **Data Pipeline:** CLI scraper in Go targeting authentic Hot Wheels wiki data feeding an automated database seeder.
-7. **Target Deployment:** Dockerized multi-container deployment (backend, frontend, PostgreSQL) leveraging GitHub Student benefits.
+6. **Data Pipeline:** CLI scraper in Go targeting authentic diecast collector catalogs (Hot Wheels, Mini GT, Inno64) feeding an automated database seeder.
+7. **Target Deployment:** Dockerized multi-container deployment (backend, frontend, PostgreSQL) leveraging GitHub Student benefits (Heroku Eco / DigitalOcean Droplet VPS).
 
 ---
 
