@@ -43,15 +43,17 @@ func (s *Auctions) participant(ctx context.Context, userID, auctionID int64) err
 	return nil
 }
 
-// Messages returns the conversation, oldest first.
+// Messages returns the latest chatLimit messages of the conversation, oldest first.
 func (s *Auctions) Messages(ctx context.Context, userID, auctionID int64) ([]Message, error) {
 	if err := s.participant(ctx, userID, auctionID); err != nil {
 		return nil, err
 	}
 	rows, err := s.pool.Query(ctx, `
-		SELECT m.id, m.sender_id, u.username, m.body, m.created_at
-		FROM messages m JOIN users u ON u.id = m.sender_id
-		WHERE m.auction_id = $1 ORDER BY m.id LIMIT $2`, auctionID, chatLimit)
+		SELECT * FROM (
+			SELECT m.id, m.sender_id, u.username, m.body, m.created_at
+			FROM messages m JOIN users u ON u.id = m.sender_id
+			WHERE m.auction_id = $1 ORDER BY m.id DESC LIMIT $2
+		) latest ORDER BY id`, auctionID, chatLimit)
 	if err != nil {
 		return nil, err
 	}

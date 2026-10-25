@@ -61,6 +61,30 @@ func TestChatBetweenSellerAndWinner(t *testing.T) {
 	}
 }
 
+// A long conversation keeps its latest messages visible, still oldest first.
+func TestMessagesKeepsNewestWhenCapped(t *testing.T) {
+	e := newAuctionEnv(t)
+	ctx := context.Background()
+	seller, winner := e.user(0), e.user(1_000_000)
+	a := wonAuction(t, e, seller, winner)
+	if _, err := e.auctions.pool.Exec(ctx,
+		"INSERT INTO messages (auction_id, sender_id, body) SELECT $1, $2, 'lama ' || n FROM generate_series(1, $3) n",
+		a.ID, seller, chatLimit); err != nil {
+		t.Fatal(err)
+	}
+	last, err := e.auctions.Send(ctx, winner, a.ID, "pesan terbaru")
+	if err != nil {
+		t.Fatalf("Send: %v", err)
+	}
+	got, err := e.auctions.Messages(ctx, seller, a.ID)
+	if err != nil {
+		t.Fatalf("Messages: %v", err)
+	}
+	if len(got) != chatLimit || got[len(got)-1].ID != last.ID || got[0].Body != "lama 2" {
+		t.Fatalf("got %d messages, first %q, last id %d, want %d ending at %d", len(got), got[0].Body, got[len(got)-1].ID, chatLimit, last.ID)
+	}
+}
+
 func TestSellerProfileIsPublic(t *testing.T) {
 	e := newAuctionEnv(t)
 	ctx := context.Background()
