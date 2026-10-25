@@ -250,7 +250,7 @@ export function AuctionDetail() {
           >
             {outbidBy !== null && (
               <div role="alert" className="refuse flex items-center justify-between gap-3 rounded-xl bg-signal px-4 py-2.5 text-white">
-                <span className="font-display text-xl font-extrabold italic">Kamu disalip! {rupiah(outbidBy)}</span>
+                <span className="font-display text-xl font-extrabold italic">Kamu disalip! {rupiah(a.current_highest_bid ?? outbidBy)}</span>
                 <button type="button" disabled={busy} onClick={() => placeBid(floor)} className="press shrink-0 rounded-lg bg-white px-3 py-1.5 font-bold text-signal">
                   Balas {rupiah(floor)}
                 </button>
