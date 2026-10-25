@@ -52,6 +52,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Seeder menyelang-nyeling merek supaya katalog tidak berisi satu merek | `57cd17d` |
 | Logo Blister64 (konsep "On the Peg"): master SVG, favicon, ikon aplikasi, panduan di `brand/README.md` | `ad623c6` |
 | Membuka lot: kartu blister "diangkat dari peg" dan berubah menjadi pack di halaman detail (View Transition, router pindah ke `createBrowserRouter`), halaman baru mulai dari atas, reduced-motion tetap memberi umpan balik lewat warna dan opacity | `1bc6e7e` |
+| Katalog: filter dikelompokkan dengan grid lot dan dipisah dari pegboard; kategori dan urutan satu baris, chip merek satu baris yang bisa digeser di HP (tinggi filter di HP dari sekitar 280px ke 172px) | `1988a29` |
 
 ## Katalog dan merek
 
