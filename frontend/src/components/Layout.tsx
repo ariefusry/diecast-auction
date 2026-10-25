@@ -1,12 +1,11 @@
-import { NavLink, Outlet, useNavigate } from "react-router";
+import { NavLink, Outlet } from "react-router";
 import { useAuth } from "../lib/auth";
 
 const link = ({ isActive }: { isActive: boolean }) =>
   `press rounded-full px-2.5 py-1.5 text-[15px] font-semibold sm:text-base sm:px-4 ${isActive ? "bg-ink text-white" : "text-ink-soft hover:text-ink"}`;
 
 export function Layout() {
-  const { userId, logout } = useAuth();
-  const navigate = useNavigate();
+  const { userId } = useAuth();
   return (
     <div className="min-h-screen">
       <header className="material sticky top-0 z-20">
@@ -26,15 +25,10 @@ export function Layout() {
               <NavLink to="/dompet" className={link}>
                 Dompet
               </NavLink>
-              <button
-                className="press rounded-full px-2.5 py-1.5 text-[15px] font-semibold sm:text-base text-ink-soft hover:text-ink sm:px-4"
-                onClick={() => {
-                  logout();
-                  navigate("/");
-                }}
-              >
-                Keluar
-              </button>
+              {/* Keluar lives on the profile page, so the bar still fits a phone. */}
+              <NavLink to="/profil" className={link}>
+                Profil
+              </NavLink>
             </>
           ) : (
             <NavLink to="/masuk" className={link}>

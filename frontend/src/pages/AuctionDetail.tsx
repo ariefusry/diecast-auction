@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { Link, useParams } from "react-router";
 import { BrandLogo } from "../components/BrandLogo";
+import { Chat } from "../components/Chat";
 import { Photo } from "../components/Photo";
 import { Button, ErrorNote } from "../components/ui";
 import { api, errorMessage, type Auction, type BidEntry } from "../lib/api";
@@ -197,6 +198,12 @@ export function AuctionDetail() {
               </span>
             ))}
           </div>
+          <p className="mt-3 text-sm text-ink-soft">
+            Dijual oleh{" "}
+            <Link to={`/penjual/${a.seller}`} className="font-semibold text-ink underline underline-offset-4">
+              {a.seller}
+            </Link>
+          </p>
         </div>
 
         <div className="rounded-xl border border-line bg-card p-5">
@@ -331,6 +338,10 @@ export function AuctionDetail() {
             )}
             {a.highest_bidder_id !== null && <p className="text-sm text-ink-soft">Lelang yang sudah punya tawaran tidak bisa dibatalkan.</p>}
           </div>
+        )}
+
+        {a.status === "completed" && a.winner_id !== null && userId !== null && (isSeller || won) && (
+          <Chat auctionId={a.id} myId={userId} otherName={isSeller ? "pemenang lelang" : `penjual (${a.seller})`} now={now} />
         )}
 
         {a.item.description && <p className="max-w-prose whitespace-pre-line">{a.item.description}</p>}

@@ -24,6 +24,7 @@ export type Item = {
 export type Auction = {
   id: number;
   seller_id: number;
+  seller: string; // seller's username
   item: Item;
   start_price: number;
   min_increment: number;
@@ -122,5 +123,28 @@ export type BidEntry = {
   bidder_id: number;
   bidder: string; // masked, e.g. d***1
   amount: number;
+  created_at: string;
+};
+
+export type Profile = { id: number; email: string; username: string; created_at: string };
+
+export type MyAuctions = {
+  won: Auction[];
+  bidding: Auction[];
+  lost: Auction[];
+  selling: Auction[];
+  my_bids: Record<string, number>; // auction id -> my highest bid
+};
+
+export type Message = { id: number; sender_id: number; sender: string; body: string; created_at: string };
+
+export type SellerProfile = { username: string; created_at: string; sold: number; active: Auction[] };
+
+export type LedgerEntry = {
+  type: "deposit" | "lock" | "release" | "settle" | "buy_now";
+  direction: "in" | "out" | "hold"; // in: spendable money arrived, out: it left, hold: locked for a bid
+  amount: number;
+  auction_id: number | null;
+  title: string;
   created_at: string;
 };

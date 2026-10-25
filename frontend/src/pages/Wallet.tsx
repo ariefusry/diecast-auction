@@ -1,9 +1,30 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { Link } from "react-router";
 import { Button, ErrorNote } from "../components/ui";
-import { api, errorMessage, type Wallet as WalletT } from "../lib/api";
-import { rupiah } from "../lib/format";
+import { api, errorMessage, type LedgerEntry, type Wallet as WalletT } from "../lib/api";
+import { rupiah, timeAgo } from "../lib/format";
+import { useNow } from "../lib/useNow";
 
 const quick = [100_000, 500_000, 1_000_000, 5_000_000];
+
+/** What a ledger row means for the wallet's owner. */
+function entryLabel(e: LedgerEntry): string {
+  switch (e.type) {
+    case "deposit":
+      return "Isi saldo";
+    case "lock":
+      return "Dikunci untuk tawaran";
+    case "release":
+      return "Dikembalikan, ada tawaran lebih tinggi";
+    case "settle":
+      return e.direction === "in" ? "Hasil lelang terjual" : "Pembayaran lelang yang dimenangkan";
+    default:
+      return e.direction === "in" ? "Terjual lewat beli langsung" : "Beli langsung";
+  }
+}
+
+const sign = { in: "+", out: "−", hold: "" };
+const tone = { in: "text-lead", out: "text-ink", hold: "text-ink-soft" };
 
 export function Wallet() {
   const [wallet, setWallet] = useState<WalletT | null>(null);
@@ -12,9 +33,14 @@ export function Wallet() {
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const now = useNow(30_000);
+  const [history, setHistory] = useState<LedgerEntry[]>([]);
+  const loadHistory = useCallback(() => api<LedgerEntry[]>("/wallet/history").then(setHistory, () => undefined), []);
+
   useEffect(() => {
     api<WalletT>("/wallet").then(setWallet, (e) => setError(errorMessage(e)));
-  }, []);
+    loadHistory();
+  }, [loadHistory]);
 
   async function deposit(e: FormEvent) {
     e.preventDefault();
@@ -25,6 +51,7 @@ export function Wallet() {
       const value = Number(amount);
       setWallet(await api<WalletT>("/wallet/deposit", { method: "POST", body: { amount: value } }));
       setNotice(`Saldo bertambah ${rupiah(value)}.`);
+      loadHistory();
       setAmount("");
     } catch (err) {
       setError(errorMessage(err));
@@ -92,6 +119,38 @@ export function Wallet() {
           </p>
         )}
       </form>
+
+      <section className="space-y-3">
+        <h2 className="font-display text-2xl font-bold italic">Riwayat dompet</h2>
+        {history.length === 0 ? (
+          <p className="rounded-xl border border-dashed border-line px-4 py-6 text-center text-ink-soft">Belum ada mutasi.</p>
+        ) : (
+          <ol className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-card">
+            {history.map((e, i) => (
+              <li key={i} className="flex items-center gap-3 px-4 py-3">
+                <div className="min-w-0 flex-1">
+                  <div className="font-semibold">{entryLabel(e)}</div>
+                  <div className="truncate text-sm text-ink-soft">
+                    {e.auction_id !== null && (
+                      <>
+                        <Link to={`/lelang/${e.auction_id}`} className="underline underline-offset-2 hover:text-ink">
+                          {e.title}
+                        </Link>
+                        {", "}
+                      </>
+                    )}
+                    {timeAgo(e.created_at, now)}
+                  </div>
+                </div>
+                <span className={`shrink-0 font-display text-xl font-bold tabular-nums ${tone[e.direction]}`}>
+                  {sign[e.direction]}
+                  {rupiah(e.amount)}
+                </span>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
     </div>
   );
 }
