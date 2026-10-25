@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Button, ErrorNote, Field, Input, Select } from "../components/ui";
 import { api, errorMessage, type Auction } from "../lib/api";
 import { dioramaBack } from "../lib/brands";
-import { conditions, dioramaConditions } from "../lib/format";
+import { conditions, dioramaConditions, rupiah } from "../lib/format";
 
 const durations: Record<string, string> = { "60": "1 jam", "360": "6 jam", "1440": "1 hari", "4320": "3 hari", "10080": "7 hari" };
 
@@ -206,14 +206,15 @@ export function Sell() {
           />
         </Field>
         <div className="grid gap-4 sm:grid-cols-3">
-          <Field label="Harga awal (Rp)">
+          {/* Echo the parsed amount: a number field reads "125.000" as 125, not Rp125.000. */}
+          <Field label="Harga awal (Rp)" hint={form.start_price ? `= ${rupiah(Number(form.start_price))}` : undefined}>
             <Input type="number" inputMode="numeric" min={1} required value={form.start_price} onChange={set("start_price")} />
           </Field>
-          <Field label="Kelipatan (Rp)">
+          <Field label="Kelipatan (Rp)" hint={form.min_increment ? `= ${rupiah(Number(form.min_increment))}` : undefined}>
             <Input type="number" inputMode="numeric" min={1} required value={form.min_increment} onChange={set("min_increment")} />
           </Field>
-          <Field label="Beli langsung (Rp)" hint="Opsional, di atas harga awal.">
-            <Input type="number" inputMode="numeric" min={1} value={form.buy_now_price} onChange={set("buy_now_price")} />
+          <Field label="Beli langsung (Rp)" hint={form.buy_now_price ? `= ${rupiah(Number(form.buy_now_price))}` : "Opsional, di atas harga awal."}>
+            <Input type="number" inputMode="numeric" min={Number(form.start_price) + 1} value={form.buy_now_price} onChange={set("buy_now_price")} />
           </Field>
         </div>
         <Field label="Durasi">
