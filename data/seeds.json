@@ -15,72 +15,16 @@
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "2008 Lancer Evolution",
-    "series": "2008 New Models",
-    "year": 2008,
-    "color": "Metalflake Red",
+    "model_name": "Honda Civic Type R",
+    "series": "2003 First Editions",
+    "year": 2003,
+    "color": "Silver",
     "tags": [
-      "mitsubishi",
+      "honda",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/9/92/Esheet_Evo.png/revision/latest?cb=20260331213627",
-    "source_url": "https://hotwheels.fandom.com/wiki/2008_Lancer_Evolution",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Nissan 300ZX",
-    "series": "The Hot Ones",
-    "year": 1985,
-    "color": "Red",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/3/35/Nissan_300ZX_Red.JPG/revision/latest?cb=20090105045122",
-    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_300ZX",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Lancer Evolution VII",
-    "series": "World Rally Championship",
-    "year": 2005,
-    "color": "Dark Red",
-    "tags": [
-      "mitsubishi",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/0/0f/MitsubishiEvo7.jpg/revision/latest?cb=20210925135727",
-    "source_url": "https://hotwheels.fandom.com/wiki/Lancer_Evolution_VII",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Mazda MX-5 Miata (1991)",
-    "series": "Mainline",
-    "year": 1991,
-    "color": "Red",
-    "tags": [
-      "mazda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/0/0a/1991NM-MMMX5_%28Large%29.JPG/revision/latest?cb=20200914020556",
-    "source_url": "https://hotwheels.fandom.com/wiki/Mazda_MX-5_Miata_(1991)",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "2009 Nissan GT-R",
-    "series": "2009 New Models",
-    "year": 2009,
-    "color": "Pearl White",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/2/2b/Nissangtr_white.JPG/revision/latest?cb=20091214091047",
-    "source_url": "https://hotwheels.fandom.com/wiki/2009_Nissan_GT-R",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/1/1c/2003_Honda_Civic_Si_-_03FE.jpg/revision/latest?cb=20081204233414",
+    "source_url": "https://hotwheels.fandom.com/wiki/Honda_Civic_Type_R",
     "description": ""
   },
   {
@@ -95,20 +39,6 @@
     ],
     "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/f5/AltezzaSketch.png/revision/latest?cb=20210817025042",
     "source_url": "https://hotwheels.fandom.com/wiki/HKS_Altezza_(%27Tooned)",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Nissan 370Z",
-    "series": "2010 New Models",
-    "year": 2010,
-    "color": "Pearl Yellow",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/78/4449323061_f90bd81b56_b.jpg/revision/latest?cb=20100329204910",
-    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_370Z",
     "description": ""
   },
   {
@@ -141,58 +71,27 @@
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "'90 Honda Civic EF",
-    "series": "HW City: Night Burnerz",
-    "year": 2014,
-    "color": "Red",
+    "model_name": "'96 Nissan 180SX Type X",
+    "series": "HW Workshop: Night Burnerz",
+    "year": 2015,
+    "color": "Metalflake Dark Red",
     "tags": [
-      "honda",
+      "nissan",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/a/a7/Civic_EF_29th_Annual_Collectors_Convention.jpg/revision/latest?cb=20260812220156",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2790_Honda_Civic_EF",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/3/35/Nissan180-hotwheels-2015.jpg/revision/latest?cb=20150927201414",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2796_Nissan_180SX_Type_X",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Mazda RX-3",
-    "series": "Car Culture: Japan Historics",
-    "year": 2016,
-    "color": "Metalflake Purple",
-    "tags": [
-      "mazda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/1/18/Mazda_RX-3-2016_Car_Culture-Japan_Historics.jpg/revision/latest?cb=20170702184030",
-    "source_url": "https://hotwheels.fandom.com/wiki/Mazda_RX-3",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'15 Mazda MX-5 Miata",
-    "series": "Night Burnerz",
-    "year": 2016,
-    "color": "Red",
-    "tags": [
-      "mazda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/5/5c/15MX5MiataDHP05.jpg/revision/latest?cb=20160901062442",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2715_Mazda_MX-5_Miata",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'85 Honda City Turbo II",
-    "series": "HW Speed Graphics",
-    "year": 2018,
-    "color": "White",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/2/20/CityTurbo_%281%29.JPG/revision/latest?cb=20180218061522",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2785_Honda_City_Turbo_II",
+    "model_name": "Fairlady 2000",
+    "series": "Legends of Speed",
+    "year": 2017,
+    "color": "Light Yellow",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/8/8f/Fairlady_2000-2017_022_.jpg/revision/latest?cb=20161030123349",
+    "source_url": "https://hotwheels.fandom.com/wiki/Fairlady_2000",
     "description": ""
   },
   {
@@ -211,20 +110,6 @@
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "'69 Nissan Skyline Van",
-    "series": "Car Culture: Cargo Carriers",
-    "year": 2018,
-    "color": "Light Green",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/6/6a/CargoCarrierNis.JPG/revision/latest?cb=20180415052714",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2769_Nissan_Skyline_Van",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
     "model_name": "'88 Honda CR-X",
     "series": "Nightburnerz",
     "year": 2019,
@@ -239,44 +124,16 @@
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "2018 Honda Civic Type R",
-    "series": "Nightburnerz",
+    "model_name": "'91 Mazda MX-5 Miata",
+    "series": "HW Speed Graphics",
     "year": 2019,
-    "color": "Rallye Red",
+    "color": "Blue",
     "tags": [
-      "honda",
+      "mazda",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/e/e9/18_Civic_R_Red_19.jpg/revision/latest?cb=20190315090509",
-    "source_url": "https://hotwheels.fandom.com/wiki/2018_Honda_Civic_Type_R",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'95 Mitsubishi Eclipse",
-    "series": "Fast \u0026 Furious: Original Fast",
-    "year": 2019,
-    "color": "Neon Green",
-    "tags": [
-      "mitsubishi",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/8/89/95_Mitsubishi_Eclipse_-_19_FastFurious-OriginalFast_1200pxOTD.png/revision/latest?cb=20190305081449",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2795_Mitsubishi_Eclipse",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Nissan 240SX (S14)",
-    "series": "Fast \u0026 Furious: Original Fast",
-    "year": 2019,
-    "color": "Burgundy",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/8/89/2019FFP-OF01_%28Large%29.JPG/revision/latest?cb=20210411072740",
-    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_240SX_(S14)",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/1/1d/2019NM25_%28Large%29.JPG/revision/latest?cb=20200712013928",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2791_Mazda_MX-5_Miata",
     "description": ""
   },
   {
@@ -309,72 +166,30 @@
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Honda Civic EG",
-    "series": "Fast \u0026 Furious: Fast Tuners",
-    "year": 2020,
-    "color": "Yellow",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/3/3a/HondaCivicEG.jpg/revision/latest?cb=20210926003845",
-    "source_url": "https://hotwheels.fandom.com/wiki/Honda_Civic_EG",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'89 Mazda Savanna RX-7 FC3S",
-    "series": "Nightburnerz",
-    "year": 2020,
-    "color": "Red",
-    "tags": [
-      "mazda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b4/GHB56-01.jpg/revision/latest?cb=20200723015933",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2789_Mazda_Savanna_RX-7_FC3S",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "2003 Honda NSX Type-R",
-    "series": "Fast \u0026 Furious: Quick Shifters",
-    "year": 2020,
-    "color": "Gloss Black",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/c/cb/0deab6defc413319a31c418fd671c54.jpg/revision/latest?cb=20200917070321",
-    "source_url": "https://hotwheels.fandom.com/wiki/2003_Honda_NSX_Type-R",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "1972 Skyline H/T 2000GT-R",
-    "series": "RLC Exclusive",
+    "model_name": "'20 Toyota GR Supra",
+    "series": "HW Speed Graphics",
     "year": 2021,
-    "color": "Spectraflame Shadowchrome",
+    "color": "Absolute Zero White",
     "tags": [
-      "nissan",
+      "toyota",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/fe/RLCHako.jpg/revision/latest?cb=20220415090602",
-    "source_url": "https://hotwheels.fandom.com/wiki/1972_Skyline_H/T_2000GT-R",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/f2/2021NM28_%28Large%29.JPG/revision/latest?cb=20210405025159",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2720_Toyota_GR_Supra",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "2004 Mitsubishi Lancer EVOLUTION 8",
-    "series": "Hot Tunerz",
-    "year": 2004,
+    "model_name": "'81 Toyota Starlet KP61",
+    "series": "Car Culture: Toyota",
+    "year": 2021,
     "color": "Red",
     "tags": [
-      "mitsubishi",
+      "toyota",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/71/Mitsubishi-evo-wrc-enkei-red.jpg/revision/latest?cb=20250604132534",
-    "source_url": "https://hotwheels.fandom.com/wiki/2004_Mitsubishi_Lancer_EVOLUTION_8",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/1/15/%2781ToyotaStarlet.jpg/revision/latest?cb=20211217004028",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2781_Toyota_Starlet_KP61",
     "description": ""
   },
   {
@@ -393,30 +208,16 @@
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Honda Civic Custom",
-    "series": "HW J-Imports",
-    "year": 2022,
-    "color": "Sky blue",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/e/eb/HondaCivicCustom.jpg/revision/latest?cb=20220528090159",
-    "source_url": "https://hotwheels.fandom.com/wiki/Honda_Civic_Custom",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Fast and Furious Nissan Skyline",
-    "series": "Hot Wheels Monster Trucks: Fast \u0026 Furious",
-    "year": 2023,
+    "model_name": "Lancer Evolution VII Interceptor Version",
+    "series": "Charawheels Ultimate Edition",
+    "year": 2003,
     "color": "Silver",
     "tags": [
-      "nissan",
+      "mitsubishi",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/9/97/R34MT.jpg/revision/latest?cb=20230225070154",
-    "source_url": "https://hotwheels.fandom.com/wiki/Fast_and_Furious_Nissan_Skyline",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/5/57/2003_SE_Taxi_3_CWUE_%285%29.jpg/revision/latest?cb=20250514155401",
+    "source_url": "https://hotwheels.fandom.com/wiki/Lancer_Evolution_VII_Interceptor_Version",
     "description": ""
   },
   {
@@ -435,48 +236,6 @@
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Mazda Autozam",
-    "series": "HW Dream Garage",
-    "year": 2024,
-    "color": "White",
-    "tags": [
-      "mazda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/4/4d/TexasToot.jpg/revision/latest?cb=20231002120349",
-    "source_url": "https://hotwheels.fandom.com/wiki/Mazda_Autozam",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "1999 Nissan Skyline (1:20)",
-    "series": "Hot Tunerz",
-    "year": 2004,
-    "color": "Silver",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/8/83/HotTunerzR34Silver120.jpg/revision/latest?cb=20230830064018",
-    "source_url": "https://hotwheels.fandom.com/wiki/1999_Nissan_Skyline_(1:20)",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Mazda",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "mazda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/f9/Mazda_logo_with_emblem.svg.png/revision/latest?cb=20240919135050",
-    "source_url": "https://hotwheels.fandom.com/wiki/Mazda",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
     "model_name": "Mazda RX-3 (Tooned)",
     "series": "HW J-Imports",
     "year": 2024,
@@ -487,20 +246,6 @@
     ],
     "image_url": "https://static.wikia.nocookie.net/hotwheels/images/e/e4/%27ToonedMazdaRX-3.jpg/revision/latest?cb=20240331131033",
     "source_url": "https://hotwheels.fandom.com/wiki/Mazda_RX-3_(Tooned)",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'64 Prince Skyline GT",
-    "series": "Car Culture: Japan Historics 4",
-    "year": 2024,
-    "color": "Blue",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/e/e1/PrinceSkyline.jpg/revision/latest?cb=20240915120931",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2764_Prince_Skyline_GT",
     "description": ""
   },
   {
@@ -519,301 +264,464 @@
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "1998 Subaru Impreza WRX STi",
-    "series": "RLC Exclusive",
+    "model_name": "'07 Honda Civic Type R",
+    "series": "Car Culture: Ronin Run II",
     "year": 2025,
-    "color": "Spectraflame WR Blue Mica",
+    "color": "Championship White",
     "tags": [
-      "subaru",
+      "honda",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/1/10/1998Subaru22B2.jpg/revision/latest?cb=20250801100225",
-    "source_url": "https://hotwheels.fandom.com/wiki/1998_Subaru_Impreza_WRX_STi",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/d/d3/2007HondaCivicTypeR.jpg/revision/latest?cb=20250913091659",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2707_Honda_Civic_Type_R",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "1999 Nissan Skyline GT-R (Monster Truck)",
-    "series": "Hot Wheels Monster Trucks: Freestyle Wreckers",
+    "model_name": "'01 Toyota Celica",
+    "series": "Fast \u0026 Furious: Race-Off",
     "year": 2026,
-    "color": "Black",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/0/06/1999NissanGTRR34FreestyleWreckersFront.jpg/revision/latest?cb=20260123033852",
-    "source_url": "https://hotwheels.fandom.com/wiki/1999_Nissan_Skyline_GT-R_(Monster_Truck)",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Mitsubishi",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "mitsubishi",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/9/9a/The_Mitsubishi_emblem.png/revision/latest?cb=20260303163146",
-    "source_url": "https://hotwheels.fandom.com/wiki/Mitsubishi",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Honda Civic Type R (FK8) Championship White",
-    "series": "",
-    "year": 0,
-    "color": "White",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/d/d1/MGT00001a.jpg/revision/latest?cb=20201002184504",
-    "source_url": "https://minigt.fandom.com/wiki/Honda_Civic_Type_R_(FK8)_Championship_White",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Bentley Continental GT3 110 M-Sport Team Bentley 2019 Total 24 Hours of Spa",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "bentley"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/5/5d/MGT00199.jpg/revision/latest?cb=20210330202447",
-    "source_url": "https://minigt.fandom.com/wiki/Bentley_Continental_GT3_110_M-Sport_Team_Bentley_2019_Total_24_Hours_of_Spa",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Honda Civic Type R (FK8) Rallye Red",
-    "series": "",
-    "year": 0,
     "color": "Red",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/4/43/MGT00012.jpg/revision/latest?cb=20201003014055",
-    "source_url": "https://minigt.fandom.com/wiki/Honda_Civic_Type_R_(FK8)_Rallye_Red",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Honda NSX GT3 30 2018 24 Hours of Spa",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/d/d4/MGT00051.jpg/revision/latest?cb=20201004055825",
-    "source_url": "https://minigt.fandom.com/wiki/Honda_NSX_GT3_30_2018_24_Hours_of_Spa",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Honda Civic Type R (FK8) 2018 Indonesia Motor Show",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/2/24/MGT00059.jpg/revision/latest?cb=20201004055913",
-    "source_url": "https://minigt.fandom.com/wiki/Honda_Civic_Type_R_(FK8)_2018_Indonesia_Motor_Show",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "HKS Toyota GR Supra ADVAN 2020 Tokyo Auto Salon",
-    "series": "",
-    "year": 0,
-    "color": "",
     "tags": [
       "toyota",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/2/24/MGT00206_cancelled.jpg/revision/latest?cb=20210106150229",
-    "source_url": "https://minigt.fandom.com/wiki/HKS_Toyota_GR_Supra_ADVAN_2020_Tokyo_Auto_Salon",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/4/4d/2001ToyotaCelica.jpg/revision/latest?cb=20260410125930",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2701_Toyota_Celica",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "LB-Kaido Works Nissan R32 Skyline GT-R",
+    "series": "Car Culture: Aerostyles",
+    "year": 2026,
+    "color": "White",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/3/34/KaidoGT-R.jpg/revision/latest?cb=20260702081646",
+    "source_url": "https://hotwheels.fandom.com/wiki/LB-Kaido_Works_Nissan_R32_Skyline_GT-R",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "'24 Toyota GR86 Pandem",
+    "series": "HW J-Imports",
+    "year": 2027,
+    "color": "White",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/Image_Not_Available.jpg/revision/latest?cb=20151025125428",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2724_Toyota_GR86_Pandem",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "1999 Mitsubishi Evo VI",
+    "series": "Elite 64",
+    "year": 2027,
+    "color": "Scotia White",
+    "tags": [
+      "mitsubishi",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/Image_Not_Available.jpg/revision/latest?cb=20151025125428",
+    "source_url": "https://hotwheels.fandom.com/wiki/1999_Mitsubishi_Evo_VI",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "1999 Honda Civic Type R",
+    "series": "RLC Exclusive",
+    "year": 2027,
+    "color": "Spectraflame Milano Red",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/Image_Not_Available.jpg/revision/latest?cb=20151025125428",
+    "source_url": "https://hotwheels.fandom.com/wiki/1999_Honda_Civic_Type_R",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Pikes Peak Celica",
+    "series": "1998 First Editions",
+    "year": 1998,
+    "color": "Yellow",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/77/1998-652a-xdroop.jpg/revision/latest?cb=20080906022108",
+    "source_url": "https://hotwheels.fandom.com/wiki/Pikes_Peak_Celica",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Skyline GT-R (R32)",
+    "series": "2002 First Editions",
+    "year": 2002,
+    "color": "Metallic Dark Blue",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/2/20/NissanSkylineR32Sketch.jpg/revision/latest?cb=20230322095624",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_GT-R_(R32)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Toyota Celica (Hardnoze)",
+    "series": "2004 First Editions",
+    "year": 2004,
+    "color": "Orange",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/f2/HardnozeToyotaCelicaSketch.jpg/revision/latest?cb=20230301093015",
+    "source_url": "https://hotwheels.fandom.com/wiki/Toyota_Celica_(Hardnoze)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Skyline 2000GT-R",
+    "series": "2011 New Models",
+    "year": 2011,
+    "color": "White",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/72/SKYLINE_HT_2000GT-R_B.jpg/revision/latest?cb=20111006195756",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_2000GT-R",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Toyota Supra",
+    "series": "HW City: Street Power",
+    "year": 2013,
+    "color": "Metalflake Orange",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/0/06/Toyota_Supra_-_13NM-1024.jpg/revision/latest?cb=20160108005645",
+    "source_url": "https://hotwheels.fandom.com/wiki/Toyota_Supra",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Toyota 2000GT Roadster",
+    "series": "Hot Wheels Entertainment: You Only Live Twice",
+    "year": 2015,
+    "color": "White",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/c/c4/Toyota_2000GT_Roadster%28arriba%29-2015_Entertainment.jpg/revision/latest?cb=20170312171810",
+    "source_url": "https://hotwheels.fandom.com/wiki/Toyota_2000GT_Roadster",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Skyline GT-R (BCNR33)",
+    "series": "Then and Now",
+    "year": 2018,
+    "color": "Metalflake Blue",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/f8/R33Blue_%281%29.JPG/revision/latest?cb=20180218050438",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_GT-R_(BCNR33)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Silvia (S15)",
+    "series": "Replica Entertainment: Forza Motorsport",
+    "year": 2018,
+    "color": "Blue",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/9/93/SilviaS15Forza_%281%29.JPG/revision/latest?cb=20181226073446",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Silvia_(S15)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Pandem Subaru BRZ",
+    "series": "Car Culture: Street Tuners",
+    "year": 2019,
+    "color": "Blue",
+    "tags": [
+      "subaru",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/6/63/2019-car-culture-street-tuners-pandemsubarubrz-1200pxotd.png/revision/latest?cb=20190808184306",
+    "source_url": "https://hotwheels.fandom.com/wiki/Pandem_Subaru_BRZ",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Skyline GT-R (BNR34) V·spec II Nür",
+    "series": "1:43",
+    "year": 2023,
+    "color": "Millennium Jade",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/4/4c/NISMOR34.jpg/revision/latest?cb=20240415120357",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_GT-R_(BNR34)_V%C2%B7spec_II_N%C3%BCr",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Skyline 2000GT-R LBWK (Tooned)",
+    "series": "Tooned",
+    "year": 2024,
+    "color": "Sky blue",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/0/03/%27ToonedKenmeri.jpg/revision/latest?cb=20240702101453",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_2000GT-R_LBWK_(Tooned)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Subaru Forester STi",
+    "series": "Car Culture: Modern Classics",
+    "year": 2024,
+    "color": "WR Blue Mica",
+    "tags": [
+      "subaru",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/2/21/2004SubaruForesterSTi.jpg/revision/latest?cb=20241005143842",
+    "source_url": "https://hotwheels.fandom.com/wiki/Subaru_Forester_STi",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Skyline GT-R (BNR32) (Hot Wheels XL)",
+    "series": "Hot Wheels XL",
+    "year": 2026,
+    "color": "Gunmetal gray",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/2/2c/1990NissanSkylineGT-R.jpg/revision/latest?cb=20260425094158",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_GT-R_(BNR32)_(Hot_Wheels_XL)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Toyota AE86 Sprinter Trueno (Hot Wheels XL)",
+    "series": "Hot Wheels XL",
+    "year": 2026,
+    "color": "White",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/Image_Not_Available.jpg/revision/latest?cb=20151025125428",
+    "source_url": "https://hotwheels.fandom.com/wiki/Toyota_AE86_Sprinter_Trueno_(Hot_Wheels_XL)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Skyline GT-R (BNR34) (police)",
+    "series": "HW J-Imports",
+    "year": 2027,
+    "color": "White",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/Image_Not_Available.jpg/revision/latest?cb=20151025125428",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_GT-R_(BNR34)_(police)",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "Bentley Continental GT3 Test Car",
+    "model_name": "Honda Civic Type R (FK8) Aegean Blue Metallic",
+    "series": "",
+    "year": 0,
+    "color": "Blue",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/9/92/MGT00002.jpg/revision/latest?cb=20201002064218",
+    "source_url": "https://minigt.fandom.com/wiki/Honda_Civic_Type_R_(FK8)_Aegean_Blue_Metallic",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "LB★WORKS Lamborghini Aventador LB-R Fighters Works Matte Grey",
+    "series": "",
+    "year": 0,
+    "color": "Grey",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/c/cb/MGT00079_cancelled_side.jpg/revision/latest?cb=20201004071535",
+    "source_url": "https://minigt.fandom.com/wiki/LB%E2%98%85WORKS_Lamborghini_Aventador_LB-R_Fighters_Works_Matte_Grey",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "EVA RT Test Type-01 X Works GT-R 33 - Super GT Series 2019",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/f/fa/MGT00090.jpg/revision/latest?cb=20250706214745",
+    "source_url": "https://minigt.fandom.com/wiki/EVA_RT_Test_Type-01_X_Works_GT-R_33_-_Super_GT_Series_2019",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Honda NSX GT3 Presentation",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/7/76/MGT00025.jpg/revision/latest?cb=20201003211648",
+    "source_url": "https://minigt.fandom.com/wiki/Honda_NSX_GT3_Presentation",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Bentley Continental GT 2019 Pikes Peak International Hill Climb",
     "series": "",
     "year": 0,
     "color": "",
     "tags": [
       "bentley"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/4/4a/MGT00177.jpg/revision/latest?cb=20201129035435",
-    "source_url": "https://minigt.fandom.com/wiki/Bentley_Continental_GT3_Test_Car",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/3/33/MGT00162.jpg/revision/latest?cb=20201008212312",
+    "source_url": "https://minigt.fandom.com/wiki/Bentley_Continental_GT_2019_Pikes_Peak_International_Hill_Climb",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "Land Rover Defender 110 Red Bull LUKA",
+    "model_name": "BMW M4 (F82) Yas Marina Blue Metallic",
     "series": "",
     "year": 0,
-    "color": "Red",
+    "color": "Blue",
     "tags": [
-      "land rover"
+      "bmw"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/e/e8/MGT00110.jpg/revision/latest?cb=20201008085359",
-    "source_url": "https://minigt.fandom.com/wiki/Land_Rover_Defender_110_Red_Bull_LUKA",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/8/83/MGT00122.jpg/revision/latest?cb=20201124074142",
+    "source_url": "https://minigt.fandom.com/wiki/BMW_M4_(F82)_Yas_Marina_Blue_Metallic",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "Lamborghini Urus - Giallo Auge",
+    "model_name": "LB★WORKS Lamborghini Huracán ver. 1 White w/ Red Stripe",
+    "series": "",
+    "year": 0,
+    "color": "White",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/6/65/MGT00148.jpg/revision/latest?cb=20201125100113",
+    "source_url": "https://minigt.fandom.com/wiki/LB%E2%98%85WORKS_Lamborghini_Hurac%C3%A1n_ver._1_White_w/_Red_Stripe",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "LB★WORKS BMW M4 Baby Blue",
+    "series": "",
+    "year": 0,
+    "color": "Blue",
+    "tags": [
+      "bmw"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/3/3f/MGT00192.jpg/revision/latest?cb=20201125100243",
+    "source_url": "https://minigt.fandom.com/wiki/LB%E2%98%85WORKS_BMW_M4_Baby_Blue",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Audi RS6 Avant Carbon Black Edition Tango Red",
+    "series": "",
+    "year": 0,
+    "color": "Black",
+    "tags": [
+      "audi"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/2/2b/MGT00194.jpg/revision/latest?cb=20210116014917",
+    "source_url": "https://minigt.fandom.com/wiki/Audi_RS6_Avant_Carbon_Black_Edition_Tango_Red",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Honda Civic Type R - Team Liquid",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/e/ee/19OEM04.jpg/revision/latest?cb=20201122230801",
+    "source_url": "https://minigt.fandom.com/wiki/Honda_Civic_Type_R_-_Team_Liquid",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Lamborghini Aventador SVJ Roadster Bianco Canopus",
     "series": "",
     "year": 0,
     "color": "",
     "tags": [
       "lamborghini"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/c/cd/MGT00113.jpg/revision/latest?cb=20201008085552",
-    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Urus_-_Giallo_Auge",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/6/61/MGT00224.jpg/revision/latest?cb=20210910135015",
+    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Aventador_SVJ_Roadster_Bianco_Canopus",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "LB-Silhouette WORKS GT NISSAN 35GT-RR Ver.1 Matte Black",
+    "model_name": "Datsun 510 Pro Street OG Green",
     "series": "",
     "year": 0,
-    "color": "Black",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/3/38/MGT00169.jpg/revision/latest?cb=20201125100538",
-    "source_url": "https://minigt.fandom.com/wiki/LB-Silhouette_WORKS_GT_NISSAN_35GT-RR_Ver.1_Matte_Black",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "LB-Silhouette WORKS GT Nissan 35GT-RR Version 1 Yellow",
-    "series": "",
-    "year": 0,
-    "color": "Yellow",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/b/b6/MGT00182.jpg/revision/latest?cb=20210105010147",
-    "source_url": "https://minigt.fandom.com/wiki/LB-Silhouette_WORKS_GT_Nissan_35GT-RR_Version_1_Yellow",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Acura NSX GT3 EVO 86 2019 IMSA Watkins Glen Class Winner",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "acura",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/3/3c/MGT00144.jpg/revision/latest?cb=20201124074954",
-    "source_url": "https://minigt.fandom.com/wiki/Acura_NSX_GT3_EVO_86_2019_IMSA_Watkins_Glen_Class_Winner",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Bentley Continental GT - Ice",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "bentley"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/4/4d/BL2126.jpg/revision/latest?cb=20201008081818",
-    "source_url": "https://minigt.fandom.com/wiki/Bentley_Continental_GT_-_Ice",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "BMW M3 AC Schnitzer S3 Sport Black",
-    "series": "",
-    "year": 0,
-    "color": "Black",
-    "tags": [
-      "bmw"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/0/01/MGT00119.jpg/revision/latest?cb=20210330205337",
-    "source_url": "https://minigt.fandom.com/wiki/BMW_M3_AC_Schnitzer_S3_Sport_Black",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Chevrolet Corvette Stingray 2020 Sebring Orange Tintcoat",
-    "series": "",
-    "year": 0,
-    "color": "Orange",
-    "tags": [
-      "chevrolet"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/a/a2/MGT00227.jpg/revision/latest?cb=20210512225341",
-    "source_url": "https://minigt.fandom.com/wiki/Chevrolet_Corvette_Stingray_2020_Sebring_Orange_Tintcoat",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Chevrolet Corvette C8.R 3 2020 IMSA 24 Hrs of Daytona",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "chevrolet"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/c/cc/MGT00253.jpg/revision/latest?cb=20210911010620",
-    "source_url": "https://minigt.fandom.com/wiki/Chevrolet_Corvette_C8.R_3_2020_IMSA_24_Hrs_of_Daytona",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Land Rover Defender 110 Camel Trophy Support Vehicle",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "land rover"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/f/f3/MGT00202_Sinopec.jpg/revision/latest?cb=20210910135928",
-    "source_url": "https://minigt.fandom.com/wiki/Land_Rover_Defender_110_Camel_Trophy_Support_Vehicle",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Isuzu N-Series Vehicle Transporter LBWK Black",
-    "series": "",
-    "year": 0,
-    "color": "Black",
-    "tags": [
-      "isuzu",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/a/af/MGT00292.jpg/revision/latest?cb=20220127230428",
-    "source_url": "https://minigt.fandom.com/wiki/Isuzu_N-Series_Vehicle_Transporter_LBWK_Black",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Datsun 510 Pro Street SK510 Orange",
-    "series": "",
-    "year": 0,
-    "color": "Orange",
+    "color": "Green",
     "tags": [
       "datsun",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/c/c2/KHMG004.jpg/revision/latest?cb=20220308063526",
-    "source_url": "https://minigt.fandom.com/wiki/Datsun_510_Pro_Street_SK510_Orange",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/c/c1/KHMG001.jpg/revision/latest?cb=20211109012430",
+    "source_url": "https://minigt.fandom.com/wiki/Datsun_510_Pro_Street_OG_Green",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Lancia Delta HF Integrale Evoluzione Martini Racing",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "lancia"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/2/20/MGT00300.jpg/revision/latest?cb=20220615195729",
+    "source_url": "https://minigt.fandom.com/wiki/Lancia_Delta_HF_Integrale_Evoluzione_Martini_Racing",
     "description": ""
   },
   {
@@ -832,121 +740,41 @@
   },
   {
     "brand": "Mini GT",
-    "model_name": "Ford GT 2021 Ken Miles Heritage Edition",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "ford"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/0/0f/MGT00313.jpg/revision/latest?cb=20230209154303",
-    "source_url": "https://minigt.fandom.com/wiki/Ford_GT_2021_Ken_Miles_Heritage_Edition",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "McLaren Senna Victory Grey",
-    "series": "",
-    "year": 0,
-    "color": "Grey",
-    "tags": [
-      "mclaren"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/6/6a/18OEM21.jpg/revision/latest?cb=20210915003139",
-    "source_url": "https://minigt.fandom.com/wiki/1/64_McLaren_Senna_Victory_Grey",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Lamborghini Huracán EVO Verde Mantis",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "lamborghini"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/c/c1/MGT00328.jpg/revision/latest?cb=20220620151349",
-    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Hurac%C3%A1n_EVO_Verde_Mantis",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Ford Mustang Shelby GT500 Shadow Black",
-    "series": "",
-    "year": 0,
-    "color": "Black",
-    "tags": [
-      "ford"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/2/2a/MGT00334.jpg/revision/latest?cb=20220615200402",
-    "source_url": "https://minigt.fandom.com/wiki/Ford_Mustang_Shelby_GT500_Shadow_Black",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Datsun 510 Pro Street BRE510 V2",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "datsun",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/f/f6/KHMG006.jpg/revision/latest?cb=20241006204242",
-    "source_url": "https://minigt.fandom.com/wiki/Datsun_510_Pro_Street_BRE510_V2",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Land Rover Defender 90 Pickup 2022 Chinese New Year Edition",
+    "model_name": "Land Rover Defender 110 2021 Hong Kong Toycar Salon Edition",
     "series": "",
     "year": 0,
     "color": "",
     "tags": [
       "land rover"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/4/4e/MGT00330.jpg/revision/latest?cb=20211119152623",
-    "source_url": "https://minigt.fandom.com/wiki/Land_Rover_Defender_90_Pickup_2022_Chinese_New_Year_Edition",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/6/64/MGT00275.jpg/revision/latest?cb=20210923144704",
+    "source_url": "https://minigt.fandom.com/wiki/Land_Rover_Defender_110_2021_Hong_Kong_Toycar_Salon_Edition",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "Honda S2000 (AP2) Type S Grand Prix White",
-    "series": "",
-    "year": 0,
-    "color": "White",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/0/05/MGT00349.jpg/revision/latest?cb=20231024153406",
-    "source_url": "https://minigt.fandom.com/wiki/Honda_S2000_(AP2)_Type_S_Grand_Prix_White",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Lamborghini Huracán GT3 EVO Presentation",
+    "model_name": "Land Rover Defender 110 Malaysian Army",
     "series": "",
     "year": 0,
     "color": "",
     "tags": [
-      "lamborghini"
+      "land rover"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/3/37/MGT00352.jpg/revision/latest?cb=20231024153505",
-    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Hurac%C3%A1n_GT3_EVO_Presentation",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/4/43/MGT00321.jpg/revision/latest?cb=20211124122254",
+    "source_url": "https://minigt.fandom.com/wiki/Land_Rover_Defender_110_Malaysian_Army",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "Ford GT Liquid Red",
+    "model_name": "Land Rover Defender 90 Pickup 2021 Christmas Edition",
     "series": "",
     "year": 0,
-    "color": "Red",
+    "color": "",
     "tags": [
-      "ford"
+      "land rover"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/4/46/MGT00273.jpg/revision/latest?cb=20241007000159",
-    "source_url": "https://minigt.fandom.com/wiki/Ford_GT_Liquid_Red",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/f/ff/MGT00320.jpg/revision/latest?cb=20211015143740",
+    "source_url": "https://minigt.fandom.com/wiki/Land_Rover_Defender_90_Pickup_2021_Christmas_Edition",
     "description": ""
   },
   {
@@ -964,133 +792,294 @@
   },
   {
     "brand": "Mini GT",
-    "model_name": "Eunos Roadster Classic Red Headlight Up / Soft Top",
+    "model_name": "Honda S2000 (AP2) Type S Apex Blue",
+    "series": "",
+    "year": 0,
+    "color": "Blue",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/0/08/MGT00376.jpg/revision/latest?cb=20231024154830",
+    "source_url": "https://minigt.fandom.com/wiki/Honda_S2000_(AP2)_Type_S_Apex_Blue",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Hyundai Kona N Performance Blue",
+    "series": "",
+    "year": 0,
+    "color": "Blue",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/2/29/MGT00450.jpg/revision/latest?cb=20241006222941",
+    "source_url": "https://minigt.fandom.com/wiki/Hyundai_Kona_N_Performance_Blue",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Lamborghini Aventador SVJ 63 Blu Aegir",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/d/df/Lamborghini_Aventador_SVJ_63_Blu_Aegir_principal.jpg/revision/latest?cb=20250813152407",
+    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Aventador_SVJ_63_Blu_Aegir",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Lamborghini Huracán GT3 EVO2 87 Bamboo Airways Lamborghini GT3 JLOC 2023 SUPER GT SERIES",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/9/9f/Lamborghini_Hurac%C3%A1n_GT3_EVO2_87_Bamboo_Airways_Lamborghini_GT3_JLOC_2023_SUPER_GT_SERIES_principal.jpg/revision/latest?cb=20250813193716",
+    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Hurac%C3%A1n_GT3_EVO2_87_Bamboo_Airways_Lamborghini_GT3_JLOC_2023_SUPER_GT_SERIES",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Lamborghini Huracán STO Verde Citrea",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/c/c8/Lamborghini_Hurac%C3%A1n_STO_Verde_Citrea_principal.jpg/revision/latest?cb=20250813215315",
+    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Hurac%C3%A1n_STO_Verde_Citrea",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Lamborghini Revuelto Viola 30th Matte",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/9/93/Lamborghini_Revuelto_Viola_30th_Matte.jpg/revision/latest?cb=20251222141243",
+    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Revuelto_Viola_30th_Matte",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "BMW Z8",
+    "series": "",
+    "year": 0,
+    "color": "Silver",
+    "tags": [
+      "bmw"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/7/78/MGT998_A.jpg/revision/latest?cb=20260825072201",
+    "source_url": "https://minigt.fandom.com/wiki/BMW_Z8",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "LB★WORKS Nissan GT-R (R35) Zero Fighter Special Type 1, Rear Wing ver 2",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/b/b5/MGT00006.jpg/revision/latest?cb=20201002065352",
+    "source_url": "https://minigt.fandom.com/wiki/LB%E2%98%85WORKS_Nissan_GT-R_(R35)_Zero_Fighter_Special_Type_1,_Rear_Wing_ver_2",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "LB★WORKS Nissan GT-R (R35) Satin Gold Type 1, Rear Wing ver 2",
+    "series": "",
+    "year": 0,
+    "color": "Gold",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/3/3c/MGT00030.jpg/revision/latest?cb=20201004030454",
+    "source_url": "https://minigt.fandom.com/wiki/LB%E2%98%85WORKS_Nissan_GT-R_(R35)_Satin_Gold_Type_1,_Rear_Wing_ver_2",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Pagani Huayra Roadster Arancio Saint Tropez",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "pagani"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/c/cb/MGT00078.jpg/revision/latest?cb=20201004062340",
+    "source_url": "https://minigt.fandom.com/wiki/Pagani_Huayra_Roadster_Arancio_Saint_Tropez",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "LB★WORKS Nissan GT-R (R35) Candy Red Type 1, Rear Wing ver 1+2",
     "series": "",
     "year": 0,
     "color": "Red",
     "tags": [
-      "mazda",
+      "nissan",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/7/73/MGT00362.jpg/revision/latest?cb=20231024154004",
-    "source_url": "https://minigt.fandom.com/wiki/Eunos_Roadster_Classic_Red_Headlight_Up_/_Soft_Top",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/1/1d/MGT00077.jpg/revision/latest?cb=20201006031221",
+    "source_url": "https://minigt.fandom.com/wiki/LB%E2%98%85WORKS_Nissan_GT-R_(R35)_Candy_Red_Type_1,_Rear_Wing_ver_1%2B2",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "Lancia Stratos HF Stradale Rosso Arancio",
+    "model_name": "Pandem Nissan GT-R (R35) Metallic Blue GT Wing",
     "series": "",
     "year": 0,
-    "color": "",
+    "color": "Blue",
     "tags": [
-      "lancia"
+      "nissan",
+      "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/c/cc/MGT00365.jpg/revision/latest?cb=20230114135722",
-    "source_url": "https://minigt.fandom.com/wiki/Lancia_Stratos_HF_Stradale_Rosso_Arancio",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/b/bf/MGT00096.jpg/revision/latest?cb=20201008084433",
+    "source_url": "https://minigt.fandom.com/wiki/Pandem_Nissan_GT-R_(R35)_Metallic_Blue_GT_Wing",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "Audi RS6 Avant Carbon Black Edition Florett Silver",
-    "series": "",
-    "year": 0,
-    "color": "Black",
-    "tags": [
-      "audi"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/3/39/MGT00372.jpg/revision/latest?cb=20220904223101",
-    "source_url": "https://minigt.fandom.com/wiki/Audi_RS6_Avant_Carbon_Black_Edition_Florett_Silver",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Lamborghini Aventador SVJ Verde Mantis",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "lamborghini"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/7/70/MGT00391.jpg/revision/latest?cb=20231103132719",
-    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Aventador_SVJ_Verde_Mantis",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "BMW 750Li xDrive Black Sapphire",
-    "series": "",
-    "year": 0,
-    "color": "Black",
-    "tags": [
-      "bmw"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/e/e9/MGT00436.jpg/revision/latest?cb=20241006221911",
-    "source_url": "https://minigt.fandom.com/wiki/BMW_750Li_xDrive_Black_Sapphire",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "BMW M4 GT3 1 ST Racing 2022 12H Mugello Winner",
-    "series": "",
-    "year": 0,
-    "color": "",
-    "tags": [
-      "bmw"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/7/7a/MGT00439.jpg/revision/latest?cb=20241006221941",
-    "source_url": "https://minigt.fandom.com/wiki/BMW_M4_GT3_1_ST_Racing_2022_12H_Mugello_Winner",
-    "description": ""
-  },
-  {
-    "brand": "Mini GT",
-    "model_name": "Bugatti Chiron Super Sport White",
+    "model_name": "Pandem Toyota GR Supra V1.0 White 180",
     "series": "",
     "year": 0,
     "color": "White",
     "tags": [
-      "bugatti"
+      "toyota",
+      "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/e/e5/MGT00440.jpg/revision/latest?cb=20231024150515",
-    "source_url": "https://minigt.fandom.com/wiki/Bugatti_Chiron_Super_Sport_White",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/1/1c/MGT00180.jpg/revision/latest?cb=20210319143010",
+    "source_url": "https://minigt.fandom.com/wiki/Pandem_Toyota_GR_Supra_V1.0_White_180",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "Bentley Continental GT Speed 2022 Anthracite Satin",
+    "model_name": "Nissan GT-R R32 Gr. A 87 HKS 1992 Group A.",
     "series": "",
     "year": 0,
     "color": "",
     "tags": [
-      "bentley"
+      "nissan",
+      "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/e/e9/MGT00442.jpg/revision/latest?cb=20241006222003",
-    "source_url": "https://minigt.fandom.com/wiki/Bentley_Continental_GT_Speed_2022_Anthracite_Satin",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/5/57/MGT00102.jpg/revision/latest?cb=20201008085037",
+    "source_url": "https://minigt.fandom.com/wiki/Nissan_GT-R_R32_Gr._A_87_HKS_1992_Group_A.",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "Lamborghini Countach LPI 800-4 Bianco Siderale",
+    "model_name": "Toyota Supra Blue Pearl Metallic",
     "series": "",
     "year": 0,
-    "color": "",
+    "color": "Blue",
     "tags": [
-      "lamborghini"
+      "toyota",
+      "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/8/80/Lamborghini_Countach_LPI_800-4_Bianco_Siderale_principal.jpg/revision/latest?cb=20250813143746",
-    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Countach_LPI_800-4_Bianco_Siderale",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/7/70/MGT00211.jpg/revision/latest?cb=20210330210220",
+    "source_url": "https://minigt.fandom.com/wiki/Toyota_Supra_Blue_Pearl_Metallic",
     "description": ""
   },
   {
     "brand": "Mini GT",
-    "model_name": "Lamborghini Urus Performante Rosso Mars",
+    "model_name": "LB★WORKS Toyota GR Supra Black",
+    "series": "",
+    "year": 0,
+    "color": "Black",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/2/29/MGT00236.jpg/revision/latest?cb=20210910142359",
+    "source_url": "https://minigt.fandom.com/wiki/LB%E2%98%85WORKS_Toyota_GR_Supra_Black",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Porsche 911 (992) Carrera S Guards Red",
+    "series": "",
+    "year": 0,
+    "color": "Red",
+    "tags": [
+      "porsche"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/9/96/MGT00283.jpg/revision/latest?cb=20211111211449",
+    "source_url": "https://minigt.fandom.com/wiki/Porsche_911_(992)_Carrera_S_Guards_Red",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Pagani Zonda F Silver",
+    "series": "",
+    "year": 0,
+    "color": "Silver",
+    "tags": [
+      "pagani"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/0/00/MGT00305.jpg/revision/latest?cb=20220615201846",
+    "source_url": "https://minigt.fandom.com/wiki/Pagani_Zonda_F_Silver",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Shelby GT500 SE Widebody Ford Race Red",
+    "series": "",
+    "year": 0,
+    "color": "Red",
+    "tags": [
+      "shelby"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/e/ea/MGT00389.jpg/revision/latest?cb=20241005014642",
+    "source_url": "https://minigt.fandom.com/wiki/Shelby_GT500_SE_Widebody_Ford_Race_Red",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Nissan Skyline GT-R (R34) V-Spec II MINI GT Digital Camouflage Purple",
+    "series": "",
+    "year": 0,
+    "color": "Purple",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/d/dc/MGT00446.jpg/revision/latest?cb=20241006222900",
+    "source_url": "https://minigt.fandom.com/wiki/Nissan_Skyline_GT-R_(R34)_V-Spec_II_MINI_GT_Digital_Camouflage_Purple",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "Mercedes-Benz Actros w/ Racing Transporter \"LB Racing\"",
     "series": "",
     "year": 0,
     "color": "",
     "tags": [
-      "lamborghini"
+      "mercedes-benz"
     ],
-    "image_url": "https://static.wikia.nocookie.net/minigt/images/8/86/Lamborghini_Urus_Performante_Rosso_Mars_principal.jpg/revision/latest?cb=20250813145229",
-    "source_url": "https://minigt.fandom.com/wiki/Lamborghini_Urus_Performante_Rosso_Mars",
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/7/72/MGT00464.jpg/revision/latest?cb=20241006224041",
+    "source_url": "https://minigt.fandom.com/wiki/Mercedes-Benz_Actros_w/_Racing_Transporter_%22LB_Racing%22",
+    "description": ""
+  },
+  {
+    "brand": "Mini GT",
+    "model_name": "2024 Red Bull VCARB 01",
+    "series": "",
+    "year": 0,
+    "color": "2024 F1 2024 Bahrain GP Daniel Ricciardo",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/minigt/images/c/ca/MGT1006_A.jpg/revision/latest?cb=20260826112617",
+    "source_url": "https://minigt.fandom.com/wiki/2024_Red_Bull_VCARB_01",
     "description": ""
   },
   {

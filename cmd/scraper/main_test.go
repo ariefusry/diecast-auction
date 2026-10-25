@@ -123,3 +123,17 @@ func TestPickSpreadsEvenly(t *testing.T) {
 		t.Fatalf("pick short = %v", got)
 	}
 }
+
+func TestIsCasting(t *testing.T) {
+	for title, want := range map[string]bool{
+		"Nissan Skyline GT-R (BNR34)": true,
+		"'90 Honda Civic EF":          true,
+		"1999 Nissan Skyline (1:20)":  false, // another scale
+		"Mazda":                       false, // a make's index page
+		"Mitsubishi":                  false,
+	} {
+		if got := isCasting(title); got != want {
+			t.Errorf("isCasting(%q) = %v, want %v", title, got, want)
+		}
+	}
+}

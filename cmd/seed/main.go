@@ -109,7 +109,7 @@ func seed(ctx context.Context, pool *pgxpool.Pool, items []service.Item, prefix 
 			MinIncrement:    base / 5,
 			DurationMinutes: durations[i%len(durations)],
 		}
-		if i%4 == 0 {
+		if i%6 == 0 { // a subset of the no-bid lots below, so buy-now stays usable
 			in.BuyNowPrice = new(in.StartPrice * 3)
 		}
 		a, err := auctions.Create(ctx, sellers[i%len(sellers)], in)

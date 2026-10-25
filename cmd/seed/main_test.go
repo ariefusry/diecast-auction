@@ -49,6 +49,14 @@ func TestSeedBuildsConsistentDemoData(t *testing.T) {
 		t.Fatalf("auctions=%d drafts=%d withBids=%d bids=%d err=%v", auctions, drafts, withBids, bids, err)
 	}
 
+	// Buy-now is only possible before the first bid, so a seeded lot with both is dead weight.
+	var dead int
+	pool.QueryRow(ctx, `SELECT count(*) FROM auctions a JOIN items i ON i.id = a.item_id
+		WHERE i.seller_id = ANY($1) AND a.buy_now_price IS NOT NULL AND a.highest_bidder_id IS NOT NULL`, users).Scan(&dead)
+	if dead != 0 {
+		t.Fatalf("%d seeded auctions have buy-now and bids", dead)
+	}
+
 	// Running again (every container start) must not duplicate anything.
 	if n, err := seed(ctx, pool, items, prefix); err != nil || n != 0 {
 		t.Fatalf("second seed = %d, %v; want 0", n, err)

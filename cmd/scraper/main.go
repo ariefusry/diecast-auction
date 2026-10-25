@@ -98,7 +98,7 @@ func scrape(s source) ([]service.Item, error) {
 			items = append(items, it)
 		}
 	}
-	return items[:min(len(items), s.limit)], nil
+	return pick(items, s.limit), nil
 }
 
 func listTitles(s source) ([]string, error) {
@@ -112,35 +112,55 @@ func listTitles(s source) ([]string, error) {
 		params.Set("cmnamespace", "0")
 		params.Set("cmlimit", "500")
 	}
-	var resp struct {
-		Query struct {
-			AllPages        []struct{ Title string }
-			CategoryMembers []struct{ Title string }
-		}
-	}
-	if err := api(s.wiki, params, &resp); err != nil {
-		return nil, err
-	}
+	// MediaWiki returns at most 500 titles per call; follow "continue" until done,
+	// otherwise an alphabetical list stops partway through the letters.
 	var titles []string
-	for _, p := range append(resp.Query.AllPages, resp.Query.CategoryMembers...) {
-		if p.Title != "Main Page" && !strings.HasSuffix(p.Title, " Wiki") {
-			titles = append(titles, p.Title)
+	for {
+		var resp struct {
+			Continue map[string]string
+			Query    struct {
+				AllPages        []struct{ Title string }
+				CategoryMembers []struct{ Title string }
+			}
+		}
+		if err := api(s.wiki, params, &resp); err != nil {
+			return nil, err
+		}
+		for _, p := range append(resp.Query.AllPages, resp.Query.CategoryMembers...) {
+			if p.Title != "Main Page" && !strings.HasSuffix(p.Title, " Wiki") && isCasting(p.Title) {
+				titles = append(titles, p.Title)
+			}
+		}
+		if len(resp.Continue) == 0 {
+			return titles, nil
+		}
+		for k, v := range resp.Continue {
+			params.Set(k, v)
 		}
 	}
-	return titles, nil
 }
 
-// pick returns up to n titles spread evenly, so one category does not yield
-// forty variants of the same make.
-func pick(titles []string, n int) []string {
-	if len(titles) <= n {
-		return titles
+// pick returns up to n elements spread evenly, so an alphabetical list does
+// not yield only the A-L half or forty variants of the same make.
+func pick[T any](xs []T, n int) []T {
+	if len(xs) <= n {
+		return xs
 	}
-	out := make([]string, n)
+	out := make([]T, n)
 	for i := range out {
-		out[i] = titles[i*len(titles)/n]
+		out[i] = xs[i*len(xs)/n]
 	}
 	return out
+}
+
+// isCasting drops pages that are not single 1:64 castings: other scales such
+// as "(1:20)" and a make's own index page such as "Mazda".
+func isCasting(title string) bool {
+	if strings.Contains(title, "(1:") {
+		return false
+	}
+	w := words(title)
+	return !(len(w) == 1 && makeIn(title) != "")
 }
 
 var lastRequest time.Time
