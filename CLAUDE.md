@@ -29,6 +29,10 @@ BUILDX_BAKE_ENTITLEMENTS_FS=0 docker compose up --build
 # Sama, plus katalog dan akun demo (password publik). Jangan dipakai di server publik
 docker compose --profile demo up --build
 
+# Server: HTTPS lewat Caddy di 80/443. Isi DOMAIN (DNS mengarah ke server) dan WEB_PORT=127.0.0.1:8081 di .env
+# Lokal: DOMAIN=localhost memakai CA Caddy sendiri (curl -k https://localhost/api/healthz)
+docker compose --profile https up -d
+
 # Pengujian wajib dengan deteksi data race (service test dibuat di Phase 1)
 # Alasan: -race butuh CGO + gcc, dan mesin dev Windows tidak punya gcc.
 docker compose --profile test run --rm test

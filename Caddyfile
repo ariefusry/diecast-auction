@@ -1,0 +1,10 @@
+# HTTPS in front of nginx: docker compose --profile https up -d
+# DOMAIN must point at this host; Caddy gets and renews its certificate.
+# DOMAIN=localhost serves a certificate from Caddy's own CA, for a local test.
+{$DOMAIN} {
+	encode zstd gzip
+	header Strict-Transport-Security "max-age=31536000"
+	# Caddy trusts no proxy before it, so X-Forwarded-For carries the real visitor
+	# and a client-sent one is replaced.
+	reverse_proxy web:80
+}

@@ -62,6 +62,24 @@ services:
       api: { condition: service_healthy }
     restart: unless-stopped
 
+  # HTTPS for a server, see Caddyfile. Also set WEB_PORT=127.0.0.1:8081 so
+  # visitors reach nginx only through Caddy.
+  caddy:
+    image: caddy:2.10.2-alpine
+    profiles: [https]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web: { condition: service_started }
+    restart: unless-stopped
+
   # Throwaway database for tests: tmpfs, never touches dev data.
   testdb:
     image: postgres:15-alpine
@@ -96,6 +114,8 @@ services:
     command: go test -race ./...
 
 volumes:
+  caddy_data:
+  caddy_config:
   uploads:
   pgdata:
   gomod:
