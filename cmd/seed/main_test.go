@@ -62,3 +62,17 @@ func TestSeedBuildsConsistentDemoData(t *testing.T) {
 		t.Fatalf("second seed = %d, %v; want 0", n, err)
 	}
 }
+
+func TestInterleaveMixesBrands(t *testing.T) {
+	var items []service.Item
+	for _, b := range []string{"A", "A", "A", "B", "C", "C"} {
+		items = append(items, service.Item{Brand: b})
+	}
+	var got string
+	for _, it := range interleave(items) {
+		got += it.Brand
+	}
+	if got != "ABCACA" {
+		t.Fatalf("interleave = %s, want ABCACA", got)
+	}
+}

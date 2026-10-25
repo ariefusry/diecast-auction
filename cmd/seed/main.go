@@ -56,11 +56,34 @@ func main() {
 	}
 	defer pool.Close()
 
-	n, err := seed(context.Background(), pool, items, "demo_")
+	n, err := seed(context.Background(), pool, interleave(items), "demo_")
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("seeded %d auctions", n)
+}
+
+// interleave deals items round-robin by brand. seeds.json is grouped by brand,
+// so seeding it in order would fill "newest" and "ending soon" with one brand.
+func interleave(items []service.Item) []service.Item {
+	var brands []string
+	byBrand := map[string][]service.Item{}
+	for _, it := range items {
+		if byBrand[it.Brand] == nil {
+			brands = append(brands, it.Brand)
+		}
+		byBrand[it.Brand] = append(byBrand[it.Brand], it)
+	}
+	out := make([]service.Item, 0, len(items))
+	for len(out) < len(items) {
+		for _, b := range brands {
+			if len(byBrand[b]) > 0 {
+				out = append(out, byBrand[b][0])
+				byBrand[b] = byBrand[b][1:]
+			}
+		}
+	}
+	return out
 }
 
 // seed creates the demo users (prefix + seller1..2, bidder1..3) and one auction
