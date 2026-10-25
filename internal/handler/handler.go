@@ -2,7 +2,7 @@
 //
 // Swagger docs are generated from the annotations below into internal/apidocs:
 //
-//	swag init -g handler.go -d internal/handler,internal/service -o internal/apidocs --ot go,json
+//	go run github.com/swaggo/swag/cmd/swag@v1.16.4 init -g handler.go -d internal/handler,internal/service -o internal/apidocs --ot go,json
 //
 // @title                      Diecast Auction API
 // @version                    1.0
