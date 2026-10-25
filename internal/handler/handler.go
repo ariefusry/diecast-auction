@@ -284,6 +284,7 @@ func (h *handler) listBids(w http.ResponseWriter, r *http.Request) {
 // @Tags     auctions
 // @Produce  json
 // @Param    q         query    string false "Keywords"
+// @Param    category  query    string false "diecast or diorama"
 // @Param    brand     query    string false "Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works or M2 Machines"
 // @Param    condition query    string false "mint_on_card, sealed_box, acrylic_case, loose_mint, damaged_packaging"
 // @Param    color     query    string false "Color substring"
@@ -298,7 +299,7 @@ func (h *handler) listAuctions(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	price := func(k string) int64 { n, _ := strconv.ParseInt(q.Get(k), 10, 64); return n }
 	f := service.Filter{
-		Text: q.Get("q"), Brand: q.Get("brand"), Series: q.Get("series"), Color: q.Get("color"),
+		Text: q.Get("q"), Category: q.Get("category"), Brand: q.Get("brand"), Series: q.Get("series"), Color: q.Get("color"),
 		Condition: q.Get("condition"), MinPrice: price("min_price"), MaxPrice: price("max_price"), Sort: q.Get("sort"),
 	}
 	if tags := q.Get("tags"); tags != "" {

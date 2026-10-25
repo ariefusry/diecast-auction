@@ -11,8 +11,15 @@ import (
 // Brands are the catalog's brands, as stored in items.brand.
 var Brands = []string{"Hot Wheels", "Mini GT", "Inno64", "Matchbox", "Tomica", "Tarmac Works", "M2 Machines"}
 
-// Conditions mirrors the items.condition CHECK constraint.
-var Conditions = []string{"mint_on_card", "sealed_box", "acrylic_case", "loose_mint", "damaged_packaging"}
+// Categories mirrors the items.category CHECK constraint.
+var Categories = []string{"diecast", "diorama"}
+
+// Conditions are the diecast packaging conditions, DioramaConditions the
+// diorama ones; together they mirror the items_category_fields CHECK.
+var (
+	Conditions        = []string{"mint_on_card", "sealed_box", "acrylic_case", "loose_mint", "damaged_packaging"}
+	DioramaConditions = []string{"new", "used"}
+)
 
 // Sorts are the accepted Filter.Sort values; empty means ending soonest first.
 var Sorts = map[string]string{
@@ -31,6 +38,7 @@ const searchLimit = 50
 // Filter is a catalog search. It may come from an LLM, so it is untrusted:
 // Normalize it, and it only ever reaches SQL as bind parameters.
 type Filter struct {
+	Category  string   `json:"category"`
 	Brand     string   `json:"brand"`
 	Series    string   `json:"series"`
 	Color     string   `json:"color"`
@@ -61,7 +69,10 @@ func (f Filter) Normalize() Filter {
 			out.Brand = b
 		}
 	}
-	if slices.Contains(Conditions, f.Condition) {
+	if c := strings.ToLower(strings.TrimSpace(f.Category)); slices.Contains(Categories, c) {
+		out.Category = c
+	}
+	if slices.Contains(Conditions, f.Condition) || slices.Contains(DioramaConditions, f.Condition) {
 		out.Condition = f.Condition
 	}
 	if _, ok := Sorts[f.Sort]; ok {
@@ -82,8 +93,8 @@ func (f Filter) Normalize() Filter {
 
 // Search returns active auctions matching f. With relax, when nothing matches it relaxes
 // step by step: first color, series, tags and condition, then price, and
-// finally any single text word may match instead of all of them. Brand always
-// stays, since it carries what the user is looking for.
+// finally any single text word may match instead of all of them. Brand and
+// category always stay, since they carry what the user is looking for.
 // Explicit catalog filters pass relax=false: a user who picked a condition
 // must not silently get other conditions back.
 func (s *Auctions) Search(ctx context.Context, f Filter, relax bool) (SearchResult, error) {
@@ -131,6 +142,9 @@ func (s *Auctions) find(ctx context.Context, f Filter, anyWord bool) ([]Auction,
 		return fmt.Sprintf("$%d", len(args))
 	}
 	where = append(where, "a.status = 'active'")
+	if f.Category != "" {
+		where = append(where, "i.category = "+arg(f.Category))
+	}
 	if f.Brand != "" {
 		where = append(where, "i.brand = "+arg(f.Brand))
 	}
@@ -157,7 +171,7 @@ func (s *Auctions) find(ctx context.Context, f Filter, anyWord bool) ([]Auction,
 	for _, w := range strings.Fields(f.Text) {
 		w = alnum(w)
 		if w != "" && (!anyWord || len(w) >= 3) {
-			words = append(words, "regexp_replace(lower(concat_ws(' ', i.brand, i.model_name, i.series, i.color, "+
+			words = append(words, "regexp_replace(lower(concat_ws(' ', i.brand, i.artist, i.model_name, i.series, i.color, "+
 				"array_to_string(i.tags, ' '))), '[^a-z0-9]', '', 'g') LIKE '%' || "+arg(w)+" || '%'")
 		}
 	}

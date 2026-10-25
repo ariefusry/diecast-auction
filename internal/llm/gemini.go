@@ -32,6 +32,8 @@ func NewGemini(key, model string) *Gemini {
 
 const prompt = `You convert a diecast (1:64 scale) auction search, usually in Indonesian, into a JSON filter.
 Rules:
+- category: "diorama" when the user asks for a diorama, display base, garage or scene for diecast; "diecast" only when they explicitly contrast cars with dioramas. Dioramas have no brand.
+- condition for dioramas: baru=new, bekas=used.
 - brand: only when the user names Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works or M2 Machines (e.g. "hw" means Hot Wheels, "mb" means Matchbox, "tarmac" means Tarmac Works, "m2" means M2 Machines).
 - color: one English color word in lowercase, translated (merah=red, putih=white, hitam=black, biru=blue, hijau=green, kuning=yellow, abu-abu=grey, perak=silver, emas=gold, oranye=orange, ungu=purple).
 - tags: lowercase car makes (nissan, honda, toyota, ...) and "jdm" for Japanese cars or when the user says jdm.
@@ -47,11 +49,12 @@ Query: `
 var schema = map[string]any{
 	"type": "object",
 	"properties": map[string]any{
+		"category":  map[string]any{"type": "string", "enum": service.Categories},
 		"brand":     map[string]any{"type": "string", "enum": service.Brands},
 		"series":    map[string]any{"type": "string"},
 		"color":     map[string]any{"type": "string"},
 		"tags":      map[string]any{"type": "array", "items": map[string]any{"type": "string"}},
-		"condition": map[string]any{"type": "string", "enum": service.Conditions},
+		"condition": map[string]any{"type": "string", "enum": append(slices.Clone(service.Conditions), service.DioramaConditions...)},
 		"min_price": map[string]any{"type": "integer"},
 		"max_price": map[string]any{"type": "integer"},
 		"text":      map[string]any{"type": "string"},

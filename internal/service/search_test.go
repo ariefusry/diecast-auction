@@ -12,16 +12,16 @@ import (
 func TestNormalizeDropsValuesOutsideTheAllowedSets(t *testing.T) {
 	got := Filter{
 		Brand: "mini gt", Series: "  Car Culture ", Color: "Red", Tags: []string{"JDM", "", "jdm", "a", "b", "c", "d", "e"},
-		Condition: "shiny", MinPrice: -5, MaxPrice: 100_000, Text: "  skyline   r34 ", Sort: "random",
+		Condition: "shiny", Category: "Diorama", MinPrice: -5, MaxPrice: 100_000, Text: "  skyline   r34 ", Sort: "random",
 	}.Normalize()
 	want := Filter{
 		Brand: "Mini GT", Series: "Car Culture", Color: "red", Tags: []string{"jdm", "a", "b", "c", "d"},
-		MaxPrice: 100_000, Text: "skyline r34",
+		MaxPrice: 100_000, Text: "skyline r34", Category: "diorama",
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got  %+v\nwant %+v", got, want)
 	}
-	if f := (Filter{Brand: "Maisto", MinPrice: 200, MaxPrice: 100}).Normalize(); f.Brand != "" || f.MaxPrice != 0 {
+	if f := (Filter{Brand: "Maisto", Category: "boat", MinPrice: 200, MaxPrice: 100}).Normalize(); f.Brand != "" || f.Category != "" || f.MaxPrice != 0 {
 		t.Fatalf("unknown brand / inverted range kept: %+v", f)
 	}
 	// Long or hostile input is cut cheaply and never carries NUL into SQL.
@@ -57,6 +57,11 @@ func searchEnv(t *testing.T) (*auctionEnv, string, map[string]int64) {
 		in.StartPrice = c.start
 		ids[c.key] = e.active(seller, in).ID
 	}
+	// A diorama has an artist instead of a brand and no packaging condition.
+	dio := sampleAuction()
+	dio.Item = Item{Category: "diorama", Artist: "Studio Kayu", ModelName: token + " garage-dio", Condition: "new", Size: "30 x 20 cm", ReadyWeeks: 3}
+	dio.StartPrice = 400_000
+	ids["garage-dio"] = e.active(seller, dio).ID
 	// A bid lifts red-mgt's current price above its start price.
 	if _, err := e.auctions.Bid(context.Background(), bidder, ids["red-mgt"], 260_000); err != nil {
 		t.Fatalf("Bid: %v", err)
@@ -73,12 +78,15 @@ func TestSearchAppliesFilters(t *testing.T) {
 		f    Filter
 		want []string
 	}{
-		{"text only, drafts hidden", Filter{Text: token, Sort: "price_asc"}, []string{"red-hw", "blue-mgt", "red-mgt"}},
+		{"text only, drafts hidden", Filter{Text: token, Sort: "price_asc"}, []string{"red-hw", "blue-mgt", "red-mgt", "garage-dio"}},
+		{"dioramas only", Filter{Text: token, Category: "diorama"}, []string{"garage-dio"}},
+		{"diecast only", Filter{Text: token, Category: "diecast", Sort: "price_asc"}, []string{"red-hw", "blue-mgt", "red-mgt"}},
+		{"artist is searchable", Filter{Text: token + " studiokayu"}, []string{"garage-dio"}},
 		{"brand", Filter{Text: token, Brand: "Mini GT", Sort: "price_asc"}, []string{"blue-mgt", "red-mgt"}},
 		{"color substring", Filter{Text: token, Color: "red", Sort: "price_desc"}, []string{"red-mgt", "red-hw"}},
 		{"tags", Filter{Text: token, Tags: []string{"jdm"}, Sort: "price_asc"}, []string{"red-hw", "blue-mgt"}},
 		{"condition", Filter{Text: token, Condition: "sealed_box"}, []string{"blue-mgt"}},
-		{"price uses current bid", Filter{Text: token, MinPrice: 250_000}, []string{"red-mgt"}},
+		{"price uses current bid", Filter{Text: token, MinPrice: 250_000, Sort: "price_asc"}, []string{"red-mgt", "garage-dio"}},
 		{"max price", Filter{Text: token, MaxPrice: 160_000, Sort: "price_asc"}, []string{"red-hw", "blue-mgt"}},
 		{"words match in any order", Filter{Text: "blue-mgt " + token}, []string{"blue-mgt"}},
 		{"punctuation ignored", Filter{Text: token + " bluemgt"}, []string{"blue-mgt"}},
@@ -142,5 +150,5 @@ func TestSearchFallsBackToAnyWord(t *testing.T) {
 	if err != nil || !res.Relaxed {
 		t.Fatalf("Search = %+v, %v; want relaxed", res, err)
 	}
-	assertIDs(t, res.Auctions, ids, []string{"red-hw", "blue-mgt", "red-mgt"})
+	assertIDs(t, res.Auctions, ids, []string{"red-hw", "blue-mgt", "red-mgt", "garage-dio"})
 }

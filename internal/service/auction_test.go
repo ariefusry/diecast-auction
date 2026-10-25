@@ -548,3 +548,49 @@ func TestMaskName(t *testing.T) {
 		}
 	}
 }
+
+func TestCreateDiorama(t *testing.T) {
+	e := newAuctionEnv(t)
+	seller := e.user(0)
+	// An artist selling a PO slot.
+	in := sampleAuction()
+	in.Item = Item{Category: "diorama", Artist: " Studio Kayu ", ModelName: "Bengkel JDM", Condition: "new", Size: "30 x 20 cm", ReadyWeeks: 3}
+	it := e.draft(seller, in).Item
+	if it.Category != "diorama" || it.Artist != "Studio Kayu" || it.Brand != "" || it.Condition != "new" || it.Size != "30 x 20 cm" || it.ReadyWeeks != 3 {
+		t.Fatalf("diorama stored as %+v", it)
+	}
+	// An owner reselling a used diorama whose maker is unknown.
+	used := sampleAuction()
+	used.Item = Item{Category: "diorama", ModelName: "Garasi dua lantai", Condition: "used"}
+	if it := e.draft(seller, used).Item; it.Artist != "" || it.Condition != "used" || it.ReadyWeeks != 0 {
+		t.Fatalf("used diorama stored as %+v", it)
+	}
+	if got := e.draft(seller, sampleAuction()).Item.Category; got != "diecast" {
+		t.Fatalf("default category = %q, want diecast", got)
+	}
+
+	for name, mutate := range map[string]func(*Item){
+		"diorama with a brand":               func(it *Item) { it.Brand = "Tomica" },
+		"diorama with a packaging condition": func(it *Item) { it.Condition = "sealed_box" },
+		"diorama without condition":          func(it *Item) { it.Condition = "" },
+		"ready in over a year":               func(it *Item) { it.ReadyWeeks = 53 },
+		"unknown category":                   func(it *Item) { it.Category = "boat" },
+	} {
+		bad := in
+		bad.Item = in.Item
+		mutate(&bad.Item)
+		if _, err := e.auctions.Create(context.Background(), seller, bad); !errors.Is(err, ErrInvalidInput) {
+			t.Errorf("%s: err = %v, want ErrInvalidInput", name, err)
+		}
+	}
+	for name, mutate := range map[string]func(*Item){
+		"diecast with artist":            func(it *Item) { it.Artist = "Studio Kayu" },
+		"diecast with diorama condition": func(it *Item) { it.Condition = "used" },
+	} {
+		car := sampleAuction()
+		mutate(&car.Item)
+		if _, err := e.auctions.Create(context.Background(), seller, car); !errors.Is(err, ErrInvalidInput) {
+			t.Errorf("%s: err = %v, want ErrInvalidInput", name, err)
+		}
+	}
+}

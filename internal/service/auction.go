@@ -23,7 +23,11 @@ const MaxMoney int64 = 1_000_000_000_000
 
 type Item struct {
 	ID          int64    `json:"id,omitempty"`
-	Brand       string   `json:"brand"`
+	Category    string   `json:"category" enums:"diecast,diorama"` // empty means diecast
+	Brand       string   `json:"brand"`                            // diecast only
+	Artist      string   `json:"artist,omitempty"`                 // diorama only: who builds it
+	Size        string   `json:"size,omitempty" example:"30 x 20 cm"`
+	ReadyWeeks  int      `json:"ready_weeks,omitempty"` // diorama PO estimate; 0 means finished
 	ModelName   string   `json:"model_name"`
 	Series      string   `json:"series"`
 	Year        int      `json:"year"`
@@ -93,10 +97,13 @@ func (s *Auctions) Create(ctx context.Context, sellerID int64, in NewAuction) (A
 	err = pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
 		var itemID int64
 		err := tx.QueryRow(ctx,
-			`INSERT INTO items (seller_id, brand, model_name, series, year, color, tags, condition, image_url, source_url, description)
-			 VALUES ($1, $2, $3, NULLIF($4, ''), NULLIF($5, 0), NULLIF($6, ''), $7, $8, NULLIF($9, ''), NULLIF($10, ''), $11)
+			`INSERT INTO items (seller_id, brand, model_name, series, year, color, tags, condition, image_url, source_url, description,
+			                    category, artist, size, ready_weeks)
+			 VALUES ($1, NULLIF($2, ''), $3, NULLIF($4, ''), NULLIF($5, 0), NULLIF($6, ''), $7, NULLIF($8, ''), NULLIF($9, ''),
+			         NULLIF($10, ''), $11, $12, NULLIF($13, ''), NULLIF($14, ''), NULLIF($15, 0))
 			 RETURNING id`,
-			sellerID, it.Brand, it.ModelName, it.Series, it.Year, it.Color, it.Tags, it.Condition, it.ImageURL, it.SourceURL, it.Description).
+			sellerID, it.Brand, it.ModelName, it.Series, it.Year, it.Color, it.Tags, it.Condition, it.ImageURL, it.SourceURL, it.Description,
+			it.Category, it.Artist, it.Size, it.ReadyWeeks).
 			Scan(&itemID)
 		if err != nil {
 			return err
@@ -118,8 +125,9 @@ func (s *Auctions) Create(ctx context.Context, sellerID int64, in NewAuction) (A
 }
 
 // auctionSelect lists the columns scanAuction reads, in order.
-const auctionSelect = `SELECT a.id, i.seller_id, i.id, i.brand, i.model_name, coalesce(i.series, ''), coalesce(i.year, 0),
-	coalesce(i.color, ''), i.tags, i.condition, coalesce(i.image_url, ''), coalesce(i.source_url, ''), i.description,
+const auctionSelect = `SELECT a.id, i.seller_id, i.id, coalesce(i.brand, ''), i.model_name, coalesce(i.series, ''), coalesce(i.year, 0),
+	coalesce(i.color, ''), i.tags, coalesce(i.condition, ''), coalesce(i.image_url, ''), coalesce(i.source_url, ''), i.description,
+	i.category, coalesce(i.artist, ''), coalesce(i.size, ''), coalesce(i.ready_weeks, 0),
 	a.start_price, a.min_increment, a.buy_now_price, a.current_highest_bid, a.highest_bidder_id,
 	a.status, extract(epoch FROM a.duration)::int / 60, a.start_time, a.end_time, a.winner_id
 	FROM auctions a JOIN items i ON i.id = a.item_id`
@@ -128,6 +136,7 @@ func scanAuction(row pgx.Row) (Auction, error) {
 	var a Auction
 	err := row.Scan(&a.ID, &a.SellerID, &a.Item.ID, &a.Item.Brand, &a.Item.ModelName, &a.Item.Series, &a.Item.Year,
 		&a.Item.Color, &a.Item.Tags, &a.Item.Condition, &a.Item.ImageURL, &a.Item.SourceURL, &a.Item.Description,
+		&a.Item.Category, &a.Item.Artist, &a.Item.Size, &a.Item.ReadyWeeks,
 		&a.StartPrice, &a.MinIncrement, &a.BuyNowPrice, &a.CurrentHighestBid, &a.HighestBidderID,
 		&a.Status, &a.DurationMinutes, &a.StartTime, &a.EndTime, &a.WinnerID)
 	return a, err
@@ -372,15 +381,38 @@ func (s *Auctions) CloseExpired(ctx context.Context) (int, error) {
 // year, lowercase tags, and URLs limited to http(s) or our own /uploads/.
 func validItem(it Item) (Item, error) {
 	bad := func(msg string) (Item, error) { return Item{}, fmt.Errorf("%w: %s", ErrInvalidInput, msg) }
-	brand := it.Brand
-	it.Brand = ""
-	for _, b := range Brands {
-		if strings.EqualFold(b, strings.TrimSpace(brand)) {
-			it.Brand = b
+	it.Artist, it.Size = strings.TrimSpace(it.Artist), strings.TrimSpace(it.Size)
+	switch it.Category {
+	case "", "diecast":
+		it.Category = "diecast"
+		brand := it.Brand
+		it.Brand = ""
+		for _, b := range Brands {
+			if strings.EqualFold(b, strings.TrimSpace(brand)) {
+				it.Brand = b
+			}
 		}
-	}
-	if it.Brand == "" {
-		return bad("brand must be one of " + strings.Join(Brands, ", "))
+		if it.Brand == "" {
+			return bad("brand must be one of " + strings.Join(Brands, ", "))
+		}
+		if it.Artist != "" || it.Size != "" || it.ReadyWeeks != 0 {
+			return bad("artist, size and ready_weeks are for dioramas only")
+		}
+	case "diorama":
+		// Sold by its artist or second-hand by an owner: no diecast brand, an
+		// optional artist, and new/used instead of packaging conditions.
+		if strings.TrimSpace(it.Brand) != "" {
+			return bad("a diorama has no diecast brand; name its artist instead")
+		}
+		it.Brand = ""
+		if !slices.Contains(DioramaConditions, it.Condition) {
+			return bad("diorama condition must be new or used")
+		}
+		if it.ReadyWeeks < 0 || it.ReadyWeeks > 52 {
+			return bad("ready_weeks must be 0 (finished) to 52")
+		}
+	default:
+		return bad("category must be diecast or diorama")
 	}
 	it.ModelName, it.Series, it.Color = strings.TrimSpace(it.ModelName), strings.TrimSpace(it.Series), strings.TrimSpace(it.Color)
 	for _, f := range []struct {
@@ -389,6 +421,7 @@ func validItem(it Item) (Item, error) {
 	}{
 		{"model_name", it.ModelName, 200}, {"series", it.Series, 100}, {"color", it.Color, 100},
 		{"description", it.Description, 2000}, {"image_url", it.ImageURL, 500}, {"source_url", it.SourceURL, 500},
+		{"artist", it.Artist, 60}, {"size", it.Size, 50},
 	} {
 		if utf8.RuneCountInString(f.value) > f.max {
 			return bad(fmt.Sprintf("%s must be at most %d characters", f.name, f.max))

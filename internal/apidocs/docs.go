@@ -33,6 +33,12 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "description": "diecast or diorama",
+                        "name": "category",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works or M2 Machines",
                         "name": "brand",
                         "in": "query"
@@ -879,6 +885,9 @@ const docTemplate = `{
                 "brand": {
                     "type": "string"
                 },
+                "category": {
+                    "type": "string"
+                },
                 "color": {
                     "type": "string"
                 },
@@ -911,8 +920,21 @@ const docTemplate = `{
         "service.Item": {
             "type": "object",
             "properties": {
-                "brand": {
+                "artist": {
+                    "description": "diorama only: who builds it",
                     "type": "string"
+                },
+                "brand": {
+                    "description": "diecast only",
+                    "type": "string"
+                },
+                "category": {
+                    "description": "empty means diecast",
+                    "type": "string",
+                    "enum": [
+                        "diecast",
+                        "diorama"
+                    ]
                 },
                 "color": {
                     "type": "string"
@@ -932,8 +954,16 @@ const docTemplate = `{
                 "model_name": {
                     "type": "string"
                 },
+                "ready_weeks": {
+                    "description": "diorama PO estimate; 0 means finished",
+                    "type": "integer"
+                },
                 "series": {
                     "type": "string"
+                },
+                "size": {
+                    "type": "string",
+                    "example": "30 x 20 cm"
                 },
                 "source_url": {
                     "description": "attribution for wiki-sourced items",
