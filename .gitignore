@@ -1,3 +1,4 @@
 .env
 uploads/
 .playwright-mcp/
+backups/
