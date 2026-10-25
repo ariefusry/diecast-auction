@@ -51,8 +51,9 @@ go run cmd/scraper/main.go
 # Isi database dengan katalog dan akun demo (butuh DATABASE_URL, idempoten)
 go run cmd/seed/main.go
 
-# Regenerasi dokumentasi Swagger setelah mengubah anotasi handler atau tipe service
-swag init -g handler.go -d internal/handler,internal/service -o internal/apidocs --ot go,json
+# Regenerasi dokumentasi Swagger setelah mengubah anotasi handler atau tipe service.
+# Lewat go run dengan versi yang sama seperti CI: binary swag lokal bisa lebih baru (dan mengaku v1.16.4) lalu menulis output berbeda
+go run github.com/swaggo/swag/cmd/swag@v1.16.4 init -g handler.go -d internal/handler,internal/service -o internal/apidocs --ot go,json
 
 # API lokal di :8080 untuk `npm run dev` (API di Docker tidak dipublish ke host, jadi tanpa ini katalog kosong).
 # API tidak membaca .env sendiri, jadi muat dulu (Git Bash)

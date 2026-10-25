@@ -1484,8 +1484,7 @@ const docTemplate = `{
                     "description": "MyBids is my highest bid per auction in Bidding and Lost, for the tracker.",
                     "type": "object",
                     "additionalProperties": {
-                        "type": "integer",
-                        "format": "int64"
+                        "type": "integer"
                     }
                 },
                 "selling": {
