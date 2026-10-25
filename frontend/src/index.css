@@ -250,13 +250,66 @@
   }
 }
 
-/* Reduced motion keeps colour and opacity feedback, drops movement. */
+/* Opening a lot: the pack you picked comes off the peg and becomes the pack on
+   the detail page, tilt and all, so the page keeps your place instead of
+   cutting. The rest of the page cross-fades quickly underneath it. */
+::view-transition-group(lot) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-old(lot) {
+  animation-duration: 180ms;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 160ms;
+}
+
+@keyframes tint {
+  from,
+  40% {
+    color: var(--color-lead);
+  }
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes flash {
+  from,
+  to {
+    opacity: 0;
+  }
+  15%,
+  70% {
+    opacity: 1;
+  }
+}
+
+/* Reduced motion drops movement but keeps the cause of a change visible: a new
+   price still flashes mint, the leading sticker still appears, and the time
+   bonus still shows, all without travelling. Pages swap without morphing. */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
     scale: none !important;
     transform: none !important;
     scroll-behavior: auto !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  .land {
+    animation: tint 700ms ease-out !important;
+  }
+  .stamp {
+    animation: appear 200ms ease-out both !important;
+  }
+  .bonus {
+    animation: flash 1600ms ease-out both !important;
   }
 }
 @media (prefers-reduced-transparency: reduce) {

@@ -23,6 +23,10 @@ export function AuctionCard({ auction: a, now, className = "" }: { auction: Auct
   return (
     <Link
       to={`/lelang/${a.id}`}
+      viewTransition
+      // Only the clicked pack gets the shared name: the same lot can hang on the
+      // pegboard and in the grid at once, and two names would cancel the morph.
+      onClick={(e) => e.currentTarget.style.setProperty("view-transition-name", "lot")}
       style={{ "--back": cardBack(a.item) } as CSSProperties}
       className={`blister press flex flex-col gap-3 [--press:0.985] ${className}`}
     >

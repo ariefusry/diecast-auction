@@ -149,7 +149,7 @@ export function AuctionDetail() {
 
   return (
     <div className={`grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:grid-rows-[auto_1fr] ${canBid ? "max-lg:pb-64" : ""}`}>
-      <section className="blister relative self-start lg:col-start-1 lg:row-start-1" style={{ "--back": cardBack(a.item) } as CSSProperties}>
+      <section className="blister relative self-start [view-transition-name:lot] lg:col-start-1 lg:row-start-1" style={{ "--back": cardBack(a.item) } as CSSProperties}>
         <Photo url={a.item.image_url} alt={a.item.model_name} />
         {no && (
           <span className="absolute top-12 right-6 grid size-16 rotate-6 place-items-center rounded-full border-[3px] border-white bg-[#e1001a] font-display text-3xl font-extrabold text-white shadow-md">

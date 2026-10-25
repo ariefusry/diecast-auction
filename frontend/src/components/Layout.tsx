@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from "react-router";
+import { useLayoutEffect } from "react";
+import { NavLink, Outlet, useLocation, useNavigationType } from "react-router";
 import { useAuth } from "../lib/auth";
 
 const link = ({ isActive }: { isActive: boolean }) =>
@@ -6,6 +7,13 @@ const link = ({ isActive }: { isActive: boolean }) =>
 
 export function Layout() {
   const { userId } = useAuth();
+  // A new page starts at the top, before an opened lot's pack morphs into place.
+  // Back (POP) is left to the browser.
+  const { pathname } = useLocation();
+  const navigation = useNavigationType();
+  useLayoutEffect(() => {
+    if (navigation !== "POP") window.scrollTo(0, 0);
+  }, [pathname, navigation]);
   return (
     <div className="min-h-screen">
       <header className="material sticky top-0 z-20">
