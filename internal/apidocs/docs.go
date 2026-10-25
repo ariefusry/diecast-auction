@@ -1100,14 +1100,15 @@ const docTemplate = `{
                 "end_time": {
                     "type": "string"
                 },
-                "highest_bidder_id": {
-                    "type": "integer"
-                },
                 "id": {
                     "type": "integer"
                 },
                 "item": {
                     "$ref": "#/definitions/service.Item"
+                },
+                "leading": {
+                    "description": "the viewer holds the highest bid",
+                    "type": "boolean"
                 },
                 "min_increment": {
                     "type": "integer"
@@ -1119,6 +1120,10 @@ const docTemplate = `{
                 "seller_id": {
                     "type": "integer"
                 },
+                "sold": {
+                    "description": "completed with a winner",
+                    "type": "boolean"
+                },
                 "start_price": {
                     "type": "integer"
                 },
@@ -1128,8 +1133,9 @@ const docTemplate = `{
                 "status": {
                     "type": "string"
                 },
-                "winner_id": {
-                    "type": "integer"
+                "won": {
+                    "description": "the viewer won",
+                    "type": "boolean"
                 }
             }
         },
@@ -1144,11 +1150,12 @@ const docTemplate = `{
                     "type": "string",
                     "example": "d***1"
                 },
-                "bidder_id": {
-                    "type": "integer"
-                },
                 "created_at": {
                     "type": "string"
+                },
+                "mine": {
+                    "description": "placed by the viewer",
+                    "type": "boolean"
                 }
             }
         },
@@ -1302,12 +1309,13 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "mine": {
+                    "description": "sent by the viewer",
+                    "type": "boolean"
+                },
                 "sender": {
                     "description": "username",
                     "type": "string"
-                },
-                "sender_id": {
-                    "type": "integer"
                 }
             }
         },

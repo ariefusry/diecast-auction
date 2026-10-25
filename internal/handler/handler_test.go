@@ -5,9 +5,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strconv"
 	"strings"
 	"testing"
@@ -148,7 +150,7 @@ func TestAuctionFlow(t *testing.T) {
 	if code := bidder.do("POST", "/auctions/"+id+"/bids", map[string]int64{"amount": 120_000}, &a); code != http.StatusOK || *a.CurrentHighestBid != 120_000 {
 		t.Fatalf("bid = %d %+v", code, a)
 	}
-	if code := (&client{t: t, base: base}).do("GET", "/auctions/"+id, nil, &a); code != http.StatusOK || *a.HighestBidderID == 0 {
+	if code := (&client{t: t, base: base}).do("GET", "/auctions/"+id, nil, &a); code != http.StatusOK || a.CurrentHighestBid == nil || a.Leading {
 		t.Fatalf("get = %d %+v", code, a)
 	}
 	var bids []service.BidEntry
@@ -358,8 +360,11 @@ func TestChatAndSellerPage(t *testing.T) {
 		t.Fatalf("send = %d %+v", code, m)
 	}
 	var msgs []service.Message
-	if code := seller.do("GET", "/auctions/"+id+"/messages", nil, &msgs); code != http.StatusOK || len(msgs) != 1 || msgs[0].Body != "Kirim JNE ya" {
+	if code := seller.do("GET", "/auctions/"+id+"/messages", nil, &msgs); code != http.StatusOK || len(msgs) != 1 || msgs[0].Body != "Kirim JNE ya" || msgs[0].Mine {
 		t.Fatalf("messages = %d %+v", code, msgs)
+	}
+	if !m.Mine || strings.Contains(seller.raw("GET", "/auctions/"+id+"/messages"), `"sender_id"`) {
+		t.Fatalf("sent message %+v; the seller must see whose it is only as mine, never the buyer's ID", m)
 	}
 	if code := stranger.do("GET", "/auctions/"+id+"/messages", nil, nil); code != http.StatusForbidden {
 		t.Fatalf("stranger reads = %d, want 403", code)
@@ -375,5 +380,74 @@ func TestChatAndSellerPage(t *testing.T) {
 	}
 	if code := anon.do("GET", "/sellers/nobody_here_"+a.Seller, nil, nil); code != http.StatusNotFound {
 		t.Fatalf("unknown seller = %d, want 404", code)
+	}
+}
+
+// raw returns the response body as text, so a test can check which keys it contains.
+func (c *client) raw(method, path string) string {
+	c.t.Helper()
+	req, _ := http.NewRequest(method, c.base+path, nil)
+	if c.token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.token)
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		c.t.Fatalf("%s %s: %v", method, path, err)
+	}
+	defer resp.Body.Close()
+	var b strings.Builder
+	if _, err := io.Copy(&b, resp.Body); err != nil {
+		c.t.Fatal(err)
+	}
+	return b.String()
+}
+
+// Public responses never carry bidder or winner user IDs: paired with a seller's
+// public username they would unmask the bid history. Viewers get booleans instead.
+func TestBidderIdentityStaysPrivate(t *testing.T) {
+	base := newServer(t)
+	seller, bidder := signup(t, base), signup(t, base)
+	anon := &client{t: t, base: base}
+	bidder.do("POST", "/wallet/deposit", map[string]int64{"amount": 500_000}, nil)
+	body := map[string]any{
+		"item":        map[string]any{"brand": "Hot Wheels", "model_name": "Private " + testutil.Unique(), "condition": "mint_on_card"},
+		"start_price": 100_000, "min_increment": 10_000, "duration_minutes": 60,
+	}
+	var a service.Auction
+	seller.do("POST", "/auctions", body, &a)
+	id := strconv.FormatInt(a.ID, 10)
+	seller.do("POST", "/auctions/"+id+"/publish", nil, nil)
+	var after map[string]any
+	if code := bidder.do("POST", "/auctions/"+id+"/bids", map[string]int64{"amount": 100_000}, &after); code != http.StatusOK || after["leading"] != true {
+		t.Fatalf("bid = %d %v, want leading", code, after)
+	}
+
+	leaks := []string{`"highest_bidder_id"`, `"winner_id"`, `"bidder_id"`, `"sender_id"`}
+	for _, path := range []string{"/auctions/" + id, "/auctions/" + id + "/bids", "/auctions?q=" + url.QueryEscape(a.Item.ModelName), "/sellers/" + a.Seller} {
+		got := anon.raw("GET", path)
+		for _, key := range leaks {
+			if strings.Contains(got, key) {
+				t.Errorf("GET %s leaks %s: %s", path, key, got)
+			}
+		}
+	}
+
+	var view map[string]any
+	anon.do("GET", "/auctions/"+id, nil, &view)
+	if view["leading"] != false {
+		t.Errorf("anonymous leading = %v, want false", view["leading"])
+	}
+	bidder.do("GET", "/auctions/"+id, nil, &view)
+	if view["leading"] != true {
+		t.Errorf("leader's leading = %v, want true", view["leading"])
+	}
+	var bids []map[string]any
+	bidder.do("GET", "/auctions/"+id+"/bids", nil, &bids)
+	if len(bids) != 1 || bids[0]["mine"] != true {
+		t.Errorf("leader's bids = %v, want mine", bids)
+	}
+	// A bad token on a public route reads as anonymous, not 401.
+	if code := (&client{t: t, base: base, token: "nope"}).do("GET", "/auctions/"+id, nil, nil); code != http.StatusOK {
+		t.Errorf("GET with bad token = %d, want 200", code)
 	}
 }

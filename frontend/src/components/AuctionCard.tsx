@@ -8,19 +8,18 @@ import { Photo } from "./Photo";
 
 /** One lot as a blister pack: brand-colored card back, photo in the bubble,
  *  and a white price label stuck on the bottom. */
-export function AuctionCard({ auction: a, now, myId, className = "" }: { auction: Auction; now: number; myId: number | null; className?: string }) {
+export function AuctionCard({ auction: a, now, className = "" }: { auction: Auction; now: number; className?: string }) {
   const left = timeLeft(a.end_time, now);
   const price = a.current_highest_bid ?? a.start_price;
-  const leading = myId !== null && a.highest_bidder_id === myId && a.status === "active";
-  const won = myId !== null && a.winner_id === myId;
+  const leading = a.leading && a.status === "active";
   // Finished lots say how they ended instead of who leads.
   const outcome =
-    a.status === "completed" ? (won ? "Anda menang" : a.winner_id === null ? "Tidak terjual" : "Terjual") : a.status === "cancelled" ? "Dibatalkan" : null;
+    a.status === "completed" ? (a.won ? "Anda menang" : a.sold ? "Terjual" : "Tidak terjual") : a.status === "cancelled" ? "Dibatalkan" : null;
   const { no, name } = castingNumber(a.item.model_name);
   const live = a.status === "active" && left.ms > 0;
   const closing = live && left.closing;
   // Buy-now only works until the first bid.
-  const buyNow = live && a.buy_now_price !== null && a.highest_bidder_id === null ? a.buy_now_price : null;
+  const buyNow = live && a.buy_now_price !== null && a.current_highest_bid === null ? a.buy_now_price : null;
   return (
     <Link
       to={`/lelang/${a.id}`}
@@ -60,7 +59,7 @@ export function AuctionCard({ auction: a, now, myId, className = "" }: { auction
         )}
         <div className="mt-auto flex items-end justify-between gap-2">
           <div>
-            <div className={`text-sm ${leading || won ? "font-semibold text-lead" : "text-ink-soft"}`}>
+            <div className={`text-sm ${leading || a.won ? "font-semibold text-lead" : "text-ink-soft"}`}>
               {outcome ?? (leading ? "Anda memimpin" : a.current_highest_bid === null ? "Harga awal" : "Tawaran tertinggi")}
             </div>
             <div className="font-display text-2xl font-bold tabular-nums">{rupiah(price)}</div>

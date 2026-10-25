@@ -5,14 +5,14 @@ import { AuctionCard } from "./AuctionCard";
 const tilts = ["-rotate-1", "rotate-[0.6deg]", "-rotate-[0.4deg]", "rotate-1"];
 
 /** The lots closing soonest, hanging from chrome pegs. Scrolls sideways on phones. */
-export function PegWall({ auctions, now, myId }: { auctions: Auction[]; now: number; myId: number | null }) {
+export function PegWall({ auctions, now }: { auctions: Auction[]; now: number }) {
   if (auctions.length === 0) return null;
   return (
     <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 [scrollbar-width:none] pb-2 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0">
       {auctions.map((a, i) => (
         <div key={a.id} className="relative w-64 shrink-0 snap-start pt-4 lg:w-auto">
           <span className="peg" aria-hidden />
-          <AuctionCard auction={a} now={now} myId={myId} className={`h-full origin-top shadow-[0_14px_22px_-12px_rgb(60_40_20/0.55)] ${tilts[i % tilts.length]}`} />
+          <AuctionCard auction={a} now={now} className={`h-full origin-top shadow-[0_14px_22px_-12px_rgb(60_40_20/0.55)] ${tilts[i % tilts.length]}`} />
         </div>
       ))}
     </div>

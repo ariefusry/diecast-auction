@@ -25,7 +25,23 @@ func RequireAuth(parse func(token string) (int64, error)) func(http.Handler) htt
 	}
 }
 
-// UserID returns the authenticated user ID; only valid behind RequireAuth.
+// OptionalAuth stores the user ID of a valid Bearer token, for public routes
+// whose response depends on who is looking. A missing or bad token is
+// anonymous (UserID 0), never a 401.
+func OptionalAuth(parse func(token string) (int64, error)) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if token, ok := strings.CutPrefix(r.Header.Get("Authorization"), "Bearer "); ok {
+				if id, err := parse(token); err == nil {
+					r = r.WithContext(context.WithValue(r.Context(), userIDKey{}, id))
+				}
+			}
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+// UserID returns the authenticated user ID: 0 without RequireAuth or OptionalAuth.
 func UserID(ctx context.Context) int64 {
 	id, _ := ctx.Value(userIDKey{}).(int64)
 	return id

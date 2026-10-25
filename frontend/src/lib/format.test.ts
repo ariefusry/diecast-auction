@@ -90,17 +90,17 @@ describe("quickBids", () => {
 });
 
 describe("trackerStatus", () => {
-  const a = (status: "active" | "completed", highest_bidder_id: number | null, winner_id: number | null) => ({ status, highest_bidder_id, winner_id });
+  const a = (status: "active" | "completed", leading: boolean, won: boolean) => ({ status, leading, won });
   it("follows the lead while open", () => {
-    expect(trackerStatus(a("active", 7, null), 7, true)).toBe("Memimpin");
-    expect(trackerStatus(a("active", 8, null), 7, true)).toBe("Disalip");
+    expect(trackerStatus(a("active", true, false), true)).toBe("Memimpin");
+    expect(trackerStatus(a("active", false, false), true)).toBe("Disalip");
   });
   it("gives an ended but unsettled auction to its leader", () => {
-    expect(trackerStatus(a("active", 7, null), 7, false)).toBe("Menang");
-    expect(trackerStatus(a("active", 8, null), 7, false)).toBe("Kalah");
+    expect(trackerStatus(a("active", true, false), false)).toBe("Menang");
+    expect(trackerStatus(a("active", false, false), false)).toBe("Kalah");
   });
   it("reads the winner once settled", () => {
-    expect(trackerStatus(a("completed", 7, 7), 7, false)).toBe("Menang");
-    expect(trackerStatus(a("completed", 8, 8), 7, false)).toBe("Kalah");
+    expect(trackerStatus(a("completed", false, true), false)).toBe("Menang");
+    expect(trackerStatus(a("completed", false, false), false)).toBe("Kalah");
   });
 });

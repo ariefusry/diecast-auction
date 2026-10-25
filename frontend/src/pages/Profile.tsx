@@ -23,11 +23,11 @@ const tabs: { key: Tab; label: string; empty: string }[] = [
 ];
 
 /** One row of the bid tracker: my best bid against the price now. */
-function TrackerRow({ a, myBid, myId, now }: { a: Auction; myBid: number; myId: number | null; now: number }) {
-  const leading = a.highest_bidder_id === myId;
+function TrackerRow({ a, myBid, now }: { a: Auction; myBid: number; now: number }) {
+  const leading = a.leading;
   const left = timeLeft(a.end_time, now);
   const open = a.status === "active" && left.ms > 0;
-  const status = trackerStatus(a, myId, open);
+  const status = trackerStatus(a, open);
   const good = status === "Memimpin" || status === "Menang";
   return (
     <li className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
@@ -61,7 +61,7 @@ function TrackerRow({ a, myBid, myId, now }: { a: Auction; myBid: number; myId: 
 }
 
 export function ProfilePage() {
-  const { userId, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const now = useNow();
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -151,15 +151,15 @@ export function ProfilePage() {
       ) : tracker ? (
         <ol className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-card">
           {list.map((a) => (
-            <TrackerRow key={a.id} a={a} myBid={mine.my_bids[a.id] ?? 0} myId={userId} now={now} />
+            <TrackerRow key={a.id} a={a} myBid={mine.my_bids[a.id] ?? 0} now={now} />
           ))}
         </ol>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {list.map((a) => (
             <div key={a.id} className="space-y-2">
-              <AuctionCard auction={a} now={now} myId={userId} />
-              {a.status === "completed" && a.winner_id !== null && (
+              <AuctionCard auction={a} now={now} />
+              {a.status === "completed" && a.sold && (
                 <Link to={`/lelang/${a.id}#chat`} className="press block rounded-lg bg-ink py-2 text-center text-sm font-semibold text-white">
                   {tab === "won" ? "Chat penjual, atur pengiriman" : "Chat pembeli, atur pengiriman"}
                 </Link>

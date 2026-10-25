@@ -58,14 +58,14 @@ export function AuctionDetail() {
       last.current = fresh;
       setAuction(fresh);
       if (!prev) return;
-      if (userId !== null && prev.highest_bidder_id === userId && fresh.highest_bidder_id !== userId && fresh.status === "active") {
+      if (prev.leading && !fresh.leading && fresh.status === "active") {
         setOutbidBy(fresh.current_highest_bid);
         setNotice(""); // "your bid is placed" is no longer true
         buzz([40, 60, 40]);
       }
       if (prev.end_time && fresh.end_time && Date.parse(fresh.end_time) > Date.parse(prev.end_time)) setBonuses((n) => n + 1);
     },
-    [userId],
+    [],
   );
 
   const load = useCallback(async () => {
@@ -96,8 +96,8 @@ export function AuctionDetail() {
   const left = timeLeft(a.end_time, now);
   const open = a.status === "active" && left.ms > 0;
   const isSeller = userId === a.seller_id;
-  const leading = userId !== null && a.highest_bidder_id === userId;
-  const won = a.status === "completed" && userId !== null && a.winner_id === userId;
+  const leading = a.leading;
+  const won = a.status === "completed" && a.won;
   const floor = minBid(a);
   const canBid = open && !isSeller && userId !== null && !leading;
   const { no, name } = castingNumber(a.item.model_name);
@@ -234,7 +234,7 @@ export function AuctionDetail() {
           )}
           {a.status === "completed" && (
             <p className="mt-3 font-semibold">
-              {a.winner_id === null ? "Selesai tanpa pemenang." : won ? "Anda memenangkan lelang ini." : "Sudah terjual."}
+              {!a.sold ? "Selesai tanpa pemenang." : won ? "Anda memenangkan lelang ini." : "Sudah terjual."}
             </p>
           )}
         </div>
@@ -304,7 +304,7 @@ export function AuctionDetail() {
           </form>
         )}
 
-        {open && !isSeller && userId !== null && a.buy_now_price !== null && a.highest_bidder_id === null && (
+        {open && !isSeller && userId !== null && a.buy_now_price !== null && a.current_highest_bid === null && (
           <Button
             variant="ghost"
             disabled={busy}
@@ -331,17 +331,17 @@ export function AuctionDetail() {
                 Tayangkan lelang
               </Button>
             )}
-            {(a.status === "draft" || open) && a.highest_bidder_id === null && (
+            {(a.status === "draft" || open) && a.current_highest_bid === null && (
               <Button variant="ghost" disabled={busy} onClick={() => run(() => api<Auction>(`/auctions/${a.id}/cancel`, { method: "POST" }), "Lelang dibatalkan.")}>
                 Batalkan lelang
               </Button>
             )}
-            {a.highest_bidder_id !== null && <p className="text-sm text-ink-soft">Lelang yang sudah punya tawaran tidak bisa dibatalkan.</p>}
+            {a.current_highest_bid !== null && <p className="text-sm text-ink-soft">Lelang yang sudah punya tawaran tidak bisa dibatalkan.</p>}
           </div>
         )}
 
-        {a.status === "completed" && a.winner_id !== null && userId !== null && (isSeller || won) && (
-          <Chat auctionId={a.id} myId={userId} otherName={isSeller ? "pemenang lelang" : `penjual (${a.seller})`} now={now} />
+        {a.status === "completed" && a.sold && userId !== null && (isSeller || won) && (
+          <Chat auctionId={a.id} otherName={isSeller ? "pemenang lelang" : `penjual (${a.seller})`} now={now} />
         )}
 
         {a.item.description && <p className="max-w-prose whitespace-pre-line">{a.item.description}</p>}
@@ -367,9 +367,9 @@ export function AuctionDetail() {
         ) : (
           <ol className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-card">
             {bids.map((b, i) => {
-              const mine = b.bidder_id === userId;
+              const mine = b.mine;
               return (
-                <li key={`${b.bidder_id}-${b.amount}`} className={`flex items-center gap-3 px-4 py-3 ${i === 0 && bumps ? "land" : ""} ${i === 0 ? "bg-lead/8" : ""}`}>
+                <li key={b.amount} className={`flex items-center gap-3 px-4 py-3 ${i === 0 && bumps ? "land" : ""} ${i === 0 ? "bg-lead/8" : ""}`}>
                   <span
                     aria-hidden
                     className={`grid size-9 shrink-0 place-items-center rounded-full font-display text-lg font-bold uppercase ${mine ? "bg-track text-white" : "bg-paper text-ink"}`}

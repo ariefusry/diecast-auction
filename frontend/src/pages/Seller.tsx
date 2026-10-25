@@ -3,7 +3,6 @@ import { useParams } from "react-router";
 import { AuctionCard } from "../components/AuctionCard";
 import { ErrorNote } from "../components/ui";
 import { api, errorMessage, type SellerProfile } from "../lib/api";
-import { useAuth } from "../lib/auth";
 import { useNow } from "../lib/useNow";
 
 // The API returns at most this many listings (service.myLimit).
@@ -14,7 +13,6 @@ const monthYear = new Intl.DateTimeFormat("id-ID", { month: "long", year: "numer
 /** A seller's public page: who they are and everything they have on offer now. */
 export function SellerPage() {
   const { username } = useParams();
-  const { userId } = useAuth();
   const now = useNow();
   const [seller, setSeller] = useState<{ name: string; data: SellerProfile } | null>(null);
   const [error, setError] = useState("");
@@ -62,7 +60,7 @@ export function SellerPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {p.active.map((a) => (
-            <AuctionCard key={a.id} auction={a} now={now} myId={userId} />
+            <AuctionCard key={a.id} auction={a} now={now} />
           ))}
         </div>
       )}

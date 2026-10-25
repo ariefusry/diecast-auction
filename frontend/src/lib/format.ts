@@ -81,14 +81,13 @@ export function timeAgo(iso: string, nowMs: number): string {
 
 /**
  * My standing in a tracked auction. Until the closer settles it, an auction
- * whose time is up has no winner_id yet, so its leader is the one who wins.
+ * whose time is up has no winner yet (won is false), so its leader is the one who wins.
  */
 export function trackerStatus(
-  a: { status: string; highest_bidder_id: number | null; winner_id: number | null },
-  myId: number | null,
+  a: { status: string; leading: boolean; won: boolean },
   open: boolean,
 ): "Memimpin" | "Disalip" | "Menang" | "Kalah" {
-  const mine = a.status === "active" ? a.highest_bidder_id === myId : a.winner_id === myId;
+  const mine = a.status === "active" ? a.leading : a.won;
   if (open) return mine ? "Memimpin" : "Disalip";
   return mine ? "Menang" : "Kalah";
 }

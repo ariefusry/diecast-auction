@@ -108,6 +108,8 @@ type searchResponse struct {
 func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auctions, parse ParseFunc, uploadDir string) http.Handler {
 	h := &handler{auth: auth, wallets: wallets, auctions: auctions, parse: parse, uploads: uploadDir}
 	authed := func(f http.HandlerFunc) http.Handler { return middleware.RequireAuth(auth.ParseToken)(f) }
+	// Public reads that also say what the viewer's part is (leading, won, mine).
+	viewing := func(f http.HandlerFunc) http.Handler { return middleware.OptionalAuth(auth.ParseToken)(f) }
 	authLimit := middleware.RateLimit(rate.Every(6*time.Second), authBurst)
 	bidLimit := middleware.RateLimit(2, bidBurst)
 	chatLimit := middleware.RateLimit(2, bidBurst)
@@ -130,13 +132,13 @@ func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auction
 	mux.Handle("GET /me/auctions", authed(h.myAuctions))
 	mux.Handle("POST /wallet/deposit", authed(h.deposit))
 	mux.Handle("POST /auctions", authed(h.createAuction))
-	mux.HandleFunc("GET /auctions", h.listAuctions)
-	mux.Handle("POST /auctions/search/ai", aiLimit(http.HandlerFunc(h.searchAI)))
-	mux.HandleFunc("GET /auctions/{id}", h.getAuction)
-	mux.HandleFunc("GET /auctions/{id}/bids", h.listBids)
+	mux.Handle("GET /auctions", viewing(h.listAuctions))
+	mux.Handle("POST /auctions/search/ai", aiLimit(viewing(h.searchAI)))
+	mux.Handle("GET /auctions/{id}", viewing(h.getAuction))
+	mux.Handle("GET /auctions/{id}/bids", viewing(h.listBids))
 	mux.Handle("GET /auctions/{id}/messages", authed(h.listMessages))
 	mux.Handle("POST /auctions/{id}/messages", chatLimit(authed(h.sendMessage)))
-	mux.HandleFunc("GET /sellers/{username}", h.seller)
+	mux.Handle("GET /sellers/{username}", viewing(h.seller))
 	mux.Handle("POST /auctions/{id}/publish", authed(h.publish))
 	mux.Handle("POST /auctions/{id}/cancel", authed(h.cancel))
 	mux.Handle("POST /auctions/{id}/buy-now", authed(h.buyNow))
@@ -253,10 +255,14 @@ func (h *handler) me(w http.ResponseWriter, r *http.Request) {
 // @Failure  401 {object} errorResponse
 // @Router   /me/auctions [get]
 func (h *handler) myAuctions(w http.ResponseWriter, r *http.Request) {
-	mine, err := h.auctions.Mine(r.Context(), middleware.UserID(r.Context()))
+	me := middleware.UserID(r.Context())
+	mine, err := h.auctions.Mine(r.Context(), me)
 	if err != nil {
 		writeError(w, err)
 		return
+	}
+	for _, list := range [][]service.Auction{mine.Won, mine.Bidding, mine.Lost, mine.Selling} {
+		forViewer(list, me)
 	}
 	writeJSON(w, http.StatusOK, mine)
 }
@@ -301,12 +307,13 @@ func (h *handler) createAuction(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &req) {
 		return
 	}
-	a, err := h.auctions.Create(r.Context(), middleware.UserID(r.Context()), req)
+	me := middleware.UserID(r.Context())
+	a, err := h.auctions.Create(r.Context(), me, req)
 	if err != nil {
 		writeError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusCreated, a)
+	writeJSON(w, http.StatusCreated, a.ForViewer(me))
 }
 
 // getAuction godoc
@@ -323,7 +330,7 @@ func (h *handler) getAuction(w http.ResponseWriter, r *http.Request) {
 		writeError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, a)
+	writeJSON(w, http.StatusOK, a.ForViewer(middleware.UserID(r.Context())))
 }
 
 // listBids godoc
@@ -340,6 +347,10 @@ func (h *handler) listBids(w http.ResponseWriter, r *http.Request) {
 		writeError(w, err)
 		return
 	}
+	me := middleware.UserID(r.Context())
+	for i := range bids {
+		bids[i].Mine = me != 0 && bids[i].BidderID == me
+	}
 	writeJSON(w, http.StatusOK, bids)
 }
 
@@ -355,10 +366,14 @@ func (h *handler) listBids(w http.ResponseWriter, r *http.Request) {
 // @Failure  404 {object} errorResponse
 // @Router   /auctions/{id}/messages [get]
 func (h *handler) listMessages(w http.ResponseWriter, r *http.Request) {
-	msgs, err := h.auctions.Messages(r.Context(), middleware.UserID(r.Context()), pathID(r))
+	me := middleware.UserID(r.Context())
+	msgs, err := h.auctions.Messages(r.Context(), me, pathID(r))
 	if err != nil {
 		writeError(w, err)
 		return
+	}
+	for i := range msgs {
+		msgs[i].Mine = msgs[i].SenderID == me
 	}
 	writeJSON(w, http.StatusOK, msgs)
 }
@@ -388,6 +403,7 @@ func (h *handler) sendMessage(w http.ResponseWriter, r *http.Request) {
 		writeError(w, err)
 		return
 	}
+	m.Mine = true
 	writeJSON(w, http.StatusCreated, m)
 }
 
@@ -405,6 +421,7 @@ func (h *handler) seller(w http.ResponseWriter, r *http.Request) {
 		writeError(w, err)
 		return
 	}
+	forViewer(p.Active, middleware.UserID(r.Context()))
 	writeJSON(w, http.StatusOK, p)
 }
 
@@ -478,6 +495,7 @@ func (h *handler) search(w http.ResponseWriter, r *http.Request, f service.Filte
 		writeError(w, err)
 		return
 	}
+	forViewer(res.Auctions, middleware.UserID(r.Context()))
 	writeJSON(w, http.StatusOK, searchResponse{AI: ai, SearchResult: res})
 }
 
@@ -547,12 +565,13 @@ func (h *handler) bid(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &req) {
 		return
 	}
-	a, err := h.auctions.Bid(r.Context(), middleware.UserID(r.Context()), pathID(r), req.Amount)
+	me := middleware.UserID(r.Context())
+	a, err := h.auctions.Bid(r.Context(), me, pathID(r), req.Amount)
 	if err != nil {
 		writeError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, a)
+	writeJSON(w, http.StatusOK, a.ForViewer(me))
 }
 
 // upload godoc
@@ -614,12 +633,20 @@ func files(dir string) http.Handler {
 
 // respond runs a body-less (user, auction) service call such as publish or cancel.
 func (h *handler) respond(w http.ResponseWriter, r *http.Request, fn func(ctx context.Context, userID, id int64) (service.Auction, error)) {
-	a, err := fn(r.Context(), middleware.UserID(r.Context()), pathID(r))
+	me := middleware.UserID(r.Context())
+	a, err := fn(r.Context(), me, pathID(r))
 	if err != nil {
 		writeError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, a)
+	writeJSON(w, http.StatusOK, a.ForViewer(me))
+}
+
+// forViewer fills the viewer-relative fields of every auction in list, in place.
+func forViewer(list []service.Auction, userID int64) {
+	for i := range list {
+		list[i] = list[i].ForViewer(userID)
+	}
 }
 
 // pathID parses {id}; a malformed id becomes 0, which matches no row and yields 404.

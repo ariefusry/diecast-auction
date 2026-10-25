@@ -30,12 +30,14 @@ export type Auction = {
   min_increment: number;
   buy_now_price: number | null;
   current_highest_bid: number | null;
-  highest_bidder_id: number | null;
   status: "draft" | "active" | "completed" | "cancelled";
   duration_minutes: number;
   start_time: string | null;
   end_time: string | null;
-  winner_id: number | null;
+  sold: boolean; // completed with a winner
+  // Viewer-relative: the API never sends bidder or winner IDs.
+  leading: boolean; // I hold the highest bid
+  won: boolean; // I won
 };
 
 export type Filter = {
@@ -120,7 +122,7 @@ export function imageSrc(url: string): string {
 }
 
 export type BidEntry = {
-  bidder_id: number;
+  mine: boolean; // placed by me
   bidder: string; // masked, e.g. d***1
   amount: number;
   created_at: string;
@@ -136,7 +138,7 @@ export type MyAuctions = {
   my_bids: Record<string, number>; // auction id -> my highest bid
 };
 
-export type Message = { id: number; sender_id: number; sender: string; body: string; created_at: string };
+export type Message = { id: number; mine: boolean; sender: string; body: string; created_at: string };
 
 export type SellerProfile = { username: string; created_at: string; sold: number; active: Auction[] };
 

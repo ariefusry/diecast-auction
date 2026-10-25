@@ -14,7 +14,8 @@ import (
 // Message is one line in the chat between an auction's seller and its winner.
 type Message struct {
 	ID        int64     `json:"id"`
-	SenderID  int64     `json:"sender_id"`
+	SenderID  int64     `json:"-"`      // private: the seller would learn the winner's ID
+	Mine      bool      `json:"mine"`   // sent by the viewer
 	Sender    string    `json:"sender"` // username
 	Body      string    `json:"body"`
 	CreatedAt time.Time `json:"created_at"`

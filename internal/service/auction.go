@@ -56,12 +56,24 @@ type Auction struct {
 	MinIncrement      int64      `json:"min_increment"`
 	BuyNowPrice       *int64     `json:"buy_now_price"`
 	CurrentHighestBid *int64     `json:"current_highest_bid"`
-	HighestBidderID   *int64     `json:"highest_bidder_id"`
 	Status            string     `json:"status"`
 	DurationMinutes   int        `json:"duration_minutes"`
 	StartTime         *time.Time `json:"start_time"`
 	EndTime           *time.Time `json:"end_time"`
-	WinnerID          *int64     `json:"winner_id"`
+	Sold              bool       `json:"sold"` // completed with a winner
+	// Bidder and winner IDs never leave the server: next to a seller's public
+	// username they would unmask the bid history. ForViewer turns them into booleans.
+	HighestBidderID *int64 `json:"-"`
+	WinnerID        *int64 `json:"-"`
+	Leading         bool   `json:"leading"` // the viewer holds the highest bid
+	Won             bool   `json:"won"`     // the viewer won
+}
+
+// ForViewer fills the viewer-relative fields for userID; 0 is anonymous.
+func (a Auction) ForViewer(userID int64) Auction {
+	a.Leading = userID != 0 && a.HighestBidderID != nil && *a.HighestBidderID == userID
+	a.Won = userID != 0 && a.WinnerID != nil && *a.WinnerID == userID
+	return a
 }
 
 // Auctions owns the auction lifecycle and every wallet movement it causes.
@@ -140,6 +152,7 @@ func scanAuction(row pgx.Row) (Auction, error) {
 		&a.Item.Category, &a.Item.Artist, &a.Item.Size, &a.Item.ReadyWeeks, &a.Seller,
 		&a.StartPrice, &a.MinIncrement, &a.BuyNowPrice, &a.CurrentHighestBid, &a.HighestBidderID,
 		&a.Status, &a.DurationMinutes, &a.StartTime, &a.EndTime, &a.WinnerID)
+	a.Sold = a.WinnerID != nil
 	return a, err
 }
 
@@ -153,7 +166,8 @@ func (s *Auctions) Get(ctx context.Context, id int64) (Auction, error) {
 
 // BidEntry is one row of an auction's public bid history.
 type BidEntry struct {
-	BidderID  int64     `json:"bidder_id"`
+	BidderID  int64     `json:"-"`                      // private, see Auction.HighestBidderID
+	Mine      bool      `json:"mine"`                   // placed by the viewer
 	Bidder    string    `json:"bidder" example:"d***1"` // masked username
 	Amount    int64     `json:"amount"`
 	CreatedAt time.Time `json:"created_at"`

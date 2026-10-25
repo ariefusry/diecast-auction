@@ -4,7 +4,7 @@ import { timeAgo } from "../lib/format";
 import { Button, ErrorNote } from "./ui";
 
 /** Seller and winner arrange shipping here once the auction is won. Polls like the auction page. */
-export function Chat({ auctionId, myId, otherName, now }: { auctionId: number; myId: number; otherName: string; now: number }) {
+export function Chat({ auctionId, otherName, now }: { auctionId: number; otherName: string; now: number }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
@@ -60,7 +60,7 @@ export function Chat({ auctionId, myId, otherName, now }: { auctionId: number; m
       <div className="max-h-80 space-y-2 overflow-y-auto rounded-lg bg-paper p-3" aria-live="polite">
         {messages.length === 0 && <p className="py-6 text-center text-sm text-ink-soft">Belum ada pesan. Mulai dengan alamat pengiriman.</p>}
         {messages.map((m) => {
-          const mine = m.sender_id === myId;
+          const mine = m.mine;
           return (
             <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
               <div className={`max-w-[80%] rounded-2xl px-3.5 py-2 ${mine ? "rounded-br-sm bg-ink text-white" : "rounded-bl-sm bg-card"}`}>

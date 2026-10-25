@@ -4,7 +4,6 @@ import { BrandLogo } from "../components/BrandLogo";
 import { PegWall } from "../components/PegWall";
 import { Button, ErrorNote } from "../components/ui";
 import { api, errorMessage, type Auction, type Filter, type SearchResult } from "../lib/api";
-import { useAuth } from "../lib/auth";
 import { conditionLabel, conditions, dioramaConditions, rupiah } from "../lib/format";
 import { useNow } from "../lib/useNow";
 
@@ -34,7 +33,6 @@ function understood(f: Filter): string[] {
 }
 
 export function Catalog() {
-  const { userId } = useAuth();
   const now = useNow();
   const [category, setCategory] = useState("");
   const [brand, setBrand] = useState("");
@@ -127,7 +125,7 @@ export function Catalog() {
         {closing.length > 0 && (
           <div className="space-y-1">
             <h2 className="font-display text-2xl font-bold italic">Segera berakhir</h2>
-            <PegWall auctions={closing} now={now} myId={userId} />
+            <PegWall auctions={closing} now={now} />
           </div>
         )}
       </section>
@@ -206,7 +204,7 @@ export function Catalog() {
         <p className="py-12 text-center text-ink-soft">Belum ada lelang yang cocok. Coba kata lain atau hapus filter.</p>
       )}
       <div className={`grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${loading ? "opacity-60" : ""}`}>
-        {shown?.auctions.map((a) => <AuctionCard key={a.id} auction={a} now={now} myId={userId} />)}
+        {shown?.auctions.map((a) => <AuctionCard key={a.id} auction={a} now={now} />)}
       </div>
     </div>
   );
