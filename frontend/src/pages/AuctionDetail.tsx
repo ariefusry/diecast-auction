@@ -331,7 +331,7 @@ export function AuctionDetail() {
                 Tayangkan lelang
               </Button>
             )}
-            {(a.status === "draft" || a.status === "active") && a.highest_bidder_id === null && (
+            {(a.status === "draft" || open) && a.highest_bidder_id === null && (
               <Button variant="ghost" disabled={busy} onClick={() => run(() => api<Auction>(`/auctions/${a.id}/cancel`, { method: "POST" }), "Lelang dibatalkan.")}>
                 Batalkan lelang
               </Button>

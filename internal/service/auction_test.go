@@ -200,6 +200,17 @@ func TestCancelOnlyBeforeFirstBid(t *testing.T) {
 	}
 }
 
+// Past end_time the auction belongs to the closer, which marks it completed.
+func TestCancelRefusedAfterEndTime(t *testing.T) {
+	e := newAuctionEnv(t)
+	seller := e.user(0)
+	a := e.active(seller, sampleAuction())
+	e.setEndTime(a.ID, "-1 second")
+	if _, err := e.auctions.Cancel(context.Background(), seller, a.ID); !errors.Is(err, ErrConflict) {
+		t.Fatalf("cancel after end_time err = %v, want ErrConflict", err)
+	}
+}
+
 func TestBidEscrowsAndReleasesOutbidFunds(t *testing.T) {
 	e := newAuctionEnv(t)
 	seller, alice, bob := e.user(0), e.user(500_000), e.user(500_000)

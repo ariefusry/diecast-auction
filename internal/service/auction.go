@@ -221,6 +221,10 @@ func (s *Auctions) Cancel(ctx context.Context, userID, id int64) (Auction, error
 		if l.status != "draft" && l.status != "active" {
 			return fmt.Errorf("%w: auction is %s", ErrConflict, l.status)
 		}
+		// Past end_time it is the closer's to mark completed. Drafts have no end_time.
+		if l.ended {
+			return fmt.Errorf("%w: auction has ended", ErrConflict)
+		}
 		if l.highestBidderID != nil {
 			return fmt.Errorf("%w: auction already has bids", ErrConflict)
 		}
