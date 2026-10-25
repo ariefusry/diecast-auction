@@ -15,7 +15,8 @@ Panduan ringkas untuk Claude Code CLI dalam mengembangkan platform lelang diecas
 ## Perintah Penting
 
 ```bash
-# Jalankan seluruh service (Postgres, Go API, React). Baru tersedia setelah Phase 10; sebelumnya compose hanya berisi db dan profil test
+# Jalankan seluruh stack (Postgres, seed, Go API, React di nginx) lalu buka http://localhost:8081
+# Butuh JWT_SECRET (>= 32 byte) di .env. Untuk development cukup `docker compose up -d db` lalu jalankan API dan Vite lokal
 docker compose up --build
 
 # Pengujian wajib dengan deteksi data race (service test dibuat di Phase 1)

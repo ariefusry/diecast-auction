@@ -75,8 +75,8 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Halaman buat lelang baru beserta upload gambar (backend `POST /uploads`, disimpan di `UPLOAD_DIR`)
 
 ## Phase 10: Docker Production & Deployment
-- [ ] Buat multi-stage `Dockerfile.backend` (Go build -> Alpine runner)
-- [ ] Buat multi-stage `Dockerfile.frontend` (Node build -> Nginx server)
-- [ ] Konfigurasi `docker-compose.yml` lengkap (db, backend, frontend) siap jalan dengan satu perintah
-- [ ] Siapkan GitHub Actions CI workflow untuk linting dan testing otomatis
+- [x] Buat multi-stage `Dockerfile.backend` (Go build -> Alpine runner)
+- [x] Buat multi-stage `Dockerfile.frontend` (Node build -> Nginx server)
+- [x] Konfigurasi `docker-compose.yml` lengkap (db, seed, api, web) siap jalan dengan satu perintah
+- [x] Siapkan GitHub Actions CI workflow untuk linting dan testing otomatis
 - [ ] Pilih provider Linux VPS dan deploy via Docker Compose (volume untuk `uploads` dan data Postgres)

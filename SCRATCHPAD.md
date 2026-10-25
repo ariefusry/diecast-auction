@@ -1,9 +1,9 @@
 # Project Scratchpad & Session Notes
 
 ## Current Status
-- Project Name: Scale 1:64 Diecast Auction Platform (Hot Wheels, Mini GT, Inno64)
+- Project Name: Blister64, lelang diecast 1:64 (7 merek) dan diorama
 - Phase: Keputusan arsitektur dikunci (spec Section 6)
-- Active Focus: Phase 9 selesai, siap Phase 10 (Docker production & deployment)
+- Active Focus: Phase 10 tugas 1-4 selesai (Docker, compose penuh, CI); deploy menunggu pilihan hosting dari user
 
 ---
 
@@ -22,15 +22,15 @@
 - Remote: `github.com/ariefusry/diecast-auction` (private).
 
 ## Open Items
-- Provider VPS dipilih di Phase 10.
-- Phase 10: rate limit memakai `RemoteAddr`. Di belakang reverse proxy (nginx) semua request terlihat dari IP proxy, jadi baca `X-Real-IP` dari proxy tepercaya.
-- Phase 10: CI sebaiknya menjalankan `swag init` lalu `git diff --exit-code internal/apidocs` agar dokumentasi tidak basi.
+- Hosting belum dipilih (user riset). Opsi: Oracle Always Free, DigitalOcean (Student Pack), atau Cloudflare Tunnel dari laptop untuk demo.
+- Scraper memilih foto utama wiki apa adanya: beberapa M2 berupa poster promo, beberapa Hot Wheels placeholder "image not available".
+- Migrasi `down` 000004 belum pernah dijalankan.
 
 ---
 
 ## Helpful Commands
 ```bash
-# Start all local containers (Database, API, Frontend)
+# Full stack (db, seed, api, nginx web) di http://localhost:8081, butuh JWT_SECRET di .env
 docker compose up --build
 
 # Run backend tests with race detector (service test dibuat di Phase 1)
@@ -70,3 +70,5 @@ Migrasi tidak punya perintah terpisah: di-embed dan dijalankan saat API start.
 - 2026-10-25: Phase 8 selesai. `middleware.RateLimit` (token bucket per IP, `x/time/rate`, bucket idle > 10 menit dibersihkan, 429 + Retry-After): auth 1 per 6 detik burst 10 (register+login berbagi bucket), bid 2/detik burst 5. `middleware.CORS` dari `CORS_ORIGINS` (default Vite `http://localhost:5173`). `middleware.Log`: slog JSON satu baris per request, panic jadi JSON 500. `slog.SetDefault` juga menyalurkan `log.Printf` lama. Route tak dikenal: JSON 404 lewat catch-all `/` (method salah pada path yang ada juga jadi 404, bukan 405). Swagger: anotasi swaggo di semua handler, request/response bertipe nama, hasil generate di `internal/apidocs` (di-commit), UI di `/swagger/index.html`. Binary `swag` lokal melaporkan v1.16.4 meski install v1.16.6.
 - 2026-10-25: Phase 9 selesai. Backend: `POST /uploads` (multipart `image`, 5 MiB, tipe dari sniffing byte: JPEG/PNG/WebP, nama acak `rand.Text()`), `GET /uploads/{name}` tanpa listing direktori, `UPLOAD_DIR`. Frontend `frontend/`: Vite 8 + React 19 + TypeScript + Tailwind 4 (`@tailwindcss/vite`) + React Router 8 (mode deklaratif, `react-router-dom` sudah tidak ada di v8) + Vitest 5. Arah desain: kartu lelang berbentuk blister card (lubang gantungan + gelembung plastik) sebagai satu-satunya elemen dekoratif; palet card-white #EEF1F5, navy #14213D, oranye track #FF6A13 (aksi bid), merah #D62828 (jendela anti-sniping), mint #2A9D8F (memimpin); font Barlow Condensed + Barlow. UI berbahasa Indonesia. Token JWT di localStorage, 401 memicu event `auth:expired`. Detail lelang polling 5 detik. Foto Fandom memakai `referrerPolicy="no-referrer"`. Diuji di browser (Playwright): katalog, AI search, login, bid, jual dengan upload, batal, dompet, lebar 390px; konsol bersih. Sisa peringatan lint: fast-refresh di main.tsx/auth.tsx (khusus dev) dan false positive set-state-in-effect di AuctionDetail.
 - 2026-10-25: QA swarm (7 explorer Haiku read-only, verifikasi dan perbaikan oleh Opus). Diperbaiki: (1) overflow int64 `minBid` lewat `min_increment` raksasa: `MaxMoney` Rp1 triliun di Create/Bid + migrasi 000003 (CHECK batas uang dan tahun 1950-2100); (2) validasi item: brand dari daftar, panjang teks, tanpa NUL, tag lowercase maks 10, `image_url` hanya http(s) atau `/uploads/<nama>`, `source_url` hanya http(s) (React 19 sudah memblok href `javascript:`, tapi data tetap dibersihkan di server); (3) `http.Server` timeout; (4) rate limit AI search 1 per 3 detik burst 5; (5) JWT_SECRET placeholder `.env.example` ditolak; (6) filter katalog eksplisit tidak lagi direlaksasi diam-diam (hanya pencarian teks/AI); (7) `Normalize` linear + buang NUL; (8) frontend: poll basi tidak menimpa hasil bid, tombol isi saldo anti klik ganda, gagal tayang tidak membuat listing ganda, salah password di /masuk tidak menghapus sesi, input bid `step=any`; (9) test race close vs bid deterministik dan wajib melihat kedua hasil; (10) scraper mengikuti `continue` MediaWiki, sampling merata setelah filter, buang halaman non-casting; seeder buy-now hanya di lot tanpa bid; `seeds.json` di-scrape ulang. Sengaja tidak diubah (keputusan user): draf bisa dibaca siapa pun lewat ID, kuota upload per user, index trigram untuk pencarian, password demo statis.
+- 2026-10-25: Pasca Phase 9: desain ulang UI (blister berwarna merek, rak pegboard, foto blend), 4 merek baru (Matchbox, Tomica, Tarmac Works, M2) dengan logo, logo Blister64 (`brand/`), riwayat tawaran `GET /auctions/{id}/bids` (nama disamarkan), umpan balik ala game saat menawar, dan kategori diorama (migrasi 000004: tanpa merek, artis opsional, kondisi new/used, estimasi PO).
+- 2026-10-25: Phase 10 tugas 1-4 selesai. `Dockerfile.backend` (golang:1.27-alpine -> alpine 3.21, binary api + seed, user non-root, healthcheck `/healthz`, uploads di `/data/uploads`). `Dockerfile.frontend` (node 22 -> nginx 1.27, `VITE_API_URL=/api`, nginx mem-proxy `/api/*` ke api sehingga satu origin tanpa CORS, fallback SPA, aset di-cache 1 tahun, header keamanan). Compose: `seed` (sekali jalan, idempoten) -> `api` -> `web` di port 8081 (`WEB_PORT`), volume `uploads`. Rate limit di belakang proxy: `TRUST_PROXY=true` membuat API membaca `X-Real-IP`; hanya aman karena api tidak dipublish selain lewat nginx. CI GitHub Actions: gofmt, vet, swag v1.16.4 + `git diff --exit-code`, `go test -race` dengan service Postgres, lint/test/build frontend, build kedua image. Diverifikasi: image 62 MB dan 75 MB, stack jalan, login/upload/foto lewat nginx, API melihat IP klien (bukan IP nginx), actionlint bersih.
