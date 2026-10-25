@@ -159,6 +159,23 @@ func TestAuctionFlow(t *testing.T) {
 	if code := bidder.do("GET", "/auctions/-1/bids", nil, nil); code != http.StatusNotFound {
 		t.Fatalf("bids of unknown auction = %d", code)
 	}
+	var profile service.Profile
+	if code := bidder.do("GET", "/me", nil, &profile); code != http.StatusOK || profile.Username == "" || profile.CreatedAt.IsZero() {
+		t.Fatalf("me = %d %+v", code, profile)
+	}
+	var mine service.MyAuctions
+	if code := bidder.do("GET", "/me/auctions", nil, &mine); code != http.StatusOK || len(mine.Bidding) != 1 || mine.Won == nil {
+		t.Fatalf("me/auctions = %d %+v", code, mine)
+	}
+	var history []service.LedgerEntry
+	if code := bidder.do("GET", "/wallet/history", nil, &history); code != http.StatusOK || len(history) != 2 || history[0].Type != "lock" {
+		t.Fatalf("wallet/history = %d %+v", code, history)
+	}
+	for _, path := range []string{"/me", "/me/auctions", "/wallet/history"} {
+		if code := (&client{t: t, base: base}).do("GET", path, nil, nil); code != http.StatusUnauthorized {
+			t.Fatalf("anonymous GET %s = %d", path, code)
+		}
+	}
 	if code := seller.do("POST", "/auctions/"+id+"/cancel", nil, nil); code != http.StatusConflict {
 		t.Fatalf("cancel with bid = %d", code)
 	}
@@ -315,4 +332,48 @@ func TestSearchAIIsRateLimited(t *testing.T) {
 		}
 	}
 	t.Fatal("never rate limited")
+}
+
+func TestChatAndSellerPage(t *testing.T) {
+	base := newServer(t)
+	seller, buyer, stranger := signup(t, base), signup(t, base), signup(t, base)
+	buyer.do("POST", "/wallet/deposit", map[string]int64{"amount": 500_000}, nil)
+	body := map[string]any{
+		"item":        map[string]any{"brand": "Tomica", "model_name": "No. 1 Nissan GT-R", "condition": "sealed_box"},
+		"start_price": 50_000, "min_increment": 5_000, "buy_now_price": 90_000, "duration_minutes": 60,
+	}
+	var a service.Auction
+	seller.do("POST", "/auctions", body, &a)
+	id := strconv.FormatInt(a.ID, 10)
+	seller.do("POST", "/auctions/"+id+"/publish", nil, nil)
+
+	if code := buyer.do("POST", "/auctions/"+id+"/messages", map[string]string{"body": "halo"}, nil); code != http.StatusForbidden {
+		t.Fatalf("chat before winning = %d, want 403", code)
+	}
+	if code := buyer.do("POST", "/auctions/"+id+"/buy-now", nil, nil); code != http.StatusOK {
+		t.Fatalf("buy-now = %d", code)
+	}
+	var m service.Message
+	if code := buyer.do("POST", "/auctions/"+id+"/messages", map[string]string{"body": "Kirim JNE ya"}, &m); code != http.StatusCreated || m.ID == 0 {
+		t.Fatalf("send = %d %+v", code, m)
+	}
+	var msgs []service.Message
+	if code := seller.do("GET", "/auctions/"+id+"/messages", nil, &msgs); code != http.StatusOK || len(msgs) != 1 || msgs[0].Body != "Kirim JNE ya" {
+		t.Fatalf("messages = %d %+v", code, msgs)
+	}
+	if code := stranger.do("GET", "/auctions/"+id+"/messages", nil, nil); code != http.StatusForbidden {
+		t.Fatalf("stranger reads = %d, want 403", code)
+	}
+	if code := (&client{t: t, base: base}).do("GET", "/auctions/"+id+"/messages", nil, nil); code != http.StatusUnauthorized {
+		t.Fatalf("anonymous reads = %d, want 401", code)
+	}
+
+	var p service.SellerProfile
+	anon := &client{t: t, base: base}
+	if code := anon.do("GET", "/sellers/"+a.Seller, nil, &p); code != http.StatusOK || p.Sold != 1 || p.Username != a.Seller {
+		t.Fatalf("seller page = %d %+v", code, p)
+	}
+	if code := anon.do("GET", "/sellers/nobody_here_"+a.Seller, nil, nil); code != http.StatusNotFound {
+		t.Fatalf("unknown seller = %d, want 404", code)
+	}
 }

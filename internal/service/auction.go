@@ -50,6 +50,7 @@ type NewAuction struct {
 type Auction struct {
 	ID                int64      `json:"id"`
 	SellerID          int64      `json:"seller_id"`
+	Seller            string     `json:"seller"` // seller's username, public like the listing
 	Item              Item       `json:"item"`
 	StartPrice        int64      `json:"start_price"`
 	MinIncrement      int64      `json:"min_increment"`
@@ -127,16 +128,16 @@ func (s *Auctions) Create(ctx context.Context, sellerID int64, in NewAuction) (A
 // auctionSelect lists the columns scanAuction reads, in order.
 const auctionSelect = `SELECT a.id, i.seller_id, i.id, coalesce(i.brand, ''), i.model_name, coalesce(i.series, ''), coalesce(i.year, 0),
 	coalesce(i.color, ''), i.tags, coalesce(i.condition, ''), coalesce(i.image_url, ''), coalesce(i.source_url, ''), i.description,
-	i.category, coalesce(i.artist, ''), coalesce(i.size, ''), coalesce(i.ready_weeks, 0),
+	i.category, coalesce(i.artist, ''), coalesce(i.size, ''), coalesce(i.ready_weeks, 0), su.username,
 	a.start_price, a.min_increment, a.buy_now_price, a.current_highest_bid, a.highest_bidder_id,
 	a.status, extract(epoch FROM a.duration)::int / 60, a.start_time, a.end_time, a.winner_id
-	FROM auctions a JOIN items i ON i.id = a.item_id`
+	FROM auctions a JOIN items i ON i.id = a.item_id JOIN users su ON su.id = i.seller_id`
 
 func scanAuction(row pgx.Row) (Auction, error) {
 	var a Auction
 	err := row.Scan(&a.ID, &a.SellerID, &a.Item.ID, &a.Item.Brand, &a.Item.ModelName, &a.Item.Series, &a.Item.Year,
 		&a.Item.Color, &a.Item.Tags, &a.Item.Condition, &a.Item.ImageURL, &a.Item.SourceURL, &a.Item.Description,
-		&a.Item.Category, &a.Item.Artist, &a.Item.Size, &a.Item.ReadyWeeks,
+		&a.Item.Category, &a.Item.Artist, &a.Item.Size, &a.Item.ReadyWeeks, &a.Seller,
 		&a.StartPrice, &a.MinIncrement, &a.BuyNowPrice, &a.CurrentHighestBid, &a.HighestBidderID,
 		&a.Status, &a.DurationMinutes, &a.StartTime, &a.EndTime, &a.WinnerID)
 	return a, err

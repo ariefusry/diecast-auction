@@ -85,6 +85,10 @@ type amountRequest struct {
 	Amount int64 `json:"amount" example:"110000"`
 }
 
+type messageRequest struct {
+	Body string `json:"body" example:"Tolong kirim pakai bubble wrap ya"`
+}
+
 type searchRequest struct {
 	Query string `json:"query" example:"jdm merah mint di bawah 100k"`
 }
@@ -118,12 +122,18 @@ func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auction
 	mux.Handle("POST /auth/register", authLimit(http.HandlerFunc(h.register)))
 	mux.Handle("POST /auth/login", authLimit(http.HandlerFunc(h.login)))
 	mux.Handle("GET /wallet", authed(h.getWallet))
+	mux.Handle("GET /wallet/history", authed(h.walletHistory))
+	mux.Handle("GET /me", authed(h.me))
+	mux.Handle("GET /me/auctions", authed(h.myAuctions))
 	mux.Handle("POST /wallet/deposit", authed(h.deposit))
 	mux.Handle("POST /auctions", authed(h.createAuction))
 	mux.HandleFunc("GET /auctions", h.listAuctions)
 	mux.Handle("POST /auctions/search/ai", aiLimit(http.HandlerFunc(h.searchAI)))
 	mux.HandleFunc("GET /auctions/{id}", h.getAuction)
 	mux.HandleFunc("GET /auctions/{id}/bids", h.listBids)
+	mux.Handle("GET /auctions/{id}/messages", authed(h.listMessages))
+	mux.Handle("POST /auctions/{id}/messages", bidLimit(authed(h.sendMessage)))
+	mux.HandleFunc("GET /sellers/{username}", h.seller)
 	mux.Handle("POST /auctions/{id}/publish", authed(h.publish))
 	mux.Handle("POST /auctions/{id}/cancel", authed(h.cancel))
 	mux.Handle("POST /auctions/{id}/buy-now", authed(h.buyNow))
@@ -195,6 +205,57 @@ func (h *handler) getWallet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, wallet)
+}
+
+// walletHistory godoc
+// @Summary  Latest wallet movements, newest first
+// @Tags     wallet
+// @Produce  json
+// @Security BearerAuth
+// @Success  200 {array}  service.LedgerEntry
+// @Failure  401 {object} errorResponse
+// @Router   /wallet/history [get]
+func (h *handler) walletHistory(w http.ResponseWriter, r *http.Request) {
+	history, err := h.wallets.History(r.Context(), middleware.UserID(r.Context()))
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, history)
+}
+
+// me godoc
+// @Summary  The signed-in user's profile
+// @Tags     me
+// @Produce  json
+// @Security BearerAuth
+// @Success  200 {object} service.Profile
+// @Failure  401 {object} errorResponse
+// @Router   /me [get]
+func (h *handler) me(w http.ResponseWriter, r *http.Request) {
+	p, err := h.auth.Profile(r.Context(), middleware.UserID(r.Context()))
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, p)
+}
+
+// myAuctions godoc
+// @Summary  The signed-in user's auctions: won, still bidding, lost, and listed
+// @Tags     me
+// @Produce  json
+// @Security BearerAuth
+// @Success  200 {object} service.MyAuctions
+// @Failure  401 {object} errorResponse
+// @Router   /me/auctions [get]
+func (h *handler) myAuctions(w http.ResponseWriter, r *http.Request) {
+	mine, err := h.auctions.Mine(r.Context(), middleware.UserID(r.Context()))
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, mine)
 }
 
 // deposit godoc
@@ -277,6 +338,71 @@ func (h *handler) listBids(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, bids)
+}
+
+// listMessages godoc
+// @Summary  Chat between the seller and the winner, oldest first
+// @Tags     chat
+// @Produce  json
+// @Security BearerAuth
+// @Param    id  path     int true "Auction ID"
+// @Success  200 {array}  service.Message
+// @Failure  401 {object} errorResponse
+// @Failure  403 {object} errorResponse "not the seller or winner, or no winner yet"
+// @Failure  404 {object} errorResponse
+// @Router   /auctions/{id}/messages [get]
+func (h *handler) listMessages(w http.ResponseWriter, r *http.Request) {
+	msgs, err := h.auctions.Messages(r.Context(), middleware.UserID(r.Context()), pathID(r))
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, msgs)
+}
+
+// sendMessage godoc
+// @Summary  Send a chat message to the other side of a won auction
+// @Tags     chat
+// @Accept   json
+// @Produce  json
+// @Security BearerAuth
+// @Param    id   path     int            true "Auction ID"
+// @Param    body body     messageRequest true "1-1000 characters"
+// @Success  201  {object} service.Message
+// @Failure  400  {object} errorResponse
+// @Failure  401  {object} errorResponse
+// @Failure  403  {object} errorResponse
+// @Failure  404  {object} errorResponse
+// @Failure  429  {object} errorResponse
+// @Router   /auctions/{id}/messages [post]
+func (h *handler) sendMessage(w http.ResponseWriter, r *http.Request) {
+	var req messageRequest
+	if !decode(w, r, &req) {
+		return
+	}
+	m, err := h.auctions.Send(r.Context(), middleware.UserID(r.Context()), pathID(r), req.Body)
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, m)
+}
+
+// seller godoc
+// @Summary  A seller's public page: open listings and how many sold
+// @Tags     sellers
+// @Produce  json
+// @Param    username path     string true "Username"
+// @Success  200      {object} service.SellerProfile
+// @Failure  404      {object} errorResponse
+// @Router   /sellers/{username} [get]
+func (h *handler) seller(w http.ResponseWriter, r *http.Request) {
+	p, err := h.auctions.Seller(r.Context(), r.PathValue("username"))
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, p)
 }
 
 // listAuctions godoc

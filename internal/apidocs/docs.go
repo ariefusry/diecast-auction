@@ -437,6 +437,133 @@ const docTemplate = `{
                 }
             }
         },
+        "/auctions/{id}/messages": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chat"
+                ],
+                "summary": "Chat between the seller and the winner, oldest first",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Auction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.Message"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "not the seller or winner, or no winner yet",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chat"
+                ],
+                "summary": "Send a chat message to the other side of a won auction",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Auction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "1-1000 characters",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.messageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/service.Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auctions/{id}/publish": {
             "post": {
                 "security": [
@@ -584,6 +711,100 @@ const docTemplate = `{
                 }
             }
         },
+        "/me": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "me"
+                ],
+                "summary": "The signed-in user's profile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Profile"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/auctions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "me"
+                ],
+                "summary": "The signed-in user's auctions: won, still bidding, lost, and listed",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.MyAuctions"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/sellers/{username}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sellers"
+                ],
+                "summary": "A seller's public page: open listings and how many sold",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Username",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.SellerProfile"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/uploads": {
             "post": {
                 "security": [
@@ -717,6 +938,39 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/wallet/history": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wallet"
+                ],
+                "summary": "Latest wallet movements, newest first",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.LedgerEntry"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -748,6 +1002,15 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "example": "demo-password"
+                }
+            }
+        },
+        "handler.messageRequest": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string",
+                    "example": "Tolong kirim pakai bubble wrap ya"
                 }
             }
         },
@@ -842,6 +1105,10 @@ const docTemplate = `{
                 },
                 "min_increment": {
                     "type": "integer"
+                },
+                "seller": {
+                    "description": "seller's username, public like the listing",
+                    "type": "string"
                 },
                 "seller_id": {
                     "type": "integer"
@@ -980,6 +1247,105 @@ const docTemplate = `{
                 }
             }
         },
+        "service.LedgerEntry": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "auction_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "direction": {
+                    "description": "in: spendable money arrived; out: money left; hold: locked for a bid",
+                    "type": "string",
+                    "enum": [
+                        "in",
+                        "out",
+                        "hold"
+                    ]
+                },
+                "title": {
+                    "description": "the auction's item, empty for deposits",
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "deposit",
+                        "lock",
+                        "release",
+                        "settle",
+                        "buy_now"
+                    ]
+                }
+            }
+        },
+        "service.Message": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "sender": {
+                    "description": "username",
+                    "type": "string"
+                },
+                "sender_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service.MyAuctions": {
+            "type": "object",
+            "properties": {
+                "bidding": {
+                    "description": "still open, with at least one of my bids",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/service.Auction"
+                    }
+                },
+                "lost": {
+                    "description": "closed, I bid, someone else won",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/service.Auction"
+                    }
+                },
+                "my_bids": {
+                    "description": "MyBids is my highest bid per auction in Bidding and Lost, for the tracker.",
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "selling": {
+                    "description": "listed by me, any status",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/service.Auction"
+                    }
+                },
+                "won": {
+                    "description": "won by bidding or bought outright",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/service.Auction"
+                    }
+                }
+            }
+        },
         "service.NewAuction": {
             "type": "object",
             "properties": {
@@ -997,6 +1363,45 @@ const docTemplate = `{
                 },
                 "start_price": {
                     "type": "integer"
+                }
+            }
+        },
+        "service.Profile": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.SellerProfile": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "description": "open now, closing soonest first",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/service.Auction"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "sold": {
+                    "description": "auctions that ended with a buyer",
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         },
