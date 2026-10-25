@@ -22,3 +22,10 @@ export const brandBack: Record<string, string> = {
   "Tarmac Works": "#7b8b63",
   "M2 Machines": "#5c1218",
 };
+
+// Dioramas have no brand; their card back is scenic-base green.
+export const dioramaBack = "#3f5e3a";
+
+export function cardBack(item: { category: string; brand: string }): string | undefined {
+  return item.category === "diorama" ? dioramaBack : brandBack[item.brand];
+}

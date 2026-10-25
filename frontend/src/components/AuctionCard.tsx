@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { Link } from "react-router";
 import type { Auction } from "../lib/api";
-import { brandBack } from "../lib/brands";
+import { cardBack } from "../lib/brands";
 import { castingNumber, conditionLabel, rupiah, timeLeft } from "../lib/format";
 import { BrandLogo } from "./BrandLogo";
 import { Photo } from "./Photo";
@@ -20,7 +20,7 @@ export function AuctionCard({ auction: a, now, myId, className = "" }: { auction
   return (
     <Link
       to={`/lelang/${a.id}`}
-      style={{ "--back": brandBack[a.item.brand] } as CSSProperties}
+      style={{ "--back": cardBack(a.item) } as CSSProperties}
       className={`blister press flex flex-col gap-3 [--press:0.985] ${className}`}
     >
       <div className="relative">
@@ -37,10 +37,20 @@ export function AuctionCard({ auction: a, now, myId, className = "" }: { auction
       </div>
       <div className="flex flex-1 flex-col gap-2 rounded-xl bg-card p-3">
         <div className="flex items-center justify-between gap-2 text-sm">
-          <BrandLogo brand={a.item.brand} className="h-5 max-w-24" />
+          {a.item.category === "diorama" ? (
+            <span className="rounded-md bg-[#3f5e3a] px-2 py-0.5 text-xs font-bold text-white">Diorama</span>
+          ) : (
+            <BrandLogo brand={a.item.brand} className="h-5 max-w-24" />
+          )}
           <span className="text-ink-soft">{conditionLabel(a.item.condition)}</span>
         </div>
         <h3 className="font-display text-xl leading-tight font-bold">{name}</h3>
+        {(a.item.artist || a.item.ready_weeks) && (
+          <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+            {a.item.artist && <span>oleh {a.item.artist}</span>}
+            {a.item.ready_weeks ? <span className="rounded-md bg-ink px-2 py-0.5 text-xs font-bold text-white">PO ±{a.item.ready_weeks} minggu</span> : null}
+          </div>
+        )}
         {buyNow !== null && (
           <span className="self-start rounded-md bg-track/12 px-2 py-0.5 text-sm font-semibold text-track-dark">Beli langsung {rupiah(buyNow)}</span>
         )}

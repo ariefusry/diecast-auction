@@ -55,6 +55,13 @@ describe("userIdFromToken", () => {
   });
 });
 
+describe("diorama conditions", () => {
+  it("label new and used", () => {
+    expect(conditionLabel("used")).toBe("Bekas");
+    expect(conditionLabel("new")).toBe("Baru");
+  });
+});
+
 describe("castingNumber", () => {
   it("splits a Tomica-style number off the name", () => {
     expect(castingNumber("No. 54 Toyota Town Ace")).toEqual({ no: "54", name: "Toyota Town Ace" });

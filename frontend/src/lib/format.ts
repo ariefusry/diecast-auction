@@ -41,8 +41,14 @@ export const conditions: Record<string, string> = {
   damaged_packaging: "Kemasan rusak",
 };
 
+/** Dioramas are sold new (by their artist) or used (by an owner). */
+export const dioramaConditions: Record<string, string> = {
+  new: "Baru",
+  used: "Bekas",
+};
+
 export function conditionLabel(c: string): string {
-  return conditions[c] ?? c;
+  return conditions[c] ?? dioramaConditions[c] ?? c;
 }
 
 /** The user ID (JWT subject) of a still-valid token, or null. */

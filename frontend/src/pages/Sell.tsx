@@ -1,15 +1,22 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { Button, ErrorNote, Field, Input, Select } from "../components/ui";
 import { api, errorMessage, type Auction } from "../lib/api";
-import { conditions } from "../lib/format";
+import { dioramaBack } from "../lib/brands";
+import { conditions, dioramaConditions } from "../lib/format";
 
 const durations: Record<string, string> = { "60": "1 jam", "360": "6 jam", "1440": "1 hari", "4320": "3 hari", "10080": "7 hari" };
 
 export function Sell() {
   const navigate = useNavigate();
+  const [category, setCategory] = useState<"diecast" | "diorama">("diecast");
+  const diorama = category === "diorama";
   const [form, setForm] = useState({
     brand: "Hot Wheels",
+    artist: "",
+    size: "",
+    ready_weeks: "",
+    diorama_condition: "used",
     model_name: "",
     series: "",
     year: "",
@@ -47,16 +54,17 @@ export function Sell() {
         method: "POST",
         body: {
           item: {
-            brand: form.brand,
+            category,
+            // A diorama has no diecast brand, series or release year; its maker is optional.
+            ...(diorama
+              ? { artist: form.artist, size: form.size, ready_weeks: Number(form.ready_weeks) || 0, condition: form.diorama_condition }
+              : { brand: form.brand, series: form.series, year: Number(form.year) || 0, condition: form.condition }),
             model_name: form.model_name,
-            series: form.series,
-            year: Number(form.year) || 0,
             color: form.color,
             tags: form.tags
               .split(",")
               .map((t) => t.trim().toLowerCase())
               .filter(Boolean),
-            condition: form.condition,
             image_url,
             description: form.description,
           },
@@ -80,8 +88,8 @@ export function Sell() {
   return (
     <form onSubmit={submit} className="grid gap-8 lg:grid-cols-[1fr_1.3fr]">
       <div className="space-y-3">
-        <h1 className="font-display text-4xl font-extrabold italic">Jual diecast</h1>
-        <div className="blister">
+        <h1 className="font-display text-4xl font-extrabold italic">{diorama ? "Jual diorama" : "Jual diecast"}</h1>
+        <div className="blister" style={{ "--back": diorama ? dioramaBack : undefined } as CSSProperties}>
           <div className="bubble flex aspect-[4/3] items-center justify-center">
             {preview ? (
               <img src={preview} alt="Pratinjau foto" className="h-full w-full object-contain p-3" />
@@ -101,43 +109,92 @@ export function Sell() {
       </div>
 
       <div className="space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Merek">
-            <Select value={form.brand} onChange={set("brand")}>
-              <option>Hot Wheels</option>
-              <option>Mini GT</option>
-              <option>Inno64</option>
-              <option>Matchbox</option>
-              <option>Tomica</option>
-              <option>Tarmac Works</option>
-              <option>M2 Machines</option>
-            </Select>
-          </Field>
-          <Field label="Kondisi">
-            <Select value={form.condition} onChange={set("condition")}>
-              {Object.entries(conditions).map(([v, l]) => (
-                <option key={v} value={v}>
-                  {l}
-                </option>
-              ))}
-            </Select>
-          </Field>
+        <div role="tablist" aria-label="Yang dijual" className="inline-flex rounded-full border border-line bg-card p-1">
+          {(["diecast", "diorama"] as const).map((c) => (
+            <button
+              key={c}
+              type="button"
+              role="tab"
+              aria-selected={category === c}
+              onClick={() => setCategory(c)}
+              className={`press rounded-full px-5 py-1.5 font-semibold ${category === c ? "bg-ink text-white" : "text-ink-soft hover:text-ink"}`}
+            >
+              {c === "diecast" ? "Diecast" : "Diorama"}
+            </button>
+          ))}
         </div>
-        <Field label="Nama model">
-          <Input required value={form.model_name} onChange={set("model_name")} placeholder="Nissan Skyline GT-R (R34)" />
-        </Field>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <Field label="Seri">
-            <Input value={form.series} onChange={set("series")} placeholder="Car Culture" />
-          </Field>
-          <Field label="Tahun rilis">
-            <Input type="number" min={1968} max={2100} value={form.year} onChange={set("year")} />
-          </Field>
-          <Field label="Warna">
-            <Input value={form.color} onChange={set("color")} placeholder="Bayside Blue" />
-          </Field>
-        </div>
-        <Field label="Tag" hint="Pisahkan dengan koma, misalnya jdm, nissan.">
+        {diorama ? (
+          <>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Kondisi">
+                <Select value={form.diorama_condition} onChange={set("diorama_condition")}>
+                  {Object.entries(dioramaConditions).map(([v, l]) => (
+                    <option key={v} value={v}>
+                      {l}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field label="Pembuat" hint="Opsional. Nama artis kalau tahu, kosongkan kalau tidak.">
+                <Input value={form.artist} onChange={set("artist")} maxLength={60} placeholder="Studio Kayu" />
+              </Field>
+            </div>
+            <Field label="Judul diorama">
+              <Input required value={form.model_name} onChange={set("model_name")} placeholder="Garasi bengkel JDM dua lantai" />
+            </Field>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label="Ukuran">
+                <Input value={form.size} onChange={set("size")} maxLength={50} placeholder="30 x 20 cm" />
+              </Field>
+              <Field label="PO, selesai dalam" hint="Minggu. Kosongkan kalau sudah jadi.">
+                <Input type="number" min={1} max={52} value={form.ready_weeks} onChange={set("ready_weeks")} />
+              </Field>
+              <Field label="Warna dominan">
+                <Input value={form.color} onChange={set("color")} placeholder="Abu beton" />
+              </Field>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Merek">
+                <Select value={form.brand} onChange={set("brand")}>
+                  <option>Hot Wheels</option>
+                  <option>Mini GT</option>
+                  <option>Inno64</option>
+                  <option>Matchbox</option>
+                  <option>Tomica</option>
+                  <option>Tarmac Works</option>
+                  <option>M2 Machines</option>
+                </Select>
+              </Field>
+              <Field label="Kondisi">
+                <Select value={form.condition} onChange={set("condition")}>
+                  {Object.entries(conditions).map(([v, l]) => (
+                    <option key={v} value={v}>
+                      {l}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+            </div>
+            <Field label="Nama model">
+              <Input required value={form.model_name} onChange={set("model_name")} placeholder="Nissan Skyline GT-R (R34)" />
+            </Field>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label="Seri">
+                <Input value={form.series} onChange={set("series")} placeholder="Car Culture" />
+              </Field>
+              <Field label="Tahun rilis">
+                <Input type="number" min={1968} max={2100} value={form.year} onChange={set("year")} />
+              </Field>
+              <Field label="Warna">
+                <Input value={form.color} onChange={set("color")} placeholder="Bayside Blue" />
+              </Field>
+            </div>
+          </>
+        )}
+        <Field label="Tag" hint={diorama ? "Pisahkan dengan koma, misalnya garasi, bengkel, jdm." : "Pisahkan dengan koma, misalnya jdm, nissan."}>
           <Input value={form.tags} onChange={set("tags")} />
         </Field>
         <Field label="Deskripsi">

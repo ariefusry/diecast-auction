@@ -5,7 +5,7 @@ import { Photo } from "../components/Photo";
 import { Button, ErrorNote } from "../components/ui";
 import { api, errorMessage, type Auction, type BidEntry } from "../lib/api";
 import { useAuth } from "../lib/auth";
-import { brandBack } from "../lib/brands";
+import { cardBack } from "../lib/brands";
 import { castingNumber, conditionLabel, minBid, quickBids, rupiah, timeAgo, timeLeft } from "../lib/format";
 import { useNow } from "../lib/useNow";
 
@@ -148,7 +148,7 @@ export function AuctionDetail() {
 
   return (
     <div className={`grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:grid-rows-[auto_1fr] ${canBid ? "max-lg:pb-64" : ""}`}>
-      <section className="blister relative self-start lg:col-start-1 lg:row-start-1" style={{ "--back": brandBack[a.item.brand] } as CSSProperties}>
+      <section className="blister relative self-start lg:col-start-1 lg:row-start-1" style={{ "--back": cardBack(a.item) } as CSSProperties}>
         <Photo url={a.item.image_url} alt={a.item.model_name} />
         {no && (
           <span className="absolute top-12 right-6 grid size-16 rotate-6 place-items-center rounded-full border-[3px] border-white bg-[#e1001a] font-display text-3xl font-extrabold text-white shadow-md">
@@ -169,7 +169,12 @@ export function AuctionDetail() {
       <section className="space-y-5 lg:col-start-2 lg:row-span-2 lg:row-start-1">
         <div>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-ink-soft">
-            <BrandLogo brand={a.item.brand} className="h-7 max-w-32" />
+            {a.item.category === "diorama" ? (
+              <span className="rounded-lg bg-[#3f5e3a] px-2.5 py-1 font-bold text-white">Diorama</span>
+            ) : (
+              <BrandLogo brand={a.item.brand} className="h-7 max-w-32" />
+            )}
+            {a.item.artist && <span className="font-semibold text-ink">oleh {a.item.artist}</span>}
             {(a.item.series || a.item.year > 0) && (
               <span>
                 {a.item.series}
@@ -181,6 +186,10 @@ export function AuctionDetail() {
           <h1 className="font-display text-4xl leading-tight font-extrabold italic">{name}</h1>
           <div className="mt-2 flex flex-wrap gap-2 text-sm">
             <span className="rounded-full bg-card px-3 py-1 font-semibold">{conditionLabel(a.item.condition)}</span>
+            {a.item.size && <span className="rounded-full bg-card px-3 py-1">{a.item.size}</span>}
+            {a.item.ready_weeks ? (
+              <span className="rounded-full bg-ink px-3 py-1 font-semibold text-white">PO, selesai ±{a.item.ready_weeks} minggu</span>
+            ) : null}
             {a.item.color && <span className="rounded-full bg-card px-3 py-1">{a.item.color}</span>}
             {a.item.tags.map((t) => (
               <span key={t} className="rounded-full bg-card px-3 py-1">

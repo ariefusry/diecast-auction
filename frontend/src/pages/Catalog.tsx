@@ -5,9 +5,10 @@ import { PegWall } from "../components/PegWall";
 import { Button, ErrorNote } from "../components/ui";
 import { api, errorMessage, type Auction, type Filter, type SearchResult } from "../lib/api";
 import { useAuth } from "../lib/auth";
-import { conditionLabel, conditions, rupiah } from "../lib/format";
+import { conditionLabel, conditions, dioramaConditions, rupiah } from "../lib/format";
 import { useNow } from "../lib/useNow";
 
+const categories: Record<string, string> = { "": "Semua", diecast: "Diecast", diorama: "Diorama" };
 const brands = ["Hot Wheels", "Mini GT", "Inno64", "Matchbox", "Tomica", "Tarmac Works", "M2 Machines"];
 const sorts: Record<string, string> = {
   ending_soon: "Segera berakhir",
@@ -20,6 +21,7 @@ const examples = ["jdm merah di bawah 100k", "inno64 skyline termurah", "mini gt
 /** What the AI understood, as short chips the collector can check at a glance. */
 function understood(f: Filter): string[] {
   const out: string[] = [];
+  if (f.category) out.push(categories[f.category] ?? f.category);
   if (f.brand) out.push(f.brand);
   if (f.text) out.push(`"${f.text}"`);
   if (f.color) out.push(`warna ${f.color}`);
@@ -34,6 +36,7 @@ function understood(f: Filter): string[] {
 export function Catalog() {
   const { userId } = useAuth();
   const now = useNow();
+  const [category, setCategory] = useState("");
   const [brand, setBrand] = useState("");
   const [condition, setCondition] = useState("");
   // The pegboard already shows what closes soonest, so the grid starts with what is new.
@@ -53,6 +56,7 @@ export function Catalog() {
   }, []);
 
   const params = new URLSearchParams({ sort });
+  if (category) params.set("category", category);
   if (brand) params.set("brand", brand);
   if (condition) params.set("condition", condition);
   const key = params.toString();
@@ -146,33 +150,53 @@ export function Catalog() {
           )}
         </div>
       ) : (
-        <div className="flex flex-wrap items-center gap-2">
-          {["", ...brands].map((b) => (
-            <button
-              key={b || "all"}
-              onClick={() => setBrand(b)}
-              aria-pressed={brand === b}
-              className={`press flex h-10 items-center rounded-full border bg-card px-4 font-semibold ${brand === b ? "border-ink ring-2 ring-ink" : "border-line hover:border-ink"}`}
-            >
-              {b ? <BrandLogo brand={b} className="h-6 max-w-28" /> : "Semua merek"}
-            </button>
-          ))}
-          <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
-            <select value={condition} onChange={(e) => setCondition(e.target.value)} aria-label="Kondisi" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
-              <option value="">Semua kondisi</option>
-              {Object.entries(conditions).map(([v, l]) => (
-                <option key={v} value={v}>
-                  {l}
-                </option>
-              ))}
-            </select>
-            <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Urutkan" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
-              {Object.entries(sorts).map(([v, l]) => (
-                <option key={v} value={v}>
-                  {l}
-                </option>
-              ))}
-            </select>
+        <div className="space-y-3">
+          <div role="tablist" aria-label="Kategori" className="inline-flex rounded-full border border-line bg-card p-1">
+            {Object.entries(categories).map(([v, l]) => (
+              <button
+                key={v || "all"}
+                role="tab"
+                aria-selected={category === v}
+                onClick={() => {
+                  setCategory(v);
+                  // Brands and packaging conditions do not apply to dioramas.
+                  setBrand("");
+                  setCondition("");
+                }}
+                className={`press rounded-full px-5 py-1.5 font-semibold ${category === v ? "bg-ink text-white" : "text-ink-soft hover:text-ink"}`}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {category !== "diorama" && ["", ...brands].map((b) => (
+              <button
+                key={b || "all"}
+                onClick={() => setBrand(b)}
+                aria-pressed={brand === b}
+                className={`press flex h-10 items-center rounded-full border bg-card px-4 font-semibold ${brand === b ? "border-ink ring-2 ring-ink" : "border-line hover:border-ink"}`}
+              >
+                {b ? <BrandLogo brand={b} className="h-6 max-w-28" /> : "Semua merek"}
+              </button>
+            ))}
+            <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
+              <select value={condition} onChange={(e) => setCondition(e.target.value)} aria-label="Kondisi" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
+                <option value="">Semua kondisi</option>
+                {Object.entries({ ...(category !== "diorama" && conditions), ...(category !== "diecast" && dioramaConditions) }).map(([v, l]) => (
+                  <option key={v} value={v}>
+                    {l}
+                  </option>
+                ))}
+              </select>
+              <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Urutkan" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
+                {Object.entries(sorts).map(([v, l]) => (
+                  <option key={v} value={v}>
+                    {l}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       )}

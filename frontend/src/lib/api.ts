@@ -4,7 +4,11 @@ export const API_URL: string = import.meta.env.VITE_API_URL ?? "http://localhost
 
 export type Item = {
   id: number;
-  brand: string;
+  category: "diecast" | "diorama";
+  brand: string; // diecast only
+  artist?: string; // diorama only, optional: who built it
+  size?: string;
+  ready_weeks?: number; // diorama PO estimate; absent means finished
   model_name: string;
   series: string;
   year: number;
@@ -33,6 +37,7 @@ export type Auction = {
 };
 
 export type Filter = {
+  category: string;
   brand: string;
   series: string;
   color: string;
