@@ -79,6 +79,20 @@ export function timeAgo(iso: string, nowMs: number): string {
   return `${Math.floor(s / 86400)} hari lalu`;
 }
 
+/**
+ * My standing in a tracked auction. Until the closer settles it, an auction
+ * whose time is up has no winner_id yet, so its leader is the one who wins.
+ */
+export function trackerStatus(
+  a: { status: string; highest_bidder_id: number | null; winner_id: number | null },
+  myId: number | null,
+  open: boolean,
+): "Memimpin" | "Disalip" | "Menang" | "Kalah" {
+  const mine = a.status === "active" ? a.highest_bidder_id === myId : a.winner_id === myId;
+  if (open) return mine ? "Memimpin" : "Disalip";
+  return mine ? "Menang" : "Kalah";
+}
+
 /** One-tap amounts: the minimum bid, one step more, and a five-step jump. */
 export function quickBids(a: { start_price: number; min_increment: number; current_highest_bid: number | null }): number[] {
   const floor = minBid(a);

@@ -4,7 +4,7 @@ import { AuctionCard } from "../components/AuctionCard";
 import { Button, ErrorNote } from "../components/ui";
 import { api, errorMessage, imageSrc, type Auction, type MyAuctions, type Profile } from "../lib/api";
 import { useAuth } from "../lib/auth";
-import { castingNumber, rupiah, timeLeft } from "../lib/format";
+import { castingNumber, rupiah, timeLeft, trackerStatus } from "../lib/format";
 import { useNow } from "../lib/useNow";
 
 // The API returns at most this many per list (service.myLimit).
@@ -27,7 +27,7 @@ function TrackerRow({ a, myBid, myId, now }: { a: Auction; myBid: number; myId: 
   const leading = a.highest_bidder_id === myId;
   const left = timeLeft(a.end_time, now);
   const open = a.status === "active" && left.ms > 0;
-  const status = open ? (leading ? "Memimpin" : "Disalip") : a.winner_id === myId ? "Menang" : "Kalah";
+  const status = trackerStatus(a, myId, open);
   const good = status === "Memimpin" || status === "Menang";
   return (
     <li className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">

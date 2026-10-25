@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { castingNumber, conditionLabel, minBid, quickBids, rupiah, timeAgo, timeLeft, userIdFromToken } from "./format";
+import { castingNumber, conditionLabel, minBid, quickBids, rupiah, timeAgo, timeLeft, trackerStatus, userIdFromToken } from "./format";
 
 describe("rupiah", () => {
   it("formats whole rupiah with dot thousands", () => {
@@ -86,5 +86,21 @@ describe("quickBids", () => {
   it("offers the floor and two bigger jumps", () => {
     expect(quickBids({ start_price: 100, min_increment: 10, current_highest_bid: 150 })).toEqual([160, 170, 200]);
     expect(quickBids({ start_price: 100, min_increment: 10, current_highest_bid: null })).toEqual([100, 110, 140]);
+  });
+});
+
+describe("trackerStatus", () => {
+  const a = (status: "active" | "completed", highest_bidder_id: number | null, winner_id: number | null) => ({ status, highest_bidder_id, winner_id });
+  it("follows the lead while open", () => {
+    expect(trackerStatus(a("active", 7, null), 7, true)).toBe("Memimpin");
+    expect(trackerStatus(a("active", 8, null), 7, true)).toBe("Disalip");
+  });
+  it("gives an ended but unsettled auction to its leader", () => {
+    expect(trackerStatus(a("active", 7, null), 7, false)).toBe("Menang");
+    expect(trackerStatus(a("active", 8, null), 7, false)).toBe("Kalah");
+  });
+  it("reads the winner once settled", () => {
+    expect(trackerStatus(a("completed", 7, 7), 7, false)).toBe("Menang");
+    expect(trackerStatus(a("completed", 8, 8), 7, false)).toBe("Kalah");
   });
 });
