@@ -4,8 +4,7 @@ WORKDIR /src
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
-# Same origin as the page: nginx forwards /api/* to the Go API, so no CORS is needed.
-ENV VITE_API_URL=/api
+# The app calls /api, which nginx forwards to the Go API (same origin, no CORS).
 RUN npm run build
 
 FROM nginx:1.27-alpine

@@ -40,7 +40,7 @@ go run cmd/seed/main.go
 # Regenerasi dokumentasi Swagger setelah mengubah anotasi handler atau tipe service
 swag init -g handler.go -d internal/handler,internal/service -o internal/apidocs --ot go,json
 
-# Jalankan frontend secara lokal (API di :8080, CORS default mengizinkan :5173)
+# Jalankan frontend secara lokal. Vite mem-proxy /api ke API di :8080 (seperti nginx di produksi), jadi port Vite bebas
 cd frontend && npm install && npm run dev
 
 # Test dan build frontend

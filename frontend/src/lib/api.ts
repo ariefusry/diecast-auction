@@ -1,6 +1,7 @@
 // Thin client for the Go API. Errors carry the server's {"error": ...} message.
 
-export const API_URL: string = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+// Same origin by default: Vite (dev) and nginx (production) proxy /api to the Go API.
+export const API_URL: string = import.meta.env.VITE_API_URL ?? "/api";
 
 export type Item = {
   id: number;
