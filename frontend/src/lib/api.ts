@@ -97,7 +97,8 @@ export async function api<T>(path: string, init: { method?: string; body?: unkno
   }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    if (res.status === 401 && token) {
+    // A wrong password on /auth/login is also a 401; that must not end the session.
+    if (res.status === 401 && token && !path.startsWith("/auth/")) {
       setToken(null); // expired or revoked session
       window.dispatchEvent(new Event("auth:expired"));
     }

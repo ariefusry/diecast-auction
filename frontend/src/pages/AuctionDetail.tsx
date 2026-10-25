@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router";
 import { Photo } from "../components/Photo";
 import { Button, ErrorNote } from "../components/ui";
@@ -19,16 +19,23 @@ export function AuctionDetail() {
   const { userId } = useAuth();
   const now = useNow();
   const [auction, setAuction] = useState<Auction | null>(null);
+  const [loadError, setLoadError] = useState("");
+  // Bumped by every request; a response from an older request is dropped, so a
+  // slow poll can never overwrite the result of a bid that finished after it.
+  const seq = useRef(0);
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
+    const mine = ++seq.current;
     try {
-      setAuction(await api<Auction>(`/auctions/${id}`));
+      const fresh = await api<Auction>(`/auctions/${id}`);
+      if (mine === seq.current) setAuction(fresh);
     } catch (e) {
-      setError(errorMessage(e));
+      // A failed poll keeps the last good data; only a failed first load shows.
+      if (mine === seq.current) setLoadError(errorMessage(e));
     }
   }, [id]);
 
@@ -40,7 +47,7 @@ export function AuctionDetail() {
   }, [load]);
 
   if (!auction) {
-    return error ? <ErrorNote message={error} /> : <p className="text-ink-soft">Memuat lelang…</p>;
+    return loadError ? <ErrorNote message={loadError} /> : <p className="text-ink-soft">Memuat lelang…</p>;
   }
 
   const a = auction;
@@ -54,8 +61,10 @@ export function AuctionDetail() {
     setBusy(true);
     setError("");
     setNotice("");
+    const mine = ++seq.current;
     try {
-      setAuction(await action());
+      const updated = await action();
+      if (mine === seq.current) setAuction(updated);
       setNotice(done);
       setAmount("");
     } catch (e) {
@@ -137,7 +146,7 @@ export function AuctionDetail() {
                   type="number"
                   inputMode="numeric"
                   min={floor}
-                  step={1000}
+                  step="any"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder={String(floor)}
@@ -191,7 +200,7 @@ export function AuctionDetail() {
         )}
 
         {a.item.description && <p className="max-w-prose whitespace-pre-line">{a.item.description}</p>}
-        {a.item.source_url && (
+        {/^https?:\/\//.test(a.item.source_url) && (
           <p className="text-sm text-ink-soft">
             Foto dan data dari{" "}
             <a href={a.item.source_url} target="_blank" rel="noreferrer" className="underline underline-offset-4">

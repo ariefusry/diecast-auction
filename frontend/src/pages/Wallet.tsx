@@ -10,6 +10,7 @@ export function Wallet() {
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     api<WalletT>("/wallet").then(setWallet, (e) => setError(errorMessage(e)));
@@ -19,6 +20,7 @@ export function Wallet() {
     e.preventDefault();
     setError("");
     setNotice("");
+    setBusy(true);
     try {
       const value = Number(amount);
       setWallet(await api<WalletT>("/wallet/deposit", { method: "POST", body: { amount: value } }));
@@ -26,6 +28,8 @@ export function Wallet() {
       setAmount("");
     } catch (err) {
       setError(errorMessage(err));
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -75,7 +79,9 @@ export function Wallet() {
             aria-label="Jumlah"
             className="min-w-0 flex-1 rounded-lg border border-line px-3 py-2.5 tabular-nums focus:border-ink focus:outline-none"
           />
-          <Button type="submit">Isi saldo</Button>
+          <Button type="submit" disabled={busy}>
+            Isi saldo
+          </Button>
         </div>
         <ErrorNote message={error} />
         {notice && (

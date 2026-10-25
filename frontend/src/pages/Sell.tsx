@@ -66,7 +66,9 @@ export function Sell() {
           duration_minutes: Number(form.duration_minutes),
         },
       });
-      if (publish) await api(`/auctions/${created.id}/publish`, { method: "POST" });
+      // The auction exists from here on. If publishing fails it stays a draft,
+      // which the detail page can publish, so never resubmit the form (duplicate).
+      if (publish) await api(`/auctions/${created.id}/publish`, { method: "POST" }).catch(() => undefined);
       navigate(`/lelang/${created.id}`);
     } catch (err) {
       setError(errorMessage(err));
