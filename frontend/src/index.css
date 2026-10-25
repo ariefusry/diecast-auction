@@ -98,8 +98,9 @@
    a clear plastic bubble. It is the one decorative idea in the interface. */
 @utility blister {
   position: relative;
-  background: var(--color-card);
-  border: 1px solid var(--color-line);
+  /* --back: the brand's printed card color, set per card */
+  background: var(--back, var(--color-card));
+  border: 1px solid rgb(20 33 61 / 0.14);
   border-radius: 14px;
   padding: 30px 12px 14px;
   &::before {
@@ -112,9 +113,34 @@
     height: 10px;
     translate: -50% 0;
     border-radius: 999px;
-    background: var(--color-paper);
-    box-shadow: inset 0 1px 2px rgb(20 33 61 / 0.25);
+    /* --hole: whatever the card hangs in front of */
+    background: var(--hole, var(--color-paper));
+    box-shadow: inset 0 1px 2px rgb(20 33 61 / 0.35);
   }
+}
+
+/* Shop pegboard: brown hardboard with a grid of punched holes. */
+@utility pegboard {
+  --hole: #8a6a43;
+  background-color: #c9a878;
+  background-image: radial-gradient(circle, rgb(74 52 28 / 0.42) 2.5px, transparent 3px);
+  background-size: 26px 26px;
+  background-position: 13px 13px;
+  box-shadow: inset 0 0 0 1px rgb(74 52 28 / 0.25);
+}
+
+/* A chrome peg the card hangs from, through its peg hole. */
+@utility peg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  width: 8px;
+  height: 32px; /* reaches into the card's peg hole */
+  translate: -50% 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #8d96a3, #f4f6f9 45%, #a5adb8);
+  box-shadow: 0 2px 3px rgb(20 33 61 / 0.35);
 }
 
 @utility bubble {

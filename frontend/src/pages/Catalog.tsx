@@ -1,8 +1,9 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { AuctionCard } from "../components/AuctionCard";
 import { BrandLogo } from "../components/BrandLogo";
+import { PegWall } from "../components/PegWall";
 import { Button, ErrorNote } from "../components/ui";
-import { api, errorMessage, type Filter, type SearchResult } from "../lib/api";
+import { api, errorMessage, type Auction, type Filter, type SearchResult } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { conditionLabel, conditions, rupiah } from "../lib/format";
 import { useNow } from "../lib/useNow";
@@ -35,12 +36,21 @@ export function Catalog() {
   const now = useNow();
   const [brand, setBrand] = useState("");
   const [condition, setCondition] = useState("");
-  const [sort, setSort] = useState("ending_soon");
+  // The pegboard already shows what closes soonest, so the grid starts with what is new.
+  const [sort, setSort] = useState("newest");
   const [query, setQuery] = useState("");
   const [aiResult, setAiResult] = useState<SearchResult | null>(null);
   const [result, setResult] = useState<{ key: string; data: SearchResult } | null>(null);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState("");
+  const [closing, setClosing] = useState<Auction[]>([]);
+
+  useEffect(() => {
+    api<SearchResult>("/auctions?sort=ending_soon").then(
+      (data) => setClosing(data.auctions.slice(0, 4)),
+      () => undefined, // the grid below reports connection errors
+    );
+  }, []);
 
   const params = new URLSearchParams({ sort });
   if (brand) params.set("brand", brand);
@@ -82,33 +92,41 @@ export function Catalog() {
   const shown = aiResult ?? result?.data;
   return (
     <div className="space-y-6">
-      <form onSubmit={searchAI} className="space-y-3">
-        <h1 className="font-display text-4xl leading-none font-extrabold italic sm:text-5xl">Cari diecast incaranmu</h1>
-        <p className="max-w-prose text-ink-soft">Ketik seperti chat ke sesama kolektor. Sebut merek, warna, kondisi atau budget.</p>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            maxLength={200}
-            placeholder={examples[0]}
-            aria-label="Pencarian"
-            className="min-w-0 flex-1 rounded-xl border-2 border-ink bg-card px-4 py-3 text-lg focus:outline-none"
-          />
-          <Button type="submit" className="px-6 text-lg" disabled={loading}>
-            Cari
-          </Button>
-        </div>
-        {!aiResult && (
-          <div className="flex flex-wrap gap-2 text-sm">
-            <span className="text-ink-soft">Contoh:</span>
-            {examples.map((ex) => (
-              <button key={ex} type="button" onClick={() => setQuery(ex)} className="press text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
-                {ex}
-              </button>
-            ))}
+      <section className="pegboard space-y-8 rounded-3xl p-5 sm:p-8">
+        <form onSubmit={searchAI} className="space-y-3">
+          <h1 className="font-display text-4xl leading-none font-extrabold italic sm:text-5xl">Cari diecast incaranmu</h1>
+          <p className="max-w-prose font-medium">Ketik seperti chat ke sesama kolektor. Sebut merek, warna, kondisi atau budget.</p>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              maxLength={200}
+              placeholder={examples[0]}
+              aria-label="Pencarian"
+              className="min-w-0 flex-1 rounded-xl border-2 border-ink bg-card px-4 py-3 text-lg focus:outline-none"
+            />
+            <Button type="submit" className="px-6 text-lg" disabled={loading}>
+              Cari
+            </Button>
+          </div>
+          {!aiResult && (
+            <div className="flex flex-wrap gap-2 text-sm">
+              <span className="font-medium">Contoh:</span>
+              {examples.map((ex) => (
+                <button key={ex} type="button" onClick={() => setQuery(ex)} className="press rounded-full bg-card/70 px-3 py-1 text-ink hover:bg-card">
+                  {ex}
+                </button>
+              ))}
+            </div>
+          )}
+        </form>
+        {closing.length > 0 && (
+          <div className="space-y-1">
+            <h2 className="font-display text-2xl font-bold italic">Segera berakhir</h2>
+            <PegWall auctions={closing} now={now} myId={userId} />
           </div>
         )}
-      </form>
+      </section>
 
       {aiResult ? (
         <div className="space-y-2 rounded-xl border border-line bg-card p-4">

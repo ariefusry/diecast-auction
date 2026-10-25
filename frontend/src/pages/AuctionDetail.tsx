@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { Link, useParams } from "react-router";
 import { BrandLogo } from "../components/BrandLogo";
 import { Photo } from "../components/Photo";
 import { Button, ErrorNote } from "../components/ui";
 import { api, errorMessage, type Auction } from "../lib/api";
 import { useAuth } from "../lib/auth";
+import { brandBack } from "../lib/brands";
 import { conditionLabel, minBid, rupiah, timeLeft } from "../lib/format";
 import { useNow } from "../lib/useNow";
 
@@ -95,7 +96,7 @@ export function AuctionDetail() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr]">
-      <section className="blister self-start">
+      <section className="blister self-start" style={{ "--back": brandBack[a.item.brand] } as CSSProperties}>
         <Photo url={a.item.image_url} alt={a.item.model_name} />
       </section>
 
