@@ -3,7 +3,8 @@ services:
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-diecast}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-diecast}
+      # Required, no default: read only when pgdata is first created, later changes need `down -v`.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env (openssl rand -hex 24)}
       POSTGRES_DB: ${POSTGRES_DB:-diecast}
     # Loopback only: containers reach it as db:5432, the host as localhost:5432.
     # A published port bypasses ufw on Linux, so never expose it on a server.
@@ -20,13 +21,15 @@ services:
   # Full stack: `docker compose up --build`, then open http://localhost:8081.
   # Needs JWT_SECRET (32+ bytes, openssl rand -hex 32) in .env; GEMINI_API_KEY is optional.
 
-  # Loads the demo catalog once; it does nothing when the demo users already exist.
+  # Demo catalog and demo accounts with a public password: opt in with
+  # `docker compose --profile demo up`. Never on a public server. Idempotent.
   seed:
+    profiles: [demo]
     build: { context: ., dockerfile: Dockerfile.backend }
     image: blister64-backend
     command: ["/app/seed"]
     environment:
-      DATABASE_URL: &db-url postgres://${POSTGRES_USER:-diecast}:${POSTGRES_PASSWORD:-diecast}@db:5432/${POSTGRES_DB:-diecast}?sslmode=disable
+      DATABASE_URL: &db-url postgres://${POSTGRES_USER:-diecast}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-diecast}?sslmode=disable
     depends_on:
       db: { condition: service_healthy }
     restart: "no"
@@ -44,9 +47,9 @@ services:
       CORS_ORIGINS: ${PUBLIC_ORIGIN:-http://localhost:8081}
     volumes:
       - uploads:/data/uploads
+    # Not on seed: it is opt-in, and both run the migrations under an advisory lock.
     depends_on:
       db: { condition: service_healthy }
-      seed: { condition: service_completed_successfully }
     restart: unless-stopped
 
   # The React build behind nginx; /api/* is proxied to the api service.
