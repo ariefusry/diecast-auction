@@ -10,8 +10,17 @@ export function Chat({ auctionId, myId, otherName, now }: { auctionId: number; m
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const end = useRef<HTMLDivElement>(null);
+  // Bumped by every request, as on the auction page: a poll that started before
+  // a send must not land after it and hide the message just sent.
+  const seq = useRef(0);
 
-  const load = useCallback(() => api<Message[]>(`/auctions/${auctionId}/messages`).then(setMessages, () => undefined), [auctionId]);
+  const load = useCallback(() => {
+    const mine = ++seq.current;
+    return api<Message[]>(`/auctions/${auctionId}/messages`).then(
+      (list) => mine === seq.current && setMessages(list),
+      () => undefined,
+    );
+  }, [auctionId]);
 
   useEffect(() => {
     load();
@@ -30,9 +39,10 @@ export function Chat({ auctionId, myId, otherName, now }: { auctionId: number; m
     if (!draft.trim()) return;
     setBusy(true);
     setError("");
+    ++seq.current;
     try {
       const m = await api<Message>(`/auctions/${auctionId}/messages`, { method: "POST", body: { body: draft } });
-      setMessages((ms) => [...ms, m]);
+      setMessages((ms) => (ms.some((x) => x.id === m.id) ? ms : [...ms, m]));
       setDraft("");
     } catch (err) {
       setError(errorMessage(err));
