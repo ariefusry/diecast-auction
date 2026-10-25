@@ -98,6 +98,10 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Rate limit bid, chat, dan upload memakai bucket terpisah | `48f89de` |
 | Keamanan: Postgres hanya dipublish ke `127.0.0.1` (port Docker melewati `ufw` di Linux) | `12fd1cf` |
 | Keamanan: `POSTGRES_PASSWORD` wajib tanpa default, seed demo hanya lewat `docker compose --profile demo up` | `c72ee91` |
+| Keamanan: username unik tanpa peduli huruf besar/kecil (migrasi 000006), halaman penjual mencari tanpa peduli huruf | `fecc315` |
+| Keamanan: kuota upload 20 foto per user dan 2 GiB untuk semua per 24 jam (migrasi 000007, 409 kalau penuh) | `df46e5d` |
+| Keamanan: ID penawar dan pemenang tidak lagi dikirim; respons memakai `leading`, `won`, `mine`, `sold` relatif ke penonton | `549e17a` |
+| Keamanan: HTTPS lewat Caddy (`--profile https`), HSTS, redirect HTTP, nginx realip supaya rate limit tetap per pengunjung | `5a28d75` |
 
 ---
 
@@ -112,6 +116,8 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | 000003 | Batas uang dan tahun |
 | 000004 | Diorama: `category`, `artist`, `size`, `ready_weeks` |
 | 000005 | Tabel `messages` untuk chat |
+| 000006 | Username unik tanpa peduli huruf besar/kecil |
+| 000007 | Tabel `uploads` untuk kuota foto |
 
 ### Endpoint API
 
@@ -120,11 +126,11 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | `POST /auth/register`, `POST /auth/login` | publik, rate limit |
 | `GET /wallet`, `POST /wallet/deposit`, `GET /wallet/history` | login |
 | `GET /me`, `GET /me/auctions` | login |
-| `GET /auctions` (filter `category`, `brand`, `condition`, harga, `sort`, `q`), `POST /auctions/search/ai` | publik |
+| `GET /auctions` (filter `category`, `brand`, `condition`, harga, `sort`, `q`), `POST /auctions/search/ai` | publik, token opsional untuk `leading`/`won` |
 | `POST /auctions`, `POST /auctions/{id}/publish`, `/cancel`, `/buy-now`, `/bids` | login |
-| `GET /auctions/{id}`, `GET /auctions/{id}/bids`, `GET /sellers/{username}` | publik |
+| `GET /auctions/{id}`, `GET /auctions/{id}/bids`, `GET /sellers/{username}` | publik, token opsional untuk `leading`/`won`/`mine` |
 | `GET`/`POST /auctions/{id}/messages` | login, hanya penjual dan pemenang |
-| `POST /uploads`, `GET /uploads/{nama}` | login untuk upload |
+| `POST /uploads`, `GET /uploads/{nama}` | login untuk upload, 20 per hari |
 
 ### Akun demo
 
@@ -137,8 +143,8 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 - Deploy (hosting sedang dipilih: Oracle Always Free, DigitalOcean, atau Cloudflare Tunnel dari laptop).
 - Notifikasi pesan chat yang belum dibaca.
 - Scraper kadang memilih foto yang salah (poster promo M2, placeholder "image not available" Hot Wheels).
-- Migrasi `down` 000004 dan 000005 belum pernah dijalankan.
-- Kuota upload per pengguna, index trigram untuk pencarian, draf yang bisa dibaca siapa pun lewat ID.
+- Migrasi `down` 000004 sampai 000007 belum pernah dijalankan.
+- Index trigram untuk pencarian, draf yang bisa dibaca siapa pun lewat ID.
 - Dua listing diorama uji tanpa foto di database dev.
 - `docker compose up --build` gagal sejak buildx 0.37.2 (di mesin dev: 0.38.1, Compose v5.6.1) dengan `additional privileges requested: --allow=fs.read=...`, juga untuk `Dockerfile.backend` yang ada di dalam context. Regresi upstream, bukan di repo ini. Workaround per perintah: `BUILDX_BAKE_ENTITLEMENTS_FS=0` (lihat CLAUDE.md). Hapus begitu rilis Compose dengan perbaikan izin baca Dockerfile keluar.
-- Temuan QA 2 yang menunggu keputusan: `bidder_id` publik membongkar nama yang disamarkan, pesan error mentah berbahasa Inggris, login tidak kembali ke halaman asal, countdown memakai jam klien, settlement gagal tanpa alert, username peka huruf besar/kecil, field isi saldo punya jebakan titik ribuan yang sama.
+- Temuan QA 2 yang menunggu keputusan: pesan error mentah berbahasa Inggris, login tidak kembali ke halaman asal, countdown memakai jam klien, settlement gagal tanpa alert, field isi saldo punya jebakan titik ribuan yang sama.
