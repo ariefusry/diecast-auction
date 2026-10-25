@@ -5,8 +5,10 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-diecast}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-diecast}
       POSTGRES_DB: ${POSTGRES_DB:-diecast}
+    # Loopback only: containers reach it as db:5432, the host as localhost:5432.
+    # A published port bypasses ufw on Linux, so never expose it on a server.
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
