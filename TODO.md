@@ -79,7 +79,8 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Buat multi-stage `Dockerfile.frontend` (Node build -> Nginx server)
 - [x] Konfigurasi `docker-compose.yml` lengkap (db, seed, api, web) siap jalan dengan satu perintah
 - [x] Siapkan GitHub Actions CI workflow untuk linting dan testing otomatis
-- [ ] Pilih provider Linux VPS dan deploy via Docker Compose (volume untuk `uploads` dan data Postgres)
+- [x] Pilih provider: AWS EC2 (project paket gratis, `ap-southeast-2`) + Cloudflare Tunnel; runbook `docs/deploy.md`, backup `scripts/backup.sh`
+- [ ] Deploy ke EC2 mengikuti `docs/deploy.md` (butuh persetujuan user karena memotong kredit; domain belum diputuskan)
 
 ## Fitur Tambahan (di luar roadmap awal, lihat `CHANGELOG.md`)
 - [x] Desain ulang UI: kartu blister berwarna merek, rak pegboard, header buram, animasi umpan balik

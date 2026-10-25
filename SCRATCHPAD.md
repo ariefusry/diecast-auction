@@ -3,7 +3,7 @@
 ## Current Status
 - Project Name: Blister64, lelang diecast 1:64 (7 merek) dan diorama
 - Phase: Keputusan arsitektur dikunci (spec Section 6)
-- Active Focus: Phase 10 selesai kecuali deploy (menunggu pilihan hosting). Fitur tambahan tercatat di `CHANGELOG.md`
+- Active Focus (2026-10-26): persiapan deploy selesai dan sudah di-push (`origin/main` = `d4e44ce`, CI hijau). Langkah berikut: deploy ke AWS EC2 mengikuti `docs/deploy.md`. Fitur tambahan tercatat di `CHANGELOG.md`
 
 ---
 
@@ -11,7 +11,7 @@
 - Language & Runtime: Go stabil terbaru, minimum 1.22 (Root repo)
 - Frontend: React + Vite + Tailwind CSS (`/frontend`)
 - Database: PostgreSQL 15 via Docker Compose
-- Deployment: Linux VPS generik + Docker Compose
+- Deployment: AWS EC2 t4g.small di project AWS (paket gratis, kredit USD 100, berakhir 2027-04-25), region `ap-southeast-2`, profil CLI `blister64` (login: `aws login --profile blister64`, kredensial 12 jam). Docker Compose dengan `--profile demo --profile tunnel`. Runbook: `docs/deploy.md`
 - Design Spec: `docs/superpowers/specs/2026-10-24-hotwheels-auction-api-design.md`
 - Roadmap: `TODO.md`
 - Architecture: `plan.md`
@@ -22,9 +22,11 @@
 - Remote: `github.com/ariefusry/diecast-auction` (private).
 
 ## Open Items
-- Hosting belum dipilih (user riset). Opsi: Oracle Always Free, DigitalOcean (Student Pack), atau Cloudflare Tunnel dari laptop untuk demo.
+- Deploy belum dieksekusi. Keputusan user: katalog demo hasil scrape (akun demo dengan `DEMO_PASSWORD` acak), HTTPS lewat Cloudflare Tunnel, panduan level HIGH (lihat CLAUDE.md). Belum diputuskan: domain (tunnel bernama butuh domain di Cloudflare; tanpa domain hanya quick tunnel `*.trycloudflare.com` yang berganti tiap restart). Membuat resource AWS memotong kredit, jadi minta persetujuan user sebelum langkah 2-4 runbook.
+- Quick tunnel tidak bisa dijalankan dari laptop: auto mode menolak ingress ke mesin lokal. Jalankan di server.
+- Sisa temuan QA (tidak wajib untuk deploy): login tidak kembali ke halaman asal, countdown memakai jam klien, settlement gagal tanpa alert.
 - Scraper memilih foto utama wiki apa adanya: beberapa M2 berupa poster promo, beberapa Hot Wheels placeholder "image not available".
-- Migrasi `down` 000004 belum pernah dijalankan.
+- Migrasi `down` 000004 sampai 000008 belum pernah dijalankan.
 
 ---
 
