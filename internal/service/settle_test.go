@@ -101,6 +101,7 @@ func TestConcurrentCloseSettlesOnce(t *testing.T) {
 func TestCloseRacesLastBid(t *testing.T) {
 	e := newAuctionEnv(t)
 	ctx := context.Background()
+	var closes, outbids int
 	for i := range 10 {
 		seller, alice, bob := e.user(0), e.user(500_000), e.user(500_000)
 		a := e.active(seller, sampleAuction())
@@ -120,6 +121,9 @@ func TestCloseRacesLastBid(t *testing.T) {
 				return err
 			},
 		)
+		// The closer may have skipped the row while a late bid held it and then
+		// rolled back; the worker's next tick closes it, so run one more pass.
+		e.closeExpired()
 		got, _ := e.auctions.Get(ctx, a.ID)
 		closed := got.Status == "completed" && *got.WinnerID == alice &&
 			e.wallet(seller).Available == 100_000 && e.wallet(bob) == (Wallet{Available: 500_000})
@@ -128,7 +132,17 @@ func TestCloseRacesLastBid(t *testing.T) {
 		if closed == outbid {
 			t.Fatalf("round %d mixed state %+v", i, got)
 		}
+		if closed {
+			closes++
+		} else {
+			outbids++
+		}
 		e.assertLedger(seller, alice, bob)
+	}
+	// Early rounds bid well before end_time, late ones after it, so both
+	// outcomes must occur; otherwise the race was not exercised.
+	if closes == 0 || outbids == 0 {
+		t.Fatalf("closes=%d outbids=%d, want both", closes, outbids)
 	}
 }
 
