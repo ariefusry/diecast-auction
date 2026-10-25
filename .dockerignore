@@ -1,0 +1,8 @@
+.git
+.env
+.playwright-mcp
+uploads
+brand
+docs
+frontend
+*.md

@@ -15,6 +15,48 @@ services:
       timeout: 3s
       retries: 15
 
+  # Full stack: `docker compose up --build`, then open http://localhost:8081.
+  # Needs JWT_SECRET (32+ bytes, openssl rand -hex 32) in .env; GEMINI_API_KEY is optional.
+
+  # Loads the demo catalog once; it does nothing when the demo users already exist.
+  seed:
+    build: { context: ., dockerfile: Dockerfile.backend }
+    image: blister64-backend
+    command: ["/app/seed"]
+    environment:
+      DATABASE_URL: &db-url postgres://${POSTGRES_USER:-diecast}:${POSTGRES_PASSWORD:-diecast}@db:5432/${POSTGRES_DB:-diecast}?sslmode=disable
+    depends_on:
+      db: { condition: service_healthy }
+    restart: "no"
+
+  api:
+    build: { context: ., dockerfile: Dockerfile.backend }
+    image: blister64-backend
+    environment:
+      DATABASE_URL: *db-url
+      JWT_SECRET: ${JWT_SECRET:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash-lite}
+      # Only reachable through nginx below, which sets X-Real-IP.
+      TRUST_PROXY: "true"
+      CORS_ORIGINS: ${PUBLIC_ORIGIN:-http://localhost:8081}
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      db: { condition: service_healthy }
+      seed: { condition: service_completed_successfully }
+    restart: unless-stopped
+
+  # The React build behind nginx; /api/* is proxied to the api service.
+  web:
+    build: { context: frontend, dockerfile: ../Dockerfile.frontend }
+    image: blister64-web
+    ports:
+      - "${WEB_PORT:-8081}:80"
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+
   # Throwaway database for tests: tmpfs, never touches dev data.
   testdb:
     image: postgres:15-alpine
@@ -49,6 +91,7 @@ services:
     command: go test -race ./...
 
 volumes:
+  uploads:
   pgdata:
   gomod:
   gobuild:

@@ -1,0 +1,24 @@
+# API and seeder in one small image. Migrations are embedded in both binaries.
+FROM golang:1.27-alpine AS build
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY cmd ./cmd
+COPY internal ./internal
+COPY migrations ./migrations
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/api ./cmd/api \
+ && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/seed ./cmd/seed
+
+FROM alpine:3.21
+# ca-certificates for the Gemini HTTPS call; wget (busybox) serves the healthcheck.
+RUN apk add --no-cache ca-certificates \
+ && adduser -D -H -u 10001 app \
+ && mkdir -p /data/uploads && chown app /data/uploads
+WORKDIR /app
+COPY --from=build /out/api /out/seed ./
+COPY data/seeds.json ./data/seeds.json
+USER app
+ENV PORT=8080 UPLOAD_DIR=/data/uploads
+EXPOSE 8080
+HEALTHCHECK --interval=10s --timeout=3s --retries=5 CMD wget -qO- http://localhost:8080/healthz >/dev/null || exit 1
+CMD ["/app/api"]
