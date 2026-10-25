@@ -123,6 +123,7 @@ func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auction
 	mux.HandleFunc("GET /auctions", h.listAuctions)
 	mux.Handle("POST /auctions/search/ai", aiLimit(http.HandlerFunc(h.searchAI)))
 	mux.HandleFunc("GET /auctions/{id}", h.getAuction)
+	mux.HandleFunc("GET /auctions/{id}/bids", h.listBids)
 	mux.Handle("POST /auctions/{id}/publish", authed(h.publish))
 	mux.Handle("POST /auctions/{id}/cancel", authed(h.cancel))
 	mux.Handle("POST /auctions/{id}/buy-now", authed(h.buyNow))
@@ -259,6 +260,23 @@ func (h *handler) getAuction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, a)
+}
+
+// listBids godoc
+// @Summary  Latest bids on an auction, newest first, bidder names masked
+// @Tags     auctions
+// @Produce  json
+// @Param    id  path     int true "Auction ID"
+// @Success  200 {array}  service.BidEntry
+// @Failure  404 {object} errorResponse
+// @Router   /auctions/{id}/bids [get]
+func (h *handler) listBids(w http.ResponseWriter, r *http.Request) {
+	bids, err := h.auctions.Bids(r.Context(), pathID(r))
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, bids)
 }
 
 // listAuctions godoc

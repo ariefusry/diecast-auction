@@ -219,6 +219,41 @@ const docTemplate = `{
             }
         },
         "/auctions/{id}/bids": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auctions"
+                ],
+                "summary": "Latest bids on an auction, newest first, bidder names masked",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Auction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.BidEntry"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -816,6 +851,25 @@ const docTemplate = `{
                 },
                 "winner_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "service.BidEntry": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "bidder": {
+                    "description": "masked username",
+                    "type": "string",
+                    "example": "d***1"
+                },
+                "bidder_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
                 }
             }
         },

@@ -513,3 +513,38 @@ func TestCreateRejectsMoneyAboveCap(t *testing.T) {
 		t.Fatalf("bid above cap err = %v", err)
 	}
 }
+
+func TestBidsListsNewestFirstWithMaskedNames(t *testing.T) {
+	e := newAuctionEnv(t)
+	ctx := context.Background()
+	seller, b1, b2 := e.user(0), e.user(1_000_000), e.user(1_000_000)
+	a := e.active(seller, sampleAuction())
+	for _, b := range []struct{ id, amount int64 }{{b1, 100_000}, {b2, 110_000}} {
+		if _, err := e.auctions.Bid(ctx, b.id, a.ID, b.amount); err != nil {
+			t.Fatalf("Bid: %v", err)
+		}
+	}
+
+	got, err := e.auctions.Bids(ctx, a.ID)
+	if err != nil || len(got) != 2 {
+		t.Fatalf("Bids = %+v, %v", got, err)
+	}
+	if got[0].BidderID != b2 || got[0].Amount != 110_000 || got[1].BidderID != b1 || got[1].Amount != 100_000 {
+		t.Fatalf("not newest first: %+v", got)
+	}
+	if !strings.Contains(got[0].Bidder, "***") || got[0].CreatedAt.IsZero() {
+		t.Fatalf("bidder not masked or no time: %+v", got[0])
+	}
+
+	if _, err := e.auctions.Bids(ctx, -1); !errors.Is(err, ErrNotFound) {
+		t.Fatalf("unknown auction err = %v, want ErrNotFound", err)
+	}
+}
+
+func TestMaskName(t *testing.T) {
+	for in, want := range map[string]string{"demo_bidder1": "d***1", "ab": "a***b", "x": "x***", "édouard": "é***d"} {
+		if got := maskName(in); got != want {
+			t.Errorf("maskName(%q) = %q, want %q", in, got, want)
+		}
+	}
+}

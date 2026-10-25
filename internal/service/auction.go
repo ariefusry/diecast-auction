@@ -141,6 +141,52 @@ func (s *Auctions) Get(ctx context.Context, id int64) (Auction, error) {
 	return a, err
 }
 
+// BidEntry is one row of an auction's public bid history.
+type BidEntry struct {
+	BidderID  int64     `json:"bidder_id"`
+	Bidder    string    `json:"bidder" example:"d***1"` // masked username
+	Amount    int64     `json:"amount"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+// bidHistoryLimit caps the history; older bids add nothing a bidder acts on.
+const bidHistoryLimit = 20
+
+// Bids returns the latest bids on an auction, newest first. Usernames are
+// masked so the history shows activity without exposing who is bidding.
+func (s *Auctions) Bids(ctx context.Context, id int64) ([]BidEntry, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT b.bidder_id, u.username, b.amount, b.created_at
+		FROM bids b JOIN users u ON u.id = b.bidder_id
+		WHERE b.auction_id = $1 ORDER BY b.amount DESC LIMIT $2`, id, bidHistoryLimit)
+	if err != nil {
+		return nil, err
+	}
+	out, err := pgx.CollectRows(rows, func(r pgx.CollectableRow) (BidEntry, error) {
+		var b BidEntry
+		err := r.Scan(&b.BidderID, &b.Bidder, &b.Amount, &b.CreatedAt)
+		b.Bidder = maskName(b.Bidder)
+		return b, err
+	})
+	if err != nil || len(out) > 0 {
+		return out, err
+	}
+	// No bids: tell an empty auction apart from one that does not exist.
+	if _, err := s.Get(ctx, id); err != nil {
+		return nil, err
+	}
+	return []BidEntry{}, nil
+}
+
+// maskName keeps the first and last letters: demo_bidder1 -> d***1.
+func maskName(name string) string {
+	r := []rune(name)
+	if len(r) < 2 {
+		return name + "***"
+	}
+	return string(r[0]) + "***" + string(r[len(r)-1])
+}
+
 // Publish moves a draft to active with end_time = now() + duration.
 func (s *Auctions) Publish(ctx context.Context, userID, id int64) (Auction, error) {
 	return s.mutate(ctx, id, func(tx pgx.Tx, l locked) error {

@@ -151,6 +151,14 @@ func TestAuctionFlow(t *testing.T) {
 	if code := (&client{t: t, base: base}).do("GET", "/auctions/"+id, nil, &a); code != http.StatusOK || *a.HighestBidderID == 0 {
 		t.Fatalf("get = %d %+v", code, a)
 	}
+	var bids []service.BidEntry
+	if code := (&client{t: t, base: base}).do("GET", "/auctions/"+id+"/bids", nil, &bids); code != http.StatusOK ||
+		len(bids) != 1 || bids[0].Amount != 120_000 || !strings.Contains(bids[0].Bidder, "***") {
+		t.Fatalf("bids = %d %+v", code, bids)
+	}
+	if code := bidder.do("GET", "/auctions/-1/bids", nil, nil); code != http.StatusNotFound {
+		t.Fatalf("bids of unknown auction = %d", code)
+	}
 	if code := seller.do("POST", "/auctions/"+id+"/cancel", nil, nil); code != http.StatusConflict {
 		t.Fatalf("cancel with bid = %d", code)
 	}
