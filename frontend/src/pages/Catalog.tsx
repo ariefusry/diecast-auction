@@ -83,7 +83,7 @@ export function Catalog() {
     <div className="space-y-6">
       <form onSubmit={searchAI} className="space-y-3">
         <h1 className="font-display text-4xl leading-none font-extrabold italic sm:text-5xl">Cari diecast incaranmu</h1>
-        <p className="max-w-prose text-ink-soft">Tulis seperti chat ke sesama kolektor. Merek, warna, kondisi dan budget akan dipahami.</p>
+        <p className="max-w-prose text-ink-soft">Ketik seperti chat ke sesama kolektor. Sebut merek, warna, kondisi atau budget.</p>
         <div className="flex flex-col gap-2 sm:flex-row">
           <input
             value={query}
@@ -101,7 +101,7 @@ export function Catalog() {
           <div className="flex flex-wrap gap-2 text-sm">
             <span className="text-ink-soft">Contoh:</span>
             {examples.map((ex) => (
-              <button key={ex} type="button" onClick={() => setQuery(ex)} className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
+              <button key={ex} type="button" onClick={() => setQuery(ex)} className="press text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
                 {ex}
               </button>
             ))}
@@ -133,7 +133,7 @@ export function Catalog() {
               key={b || "all"}
               onClick={() => setBrand(b)}
               aria-pressed={brand === b}
-              className={`rounded-full border px-4 py-1.5 font-semibold ${brand === b ? "border-ink bg-ink text-white" : "border-line bg-card hover:border-ink"}`}
+              className={`press rounded-full border px-4 py-1.5 font-semibold ${brand === b ? "border-ink bg-ink text-white" : "border-line bg-card hover:border-ink"}`}
             >
               {b || "Semua merek"}
             </button>

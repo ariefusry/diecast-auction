@@ -25,6 +25,73 @@
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-track;
   }
+  /* Condensed display type reads loose as it grows: tighten it with size. */
+  .font-display {
+    letter-spacing: -0.01em;
+  }
+  h1.font-display {
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+  }
+}
+
+/* Feedback on press, not on release: anything tappable gives a little. */
+@utility press {
+  transition:
+    scale 100ms ease-out,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 200ms ease;
+  &:active:not(:disabled) {
+    scale: var(--press, 0.97);
+  }
+}
+
+/* Frosted chrome: content scrolls under the header instead of beside it.
+   A soft fade replaces a hard divider where the two meet. */
+@utility material {
+  background: rgb(238 241 245 / 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 100% 0 auto;
+    height: 12px;
+    background: linear-gradient(rgb(20 33 61 / 0.06), transparent);
+    pointer-events: none;
+  }
+}
+
+/* A new price lands with a short lift and a mint tint that fades out, so
+   the change has a visible cause. */
+@keyframes land {
+  from {
+    transform: translateY(6px);
+    opacity: 0.4;
+    color: var(--color-lead);
+  }
+  40% {
+    color: var(--color-lead);
+  }
+}
+
+/* A refused action shakes once, the way a locked door answers a push. */
+@keyframes refuse {
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+@utility refuse {
+  animation: refuse 280ms ease-in-out;
+}
+@utility land {
+  animation: land 700ms cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
 /* The blister card: a hang tab with a peg hole on top, the photo sealed in
@@ -71,9 +138,36 @@
   }
 }
 
+@media (hover: hover) {
+  .blister:hover {
+    border-color: var(--color-ink);
+    box-shadow: 0 10px 24px -14px rgb(20 33 61 / 0.35);
+  }
+}
+
+/* Reduced motion keeps colour and opacity feedback, drops movement. */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
-    transition: none !important;
+    scale: none !important;
+    transform: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .material {
+    background: var(--color-paper);
+    backdrop-filter: none;
+  }
+}
+@media (prefers-contrast: more) {
+  :root {
+    --color-ink-soft: #2b3550;
+    --color-line: #7c879c;
+  }
+  .material {
+    background: var(--color-paper);
+    backdrop-filter: none;
+    border-bottom: 1px solid var(--color-ink);
   }
 }

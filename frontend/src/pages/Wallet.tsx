@@ -40,7 +40,9 @@ export function Wallet() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-xl border border-line bg-card p-5">
             <div className="text-ink-soft">Bisa dipakai</div>
-            <div className="font-display text-4xl font-bold tabular-nums">{rupiah(wallet.available_balance)}</div>
+            <div key={wallet.available_balance} className="land font-display text-4xl font-bold tabular-nums">
+              {rupiah(wallet.available_balance)}
+            </div>
           </div>
           <div className="rounded-xl border border-line bg-card p-5">
             <div className="text-ink-soft">Terkunci di tawaran</div>
@@ -60,7 +62,7 @@ export function Wallet() {
               type="button"
               onClick={() => setAmount(String(q))}
               aria-pressed={amount === String(q)}
-              className={`rounded-full border px-3 py-1.5 font-semibold ${amount === String(q) ? "border-ink bg-ink text-white" : "border-line hover:border-ink"}`}
+              className={`press rounded-full border px-3 py-1.5 font-semibold ${amount === String(q) ? "border-ink bg-ink text-white" : "border-line hover:border-ink"}`}
             >
               {rupiah(q)}
             </button>

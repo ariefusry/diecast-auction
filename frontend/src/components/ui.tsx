@@ -11,7 +11,7 @@ const variants: Record<Variant, string> = {
 export function Button({ variant = "ink", className = "", ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 font-semibold disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${className}`}
+      className={`press inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 font-semibold disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${className}`}
       {...props}
     />
   );

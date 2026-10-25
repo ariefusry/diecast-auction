@@ -2,16 +2,16 @@ import { NavLink, Outlet, useNavigate } from "react-router";
 import { useAuth } from "../lib/auth";
 
 const link = ({ isActive }: { isActive: boolean }) =>
-  `rounded-md px-2 py-1.5 font-semibold sm:px-3 ${isActive ? "bg-white/15 text-white" : "text-white/75 hover:text-white"}`;
+  `press rounded-full px-2.5 py-1.5 text-[15px] font-semibold sm:text-base sm:px-4 ${isActive ? "bg-ink text-white" : "text-ink-soft hover:text-ink"}`;
 
 export function Layout() {
   const { userId, logout } = useAuth();
   const navigate = useNavigate();
   return (
     <div className="min-h-screen">
-      <header className="bg-ink text-white">
-        <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-1 gap-y-2 px-4 py-3 sm:gap-x-2">
-          <NavLink to="/" className="mr-auto font-display text-xl font-extrabold italic tracking-tight sm:text-2xl">
+      <header className="material sticky top-0 z-20">
+        <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-0.5 gap-y-2 px-4 py-3 sm:gap-x-2">
+          <NavLink to="/" className="mr-auto font-display text-xl font-extrabold italic sm:text-2xl">
             Lelang 1:64
           </NavLink>
           <NavLink to="/" end className={link}>
@@ -26,7 +26,7 @@ export function Layout() {
                 Dompet
               </NavLink>
               <button
-                className="rounded-md px-2 py-1.5 font-semibold text-white/75 hover:text-white sm:px-3"
+                className="press rounded-full px-2.5 py-1.5 text-[15px] font-semibold sm:text-base text-ink-soft hover:text-ink sm:px-4"
                 onClick={() => {
                   logout();
                   navigate("/");

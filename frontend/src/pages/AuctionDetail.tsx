@@ -25,8 +25,18 @@ export function AuctionDetail() {
   const seq = useRef(0);
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
+  const [shaking, setShaking] = useState(false);
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  // Counts price changes after the first load, so a new bid (ours or someone
+  // else's) animates in while the initial render stays still.
+  const price = auction ? (auction.current_highest_bid ?? auction.start_price) : null;
+  const [seenPrice, setSeenPrice] = useState<number | null>(null);
+  const [bumps, setBumps] = useState(0);
+  if (price !== seenPrice) {
+    if (seenPrice !== null) setBumps(bumps + 1);
+    setSeenPrice(price);
+  }
 
   const load = useCallback(async () => {
     const mine = ++seq.current;
@@ -69,6 +79,7 @@ export function AuctionDetail() {
       setAmount("");
     } catch (e) {
       setError(errorMessage(e));
+      setShaking(true);
       load();
     } finally {
       setBusy(false);
@@ -110,7 +121,9 @@ export function AuctionDetail() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <div className="text-sm text-ink-soft">{a.current_highest_bid === null ? "Harga awal" : "Tawaran tertinggi"}</div>
-              <div className="font-display text-4xl font-bold tabular-nums">{rupiah(a.current_highest_bid ?? a.start_price)}</div>
+              <div key={bumps} className={`font-display text-4xl font-bold tabular-nums ${bumps ? "land" : ""}`}>
+                {rupiah(a.current_highest_bid ?? a.start_price)}
+              </div>
             </div>
             <div className="sm:text-right">
               <div className="text-sm text-ink-soft">{open ? "Sisa waktu" : statusText[a.status]}</div>
@@ -138,7 +151,7 @@ export function AuctionDetail() {
         )}
 
         {open && !isSeller && userId !== null && !leading && (
-          <form onSubmit={bid} className="space-y-3">
+          <form onSubmit={bid} onAnimationEnd={() => setShaking(false)} className={`space-y-3 ${shaking ? "refuse" : ""}`}>
             <label className="block">
               <span className="mb-1 block font-semibold">Tawaran Anda</span>
               <div className="flex gap-2">
@@ -153,12 +166,16 @@ export function AuctionDetail() {
                   className="min-w-0 flex-1 rounded-lg border-2 border-ink bg-card px-3 py-2.5 font-display text-2xl font-bold tabular-nums focus:outline-none"
                 />
                 <Button type="submit" variant="track" disabled={busy} className="px-6 text-lg">
-                  Pasang tawaran
+                  {busy ? "Memasang…" : "Pasang tawaran"}
                 </Button>
               </div>
-              <span className="mt-1 block text-sm text-ink-soft">
-                Minimal {rupiah(floor)}. Dana dikunci di dompet dan kembali otomatis jika ada yang menawar lebih tinggi.
-              </span>
+              {amount !== "" && Number(amount) < floor ? (
+                <span className="mt-1 block text-sm font-medium text-signal">Kurang dari minimal {rupiah(floor)}.</span>
+              ) : (
+                <span className="mt-1 block text-sm text-ink-soft">
+                  Minimal {rupiah(floor)}. Dana Anda terkunci selama memimpin dan kembali begitu ada tawaran lebih tinggi.
+                </span>
+              )}
             </label>
           </form>
         )}
