@@ -82,6 +82,24 @@ services:
       web: { condition: service_started }
     restart: unless-stopped
 
+  # HTTPS without opening a port, through Cloudflare Tunnel (the alternative to
+  # caddy above): docker compose --profile tunnel up -d. Needs TUNNEL_TOKEN from a
+  # named tunnel in the Cloudflare dashboard whose public hostname points at
+  # http://web:80. Without a domain, a quick tunnel prints a random
+  # https://*.trycloudflare.com address (new on every restart):
+  #   docker compose --profile tunnel run --rm cloudflared tunnel --no-autoupdate --url http://web:80
+  # nginx takes the visitor from X-Forwarded-For, so rate limits stay per visitor.
+  # Also set WEB_PORT=127.0.0.1:8081 so the tunnel is the only way in.
+  cloudflared:
+    image: cloudflare/cloudflared:2026.10.0
+    profiles: [tunnel]
+    command: ["tunnel", "--no-autoupdate", "run"]
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+    depends_on:
+      web: { condition: service_started }
+    restart: unless-stopped
+
   # Throwaway database for tests: tmpfs, never touches dev data.
   testdb:
     image: postgres:15-alpine
