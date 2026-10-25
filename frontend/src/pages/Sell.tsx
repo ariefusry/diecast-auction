@@ -99,12 +99,14 @@ export function Sell() {
           </div>
         </div>
         <Field label="Foto" hint="JPEG, PNG atau WebP, maksimal 5 MB.">
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
-            className="block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-ink file:px-4 file:py-2 file:font-semibold file:text-white"
-          />
+          {/* The native picker's own button and "No file chosen" text are in the browser's language; Field's label opens it. */}
+          <div className="flex items-center gap-3">
+            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => setPhoto(e.target.files?.[0] ?? null)} className="peer sr-only" />
+            <span className="press shrink-0 cursor-pointer rounded-lg bg-ink px-4 py-2 text-sm font-semibold text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-track">
+              {photo ? "Ganti foto" : "Pilih foto"}
+            </span>
+            <span className="min-w-0 truncate text-sm text-ink-soft">{photo?.name ?? "Belum ada foto"}</span>
+          </div>
         </Field>
       </div>
 

@@ -41,20 +41,23 @@ function TrackerRow({ a, myBid, now }: { a: Auction; myBid: number; now: number 
           {open && <span className={`ml-2 text-sm tabular-nums ${left.closing ? "font-semibold text-signal" : "text-ink-soft"}`}>{left.label}</span>}
         </span>
       </Link>
-      <dl className="flex gap-5 text-right">
-        <div>
+      {/* Fixed columns, so amounts line up down the list whether or not a row has a button. */}
+      <dl className="flex gap-5 sm:text-right">
+        <div className="sm:w-28">
           <dt className="text-xs text-ink-soft">Tawaran saya</dt>
           <dd className="font-display text-lg font-bold tabular-nums">{rupiah(myBid)}</dd>
         </div>
-        <div>
+        <div className="sm:w-28">
           <dt className="text-xs text-ink-soft">{open ? "Tertinggi" : "Akhir"}</dt>
           <dd className="font-display text-lg font-bold tabular-nums">{rupiah(a.current_highest_bid ?? a.start_price)}</dd>
         </div>
       </dl>
-      {open && !leading && (
-        <Link to={`/lelang/${a.id}`} className="press rounded-lg bg-track px-3 py-2 text-sm font-semibold text-white hover:bg-track-dark">
+      {open && !leading ? (
+        <Link to={`/lelang/${a.id}`} className="press rounded-lg bg-track px-3 py-2 text-center text-sm font-semibold text-white hover:bg-track-dark sm:w-28">
           Tawar lagi
         </Link>
+      ) : (
+        <span aria-hidden className="max-sm:hidden sm:w-28" />
       )}
     </li>
   );

@@ -30,6 +30,15 @@
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-track;
   }
+  /* Browser-drawn surfaces take the palette too: track orange marks what you
+     select or type into, navy fills checkboxes. */
+  ::selection {
+    background: rgb(255 106 19 / 0.28);
+  }
+  :root {
+    accent-color: var(--color-ink);
+    caret-color: var(--color-track);
+  }
   /* Condensed display type reads loose as it grows: tighten it with size. */
   .font-display {
     letter-spacing: -0.01em;

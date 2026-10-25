@@ -42,7 +42,7 @@ export function SellerPage() {
           <h1 className="truncate font-display text-3xl font-extrabold italic">{p.username}</h1>
           <p className="text-ink-soft">Bergabung {monthYear.format(new Date(p.created_at))}</p>
         </div>
-        <dl className="flex gap-6 text-right">
+        <dl className="flex gap-6 sm:text-right">
           <div>
             <dt className="text-sm text-ink-soft">Sedang dilelang</dt>
             <dd className="font-display text-3xl font-bold tabular-nums">{p.active.length >= listLimit ? `${listLimit}+` : p.active.length}</dd>
