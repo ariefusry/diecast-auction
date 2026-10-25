@@ -21,6 +21,11 @@ Panduan ringkas untuk Claude Code CLI dalam mengembangkan platform lelang diecas
 # Untuk development cukup `docker compose up -d db` lalu jalankan API dan Vite lokal
 docker compose up --build
 
+# Kalau build berhenti dengan "additional privileges requested: pass --allow=fs.read=...":
+# regresi buildx >= 0.37.2 (Compose hanya memberi izin baca untuk context). Matikan cek itu
+# hanya untuk satu perintah, karena compose file ini milik kita sendiri. PowerShell: $env:BUILDX_BAKE_ENTITLEMENTS_FS=0
+BUILDX_BAKE_ENTITLEMENTS_FS=0 docker compose up --build
+
 # Sama, plus katalog dan akun demo (password publik). Jangan dipakai di server publik
 docker compose --profile demo up --build
 
