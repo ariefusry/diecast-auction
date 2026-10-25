@@ -93,7 +93,8 @@ export function Catalog() {
 
   const shown = aiResult ?? result?.data;
   return (
-    <div className="space-y-6">
+    // Search stands apart; filters and the lots they control sit together below it.
+    <div className="space-y-8">
       <section className="pegboard space-y-8 rounded-3xl p-5 sm:p-8">
         <form onSubmit={searchAI} className="space-y-3">
           <h1 className="font-display text-4xl leading-none font-extrabold italic sm:text-5xl">Cari diecast incaranmu</h1>
@@ -130,81 +131,88 @@ export function Catalog() {
         )}
       </section>
 
-      {aiResult ? (
-        <div className="space-y-2 rounded-xl border border-line bg-card p-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold">{aiResult.ai ? "Dipahami sebagai" : "Dicari sebagai kata kunci"}</span>
-            {understood(aiResult.filter).map((c) => (
-              <span key={c} className="rounded-full bg-paper px-3 py-1 text-sm">
-                {c}
-              </span>
-            ))}
-            <button onClick={clearAI} className="ml-auto text-sm font-semibold underline underline-offset-4">
-              Hapus pencarian
-            </button>
-          </div>
-          {aiResult.relaxed && aiResult.auctions.length > 0 && (
-            <p className="text-sm text-ink-soft">Tidak ada yang persis cocok. Ini yang paling mendekati.</p>
-          )}
-        </div>
-      ) : (
-        <div className="space-y-3">
-          <div role="tablist" aria-label="Kategori" className="inline-flex rounded-full border border-line bg-card p-1">
-            {Object.entries(categories).map(([v, l]) => (
-              <button
-                key={v || "all"}
-                role="tab"
-                aria-selected={category === v}
-                onClick={() => {
-                  setCategory(v);
-                  // Brands and packaging conditions do not apply to dioramas.
-                  setBrand("");
-                  setCondition("");
-                }}
-                className={`press rounded-full px-5 py-1.5 font-semibold ${category === v ? "bg-ink text-white" : "text-ink-soft hover:text-ink"}`}
-              >
-                {l}
+      <div className="space-y-5">
+        {aiResult ? (
+          <div className="space-y-2 rounded-xl border border-line bg-card p-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm font-semibold">{aiResult.ai ? "Dipahami sebagai" : "Dicari sebagai kata kunci"}</span>
+              {understood(aiResult.filter).map((c) => (
+                <span key={c} className="rounded-full bg-paper px-3 py-1 text-sm">
+                  {c}
+                </span>
+              ))}
+              <button onClick={clearAI} className="ml-auto text-sm font-semibold underline underline-offset-4">
+                Hapus pencarian
               </button>
-            ))}
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {category !== "diorama" && ["", ...brands].map((b) => (
-              <button
-                key={b || "all"}
-                onClick={() => setBrand(b)}
-                aria-pressed={brand === b}
-                className={`press flex h-10 items-center rounded-full border bg-card px-4 font-semibold ${brand === b ? "border-ink ring-2 ring-ink" : "border-line hover:border-ink"}`}
-              >
-                {b ? <BrandLogo brand={b} className="h-6 max-w-28" /> : "Semua merek"}
-              </button>
-            ))}
-            <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
-              <select value={condition} onChange={(e) => setCondition(e.target.value)} aria-label="Kondisi" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
-                <option value="">Semua kondisi</option>
-                {Object.entries({ ...(category !== "diorama" && conditions), ...(category !== "diecast" && dioramaConditions) }).map(([v, l]) => (
-                  <option key={v} value={v}>
-                    {l}
-                  </option>
-                ))}
-              </select>
-              <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Urutkan" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
-                {Object.entries(sorts).map(([v, l]) => (
-                  <option key={v} value={v}>
-                    {l}
-                  </option>
-                ))}
-              </select>
             </div>
+            {aiResult.relaxed && aiResult.auctions.length > 0 && (
+              <p className="text-sm text-ink-soft">Tidak ada yang persis cocok. Ini yang paling mendekati.</p>
+            )}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+              <div role="tablist" aria-label="Kategori" className="inline-flex rounded-full border border-line bg-card p-1">
+                {Object.entries(categories).map(([v, l]) => (
+                  <button
+                    key={v || "all"}
+                    role="tab"
+                    aria-selected={category === v}
+                    onClick={() => {
+                      setCategory(v);
+                      // Brands and packaging conditions do not apply to dioramas.
+                      setBrand("");
+                      setCondition("");
+                    }}
+                    className={`press rounded-full px-5 py-1.5 font-semibold ${category === v ? "bg-ink text-white" : "text-ink-soft hover:text-ink"}`}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+              <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
+                <select value={condition} onChange={(e) => setCondition(e.target.value)} aria-label="Kondisi" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
+                  <option value="">Semua kondisi</option>
+                  {Object.entries({ ...(category !== "diorama" && conditions), ...(category !== "diecast" && dioramaConditions) }).map(([v, l]) => (
+                    <option key={v} value={v}>
+                      {l}
+                    </option>
+                  ))}
+                </select>
+                <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Urutkan" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
+                  {Object.entries(sorts).map(([v, l]) => (
+                    <option key={v} value={v}>
+                      {l}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {category !== "diorama" && (
+              // One row: on phones it scrolls sideways to the screen edge instead of wrapping into three.
+              <div className="-mx-4 flex gap-2 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+                {["", ...brands].map((b) => (
+                  <button
+                    key={b || "all"}
+                    onClick={() => setBrand(b)}
+                    aria-pressed={brand === b}
+                    className={`press flex h-10 shrink-0 items-center rounded-full border bg-card px-4 font-semibold ${brand === b ? "border-ink ring-2 ring-ink" : "border-line hover:border-ink"}`}
+                  >
+                    {b ? <BrandLogo brand={b} className="h-6 max-w-28" /> : "Semua merek"}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
-      <ErrorNote message={error} />
-      {shown && shown.auctions.length === 0 && !loading && (
-        <p className="py-12 text-center text-ink-soft">Belum ada lelang yang cocok. Coba kata lain atau hapus filter.</p>
-      )}
-      <div className={`grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${loading ? "opacity-60" : ""}`}>
-        {shown?.auctions.map((a) => <AuctionCard key={a.id} auction={a} now={now} />)}
+        <ErrorNote message={error} />
+        {shown && shown.auctions.length === 0 && !loading && (
+          <p className="py-12 text-center text-ink-soft">Belum ada lelang yang cocok. Coba kata lain atau hapus filter.</p>
+        )}
+        <div className={`grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${loading ? "opacity-60" : ""}`}>
+          {shown?.auctions.map((a) => <AuctionCard key={a.id} auction={a} now={now} />)}
+        </div>
       </div>
     </div>
   );
