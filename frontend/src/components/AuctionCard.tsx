@@ -28,47 +28,56 @@ export function AuctionCard({ auction: a, now, className = "" }: { auction: Auct
       // pegboard and in the grid at once, and two names would cancel the morph.
       onClick={(e) => e.currentTarget.style.setProperty("view-transition-name", "lot")}
       style={{ "--back": cardBack(a.item) } as CSSProperties}
-      className={`blister press flex flex-col gap-3 [--press:0.985] ${className}`}
+      // A container: the pack reads its own width, so the same card is compact in a
+      // two-up phone grid or the pegboard strip and roomy in a wide desktop grid.
+      className={`blister press @container flex flex-col gap-2 [--press:0.985] ${className}`}
     >
       <div className="relative">
         <Photo url={a.item.image_url} alt={a.item.model_name} />
         {no && (
           // Tomica's red number sticker, top corner of the pack
-          <span className="absolute top-2 right-2 grid size-11 rotate-6 place-items-center rounded-full border-2 border-white bg-[#e1001a] font-display text-lg leading-none font-extrabold text-white shadow">
+          <span className="absolute top-1.5 right-1.5 grid size-8 rotate-6 place-items-center rounded-full border-2 border-white bg-[#e1001a] font-display text-sm leading-none font-extrabold text-white shadow @min-[14rem]:top-2 @min-[14rem]:right-2 @min-[14rem]:size-11 @min-[14rem]:text-lg">
             {no}
           </span>
         )}
         {closing && (
-          <span className="absolute top-2 left-2 rounded-full bg-signal px-2.5 py-1 text-xs font-bold text-white shadow">Detik terakhir</span>
+          <span className="absolute top-1.5 left-1.5 rounded-full bg-signal px-2 py-0.5 text-[11px] font-bold text-white shadow @min-[14rem]:top-2 @min-[14rem]:left-2 @min-[14rem]:px-2.5 @min-[14rem]:py-1 @min-[14rem]:text-xs">
+            Detik terakhir
+          </span>
         )}
       </div>
-      <div className="flex flex-1 flex-col gap-2 rounded-xl bg-card p-3">
-        <div className="flex items-center justify-between gap-2 text-sm">
+      <div className="flex flex-1 flex-col gap-1 rounded-xl bg-card p-2.5 @min-[14rem]:gap-2 @min-[14rem]:p-3">
+        {/* Wraps rather than truncates: a cut-off condition ("Box sege…") reads as a typo. */}
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-xs @min-[14rem]:text-sm">
           {a.item.category === "diorama" ? (
-            <span className="rounded-md bg-[#3f5e3a] px-2 py-0.5 text-xs font-bold text-white">Diorama</span>
+            <span className="rounded-md bg-[#3f5e3a] px-1.5 py-0.5 text-[11px] font-bold text-white @min-[14rem]:px-2 @min-[14rem]:text-xs">Diorama</span>
           ) : (
-            <BrandLogo brand={a.item.brand} className="h-5 max-w-24" />
+            <BrandLogo brand={a.item.brand} className="h-4 max-w-20 @min-[14rem]:h-5 @min-[14rem]:max-w-24" />
           )}
           <span className="text-ink-soft">{conditionLabel(a.item.condition)}</span>
         </div>
-        <h3 className="font-display text-xl leading-tight font-bold">{name}</h3>
+        <h3 className="line-clamp-2 font-display text-base leading-tight font-bold @min-[14rem]:text-xl">{name}</h3>
         {(a.item.artist || a.item.ready_weeks) && (
-          <div className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
-            {a.item.artist && <span>oleh {a.item.artist}</span>}
-            {a.item.ready_weeks ? <span className="rounded-md bg-ink px-2 py-0.5 text-xs font-bold text-white">PO ±{a.item.ready_weeks} minggu</span> : null}
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-soft @min-[14rem]:text-sm">
+            {a.item.artist && <span className="truncate">oleh {a.item.artist}</span>}
+            {a.item.ready_weeks ? <span className="rounded-md bg-ink px-1.5 py-0.5 text-[11px] font-bold text-white @min-[14rem]:px-2 @min-[14rem]:text-xs">PO ±{a.item.ready_weeks} minggu</span> : null}
           </div>
         )}
         {buyNow !== null && (
-          <span className="self-start rounded-md bg-track/12 px-2 py-0.5 text-sm font-semibold text-track-dark">Beli langsung {rupiah(buyNow)}</span>
+          <span className="self-start rounded-md bg-track/12 px-1.5 py-0.5 text-xs font-semibold text-track-dark @min-[14rem]:px-2 @min-[14rem]:text-sm">
+            Beli <span className="hidden @min-[14rem]:inline">langsung </span>
+            {rupiah(buyNow)}
+          </span>
         )}
-        <div className="mt-auto flex items-end justify-between gap-2">
+        {/* Narrow packs stack price over time; wide ones put them side by side. */}
+        <div className="mt-auto flex flex-col pt-1 @min-[14rem]:flex-row @min-[14rem]:items-end @min-[14rem]:justify-between @min-[14rem]:gap-2">
           <div>
-            <div className={`text-sm ${leading || a.won ? "font-semibold text-lead" : "text-ink-soft"}`}>
+            <div className={`text-xs @min-[14rem]:text-sm ${leading || a.won ? "font-semibold text-lead" : "text-ink-soft"}`}>
               {outcome ?? (leading ? "Anda memimpin" : a.current_highest_bid === null ? "Harga awal" : "Tawaran tertinggi")}
             </div>
-            <div className="font-display text-2xl font-bold tabular-nums">{rupiah(price)}</div>
+            <div className="font-display text-lg leading-tight font-bold tabular-nums @min-[14rem]:text-2xl">{rupiah(price)}</div>
           </div>
-          <div className={`text-right font-display text-lg font-bold tabular-nums ${closing ? "text-signal" : ""}`}>
+          <div className={`font-display text-sm font-bold tabular-nums @min-[14rem]:text-right @min-[14rem]:text-lg ${closing ? "text-signal" : "text-ink-soft @min-[14rem]:text-ink"}`}>
             {left.label}
           </div>
         </div>

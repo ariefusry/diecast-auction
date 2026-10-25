@@ -95,28 +95,28 @@ export function Catalog() {
   return (
     // Search stands apart; filters and the lots they control sit together below it.
     <div className="space-y-8">
-      <section className="pegboard space-y-8 rounded-3xl p-5 sm:p-8">
+      <section className="pegboard space-y-5 rounded-3xl p-4 sm:space-y-8 sm:p-8">
         <form onSubmit={searchAI} className="space-y-3">
-          <h1 className="font-display text-4xl leading-none font-extrabold italic sm:text-5xl">Cari diecast incaranmu</h1>
-          <p className="max-w-prose font-medium">Ketik seperti chat ke sesama kolektor. Sebut merek, warna, kondisi atau budget.</p>
-          <div className="flex flex-col gap-2 sm:flex-row">
+          <h1 className="font-display text-3xl leading-none font-extrabold italic sm:text-5xl">Cari diecast incaranmu</h1>
+          <p className="max-w-prose font-medium max-sm:hidden">Ketik seperti chat ke sesama kolektor. Sebut merek, warna, kondisi atau budget.</p>
+          <div className="flex gap-2">
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               maxLength={200}
               placeholder={examples[0]}
               aria-label="Pencarian"
-              className="min-w-0 flex-1 rounded-xl border-2 border-ink bg-card px-4 py-3 text-lg focus:outline-none"
+              className="min-w-0 flex-1 rounded-xl border-2 border-ink bg-card px-3 py-2.5 text-base focus:outline-none sm:px-4 sm:py-3 sm:text-lg"
             />
-            <Button type="submit" className="px-6 text-lg" disabled={loading}>
+            <Button type="submit" className="px-4 text-base sm:px-6 sm:text-lg" disabled={loading}>
               Cari
             </Button>
           </div>
           {!aiResult && (
-            <div className="flex flex-wrap gap-2 text-sm">
-              <span className="font-medium">Contoh:</span>
+            <div className="-mx-4 flex items-center gap-2 overflow-x-auto px-4 text-sm [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+              <span className="shrink-0 font-medium">Contoh:</span>
               {examples.map((ex) => (
-                <button key={ex} type="button" onClick={() => setQuery(ex)} className="press rounded-full bg-card/70 px-3 py-1 text-ink hover:bg-card">
+                <button key={ex} type="button" onClick={() => setQuery(ex)} className="press shrink-0 rounded-full bg-card/70 px-3 py-1 text-ink hover:bg-card">
                   {ex}
                 </button>
               ))}
@@ -125,7 +125,7 @@ export function Catalog() {
         </form>
         {closing.length > 0 && (
           <div className="space-y-1">
-            <h2 className="font-display text-2xl font-bold italic">Segera berakhir</h2>
+            <h2 className="font-display text-xl font-bold italic sm:text-2xl">Segera berakhir</h2>
             <PegWall auctions={closing} now={now} />
           </div>
         )}
@@ -210,7 +210,7 @@ export function Catalog() {
         {shown && shown.auctions.length === 0 && !loading && (
           <p className="py-12 text-center text-ink-soft">Belum ada lelang yang cocok. Coba kata lain atau hapus filter.</p>
         )}
-        <div className={`grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${loading ? "opacity-60" : ""}`}>
+        <div className={`grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 ${loading ? "opacity-60" : ""}`}>
           {shown?.auctions.map((a) => <AuctionCard key={a.id} auction={a} now={now} />)}
         </div>
       </div>

@@ -92,20 +92,21 @@ export function ProfilePage() {
   const tracker = tab === "bidding" || tab === "lost";
   return (
     <div className="space-y-6">
-      <section className="flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-card p-5">
-        <span aria-hidden className="grid size-16 shrink-0 place-items-center rounded-full bg-track font-display text-3xl font-extrabold text-white uppercase">
+      <section className="flex items-center gap-3 rounded-2xl border border-line bg-card p-4 sm:gap-4 sm:p-5">
+        <span aria-hidden className="grid size-12 shrink-0 place-items-center rounded-full bg-track font-display text-2xl font-extrabold text-white uppercase sm:size-16 sm:text-3xl">
           {profile.username.charAt(0)}
         </span>
-        <div className="min-w-48 flex-1">
-          <h1 className="truncate font-display text-3xl font-extrabold italic">{profile.username}</h1>
-          <p className="truncate text-ink-soft">
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate font-display text-2xl font-extrabold italic sm:text-3xl">{profile.username}</h1>
+          <p className="truncate text-sm text-ink-soft sm:text-base">
             {profile.email}, bergabung {monthYear.format(new Date(profile.created_at))}
           </p>
           <Link to={`/penjual/${profile.username}`} className="text-sm font-semibold underline underline-offset-4">
-            Lihat halaman penjual Anda
+            <span className="sm:hidden">Halaman penjual Anda</span>
+            <span className="max-sm:hidden">Lihat halaman penjual Anda</span>
           </Link>
         </div>
-        <Button variant="ghost" onClick={() => confirm.current?.showModal()}>
+        <Button variant="ghost" className="shrink-0 px-3 sm:px-4" onClick={() => confirm.current?.showModal()}>
           Keluar
         </Button>
       </section>
@@ -129,17 +130,17 @@ export function ProfilePage() {
         </form>
       </dialog>
 
-      <div role="tablist" aria-label="Lelang saya" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <div role="tablist" aria-label="Lelang saya" className="grid grid-cols-4 gap-1.5 sm:gap-2">
         {tabs.map((t) => (
           <button
             key={t.key}
             role="tab"
             aria-selected={tab === t.key}
             onClick={() => setTab(t.key)}
-            className={`press rounded-xl border px-4 py-3 text-left ${tab === t.key ? "border-ink bg-ink text-white" : "border-line bg-card hover:border-ink"}`}
+            className={`press rounded-xl border px-1 py-2.5 text-center sm:px-4 sm:py-3 sm:text-left ${tab === t.key ? "border-ink bg-ink text-white" : "border-line bg-card hover:border-ink"}`}
           >
-            <span className="block font-display text-3xl font-bold tabular-nums">{mine[t.key].length >= listLimit ? `${listLimit}+` : mine[t.key].length}</span>
-            <span className={`text-sm font-semibold ${tab === t.key ? "text-white/80" : "text-ink-soft"}`}>{t.label}</span>
+            <span className="block font-display text-2xl font-bold tabular-nums sm:text-3xl">{mine[t.key].length >= listLimit ? `${listLimit}+` : mine[t.key].length}</span>
+            <span className={`block text-xs leading-tight font-semibold sm:text-sm ${tab === t.key ? "text-white/80" : "text-ink-soft"}`}>{t.label}</span>
           </button>
         ))}
       </div>
@@ -158,13 +159,15 @@ export function ProfilePage() {
           ))}
         </ol>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
           {list.map((a) => (
-            <div key={a.id} className="space-y-2">
-              <AuctionCard auction={a} now={now} />
+            <div key={a.id} className="flex flex-col gap-2">
+              {/* The card fills the row, so chat buttons line up across columns. */}
+              <AuctionCard auction={a} now={now} className="flex-1" />
               {a.status === "completed" && a.sold && (
                 <Link to={`/lelang/${a.id}#chat`} className="press block rounded-lg bg-ink py-2 text-center text-sm font-semibold text-white">
-                  {tab === "won" ? "Chat penjual, atur pengiriman" : "Chat pembeli, atur pengiriman"}
+                  {tab === "won" ? "Chat penjual" : "Chat pembeli"}
+                  <span className="max-sm:hidden">, atur pengiriman</span>
                 </Link>
               )}
             </div>
