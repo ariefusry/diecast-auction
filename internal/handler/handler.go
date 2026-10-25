@@ -37,7 +37,8 @@ import (
 	"github.com/ariefusry/diecast-auction/internal/service"
 )
 
-// Per-IP limits against bots: auth refills one request per 6s (10/min), bids 2/s,
+// Per-IP limits against bots: auth refills one request per 6s (10/min), bids,
+// chat and uploads 2/s each (separate buckets, so chatting never blocks a bid),
 // AI search one per 3s (20/min) since each may cost an LLM call.
 const (
 	authBurst = 10
@@ -109,6 +110,8 @@ func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auction
 	authed := func(f http.HandlerFunc) http.Handler { return middleware.RequireAuth(auth.ParseToken)(f) }
 	authLimit := middleware.RateLimit(rate.Every(6*time.Second), authBurst)
 	bidLimit := middleware.RateLimit(2, bidBurst)
+	chatLimit := middleware.RateLimit(2, bidBurst)
+	uploadLimit := middleware.RateLimit(2, bidBurst)
 	aiLimit := middleware.RateLimit(rate.Every(3*time.Second), aiBurst)
 
 	mux := http.NewServeMux()
@@ -132,13 +135,13 @@ func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auction
 	mux.HandleFunc("GET /auctions/{id}", h.getAuction)
 	mux.HandleFunc("GET /auctions/{id}/bids", h.listBids)
 	mux.Handle("GET /auctions/{id}/messages", authed(h.listMessages))
-	mux.Handle("POST /auctions/{id}/messages", bidLimit(authed(h.sendMessage)))
+	mux.Handle("POST /auctions/{id}/messages", chatLimit(authed(h.sendMessage)))
 	mux.HandleFunc("GET /sellers/{username}", h.seller)
 	mux.Handle("POST /auctions/{id}/publish", authed(h.publish))
 	mux.Handle("POST /auctions/{id}/cancel", authed(h.cancel))
 	mux.Handle("POST /auctions/{id}/buy-now", authed(h.buyNow))
 	mux.Handle("POST /auctions/{id}/bids", bidLimit(authed(h.bid)))
-	mux.Handle("POST /uploads", bidLimit(authed(h.upload)))
+	mux.Handle("POST /uploads", uploadLimit(authed(h.upload)))
 	mux.Handle("GET /uploads/", http.StripPrefix("/uploads/", files(uploadDir)))
 	return mux
 }
