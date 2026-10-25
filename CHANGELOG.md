@@ -55,6 +55,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Katalog: filter dikelompokkan dengan grid lot dan dipisah dari pegboard; kategori dan urutan satu baris, chip merek satu baris yang bisa digeser di HP (tinggi filter di HP dari sekitar 280px ke 172px) | `1988a29` |
 | Polish: kolom angka tracker profil lurus, label dan angka rata kiri di HP (tracker dan statistik penjual), tombol foto berbahasa Indonesia, warna seleksi, caret dan checkbox mengikuti palet | `6044677` |
 | Pesan error dari API tampil dalam bahasa Indonesia dengan cara memulihkannya dan nominal rupiah (`frontend/src/lib/errors.ts`); field isi saldo menampilkan nominal yang terbaca | `a94213d` |
+| Tampilan HP ala aplikasi belanja: kartu lot container-aware (ringkas di bawah 14rem), grid dua kolom di katalog, profil dan penjual, pencarian satu baris, rak "Segera berakhir" jadi strip kartu kecil, profil dengan empat status satu baris | `94a194c` |
 
 ## Katalog dan merek
 
