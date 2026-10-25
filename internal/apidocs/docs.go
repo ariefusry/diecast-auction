@@ -821,7 +821,7 @@ const docTemplate = `{
                 "tags": [
                     "auctions"
                 ],
-                "summary": "Upload an item photo (JPEG, PNG or WebP, at most 5 MiB)",
+                "summary": "Upload an item photo (JPEG, PNG or WebP, at most 5 MiB, 20 per user per day)",
                 "parameters": [
                     {
                         "type": "file",
@@ -846,6 +846,12 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "daily upload cap reached",
                         "schema": {
                             "$ref": "#/definitions/handler.errorResponse"
                         }

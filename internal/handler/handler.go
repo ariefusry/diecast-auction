@@ -556,7 +556,7 @@ func (h *handler) bid(w http.ResponseWriter, r *http.Request) {
 }
 
 // upload godoc
-// @Summary  Upload an item photo (JPEG, PNG or WebP, at most 5 MiB)
+// @Summary  Upload an item photo (JPEG, PNG or WebP, at most 5 MiB, 20 per user per day)
 // @Tags     auctions
 // @Accept   multipart/form-data
 // @Produce  json
@@ -565,6 +565,7 @@ func (h *handler) bid(w http.ResponseWriter, r *http.Request) {
 // @Success  201   {object} uploadResponse "use url as item.image_url"
 // @Failure  400   {object} errorResponse
 // @Failure  401   {object} errorResponse
+// @Failure  409   {object} errorResponse "daily upload cap reached"
 // @Failure  429   {object} errorResponse
 // @Router   /uploads [post]
 func (h *handler) upload(w http.ResponseWriter, r *http.Request) {
@@ -587,6 +588,10 @@ func (h *handler) upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	name := rand.Text() + ext
+	if err := h.auctions.ReserveUpload(r.Context(), middleware.UserID(r.Context()), name, int64(len(data))); err != nil {
+		writeError(w, err)
+		return
+	}
 	if err := os.WriteFile(filepath.Join(h.uploads, name), data, 0o644); err != nil {
 		writeError(w, err)
 		return
