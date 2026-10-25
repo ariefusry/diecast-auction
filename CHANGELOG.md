@@ -51,6 +51,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Kartu blister berwarna sesuai kemasan tiap merek, rak pegboard di beranda berisi lot yang segera berakhir, foto menyatu dengan gelembung | `8461b98` |
 | Seeder menyelang-nyeling merek supaya katalog tidak berisi satu merek | `57cd17d` |
 | Logo Blister64 (konsep "On the Peg"): master SVG, favicon, ikon aplikasi, panduan di `brand/README.md` | `ad623c6` |
+| Membuka lot: kartu blister "diangkat dari peg" dan berubah menjadi pack di halaman detail (View Transition, router pindah ke `createBrowserRouter`), halaman baru mulai dari atas, reduced-motion tetap memberi umpan balik lewat warna dan opacity | `1bc6e7e` |
 
 ## Katalog dan merek
 
