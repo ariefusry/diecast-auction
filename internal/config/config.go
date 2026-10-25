@@ -18,6 +18,8 @@ type Config struct {
 	CORSOrigins []string
 	// UploadDir stores item photos (mount a volume there in production).
 	UploadDir string
+	// TrustProxy reads the client IP from X-Real-IP; set it only behind a reverse proxy.
+	TrustProxy bool
 }
 
 func Load() (Config, error) {
@@ -27,6 +29,7 @@ func Load() (Config, error) {
 		JWTSecret:    []byte(os.Getenv("JWT_SECRET")),
 		GeminiAPIKey: os.Getenv("GEMINI_API_KEY"),
 		GeminiModel:  os.Getenv("GEMINI_MODEL"),
+		TrustProxy:   os.Getenv("TRUST_PROXY") == "true",
 	}
 	if cfg.DatabaseURL == "" {
 		return Config{}, errors.New("config: DATABASE_URL is required")

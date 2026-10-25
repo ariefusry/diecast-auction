@@ -34,6 +34,7 @@ func main() {
 	if err := db.Migrate(cfg.DatabaseURL, migrations.FS); err != nil {
 		log.Fatal(err)
 	}
+	middleware.TrustProxy = cfg.TrustProxy
 	if err := os.MkdirAll(cfg.UploadDir, 0o755); err != nil {
 		log.Fatal(err)
 	}

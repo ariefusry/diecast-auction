@@ -87,3 +87,22 @@ func TestLogRecordsRequestsAndRecoversPanics(t *testing.T) {
 		t.Fatalf("log line = %v", line)
 	}
 }
+
+func TestClientIPTrustsRealIPOnlyBehindProxy(t *testing.T) {
+	r := httptest.NewRequest("GET", "/", nil)
+	r.RemoteAddr = "172.18.0.5:41000" // the reverse proxy
+	r.Header.Set("X-Real-IP", "203.0.113.9")
+
+	if got := clientIP(r); got != "172.18.0.5" {
+		t.Fatalf("without TrustProxy, clientIP = %s; a client must not pick its own IP", got)
+	}
+	TrustProxy = true
+	defer func() { TrustProxy = false }()
+	if got := clientIP(r); got != "203.0.113.9" {
+		t.Fatalf("behind proxy, clientIP = %s, want the X-Real-IP", got)
+	}
+	r.Header.Del("X-Real-IP")
+	if got := clientIP(r); got != "172.18.0.5" {
+		t.Fatalf("missing header, clientIP = %s, want RemoteAddr", got)
+	}
+}

@@ -146,7 +146,15 @@ func Log(logger *slog.Logger) func(http.Handler) http.Handler {
 	}
 }
 
+// TrustProxy makes clientIP read X-Real-IP. Enable it only when the API is
+// reachable solely through a reverse proxy that sets the header (the compose
+// nginx does); otherwise any client could pick its own rate-limit bucket.
+var TrustProxy bool
+
 func clientIP(r *http.Request) string {
+	if ip := r.Header.Get("X-Real-IP"); TrustProxy && ip != "" {
+		return ip
+	}
 	host, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		return r.RemoteAddr
