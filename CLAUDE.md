@@ -54,6 +54,10 @@ go run cmd/seed/main.go
 # Regenerasi dokumentasi Swagger setelah mengubah anotasi handler atau tipe service
 swag init -g handler.go -d internal/handler,internal/service -o internal/apidocs --ot go,json
 
+# API lokal di :8080 untuk `npm run dev` (API di Docker tidak dipublish ke host, jadi tanpa ini katalog kosong).
+# API tidak membaca .env sendiri, jadi muat dulu (Git Bash)
+set -a; . ./.env; set +a; go run ./cmd/api
+
 # Jalankan frontend secara lokal. Vite mem-proxy /api ke API di :8080 (seperti nginx di produksi), jadi port Vite bebas
 cd frontend && npm install && npm run dev
 
