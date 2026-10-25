@@ -11,8 +11,9 @@ export function Layout() {
     <div className="min-h-screen">
       <header className="material sticky top-0 z-20">
         <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-0.5 gap-y-2 px-4 py-3 sm:gap-x-2">
-          <NavLink to="/" className="mr-auto font-display text-xl font-extrabold italic sm:text-2xl">
-            Lelang 1:64
+          <NavLink to="/" className="press mr-auto">
+            <img src="/logo-symbol.svg" alt="Blister64" className="h-9 w-auto sm:hidden" />
+            <img src="/logo.svg" alt="Blister64" className="hidden h-9 w-auto sm:block" />
           </NavLink>
           <NavLink to="/" end className={link}>
             Katalog
