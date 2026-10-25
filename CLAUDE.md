@@ -7,6 +7,7 @@ Panduan ringkas untuk Claude Code CLI dalam mengembangkan platform lelang diecas
 ## Prinsip & Alur Kerja
 - Baca `TODO.md` sebelum mulai pengerjaan untuk mengambil tugas fase aktif dan perbarui status centang setelah selesai.
 - Rujuk `plan.md` untuk arsitektur detail, spec Section 6 untuk keputusan final, dan `SCRATCHPAD.md` untuk log sesi.
+- Catat setiap fitur atau perbaikan yang di-commit di `CHANGELOG.md` (ringkas, dengan hash commit).
 - Prioritaskan Test-Driven Development (TDD): tulis failing test sebelum menulis logika bisnis baru.
 - Dokumen dan komentar tanpa em-dash.
 

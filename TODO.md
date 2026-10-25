@@ -80,3 +80,14 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Konfigurasi `docker-compose.yml` lengkap (db, seed, api, web) siap jalan dengan satu perintah
 - [x] Siapkan GitHub Actions CI workflow untuk linting dan testing otomatis
 - [ ] Pilih provider Linux VPS dan deploy via Docker Compose (volume untuk `uploads` dan data Postgres)
+
+## Fitur Tambahan (di luar roadmap awal, lihat `CHANGELOG.md`)
+- [x] Desain ulang UI: kartu blister berwarna merek, rak pegboard, header buram, animasi umpan balik
+- [x] Logo dan identitas Blister64 (`brand/`)
+- [x] 4 merek baru (Matchbox, Tomica, Tarmac Works, M2 Machines) dengan logo
+- [x] Kategori diorama (artis opsional, Baru/Bekas, ukuran, estimasi PO)
+- [x] Riwayat tawaran dan pengalaman menawar ala game
+- [x] Profil: tab Menang/Sedang ditawar/Kalah/Dijual, tracker tawaran, konfirmasi keluar
+- [x] Riwayat dompet, halaman penjual publik, chat penjual dan pemenang untuk pengiriman
+- [ ] Notifikasi pesan chat yang belum dibaca
+- [ ] Scraper memilih foto yang benar (lewati poster promo dan placeholder)
