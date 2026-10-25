@@ -107,6 +107,10 @@ func TestSellerProfileIsPublic(t *testing.T) {
 	if active.Seller != username {
 		t.Fatalf("auction seller = %q, want %q", active.Seller, username)
 	}
+	// Usernames are unique ignoring case, so a link typed in another case still lands here.
+	if p, err := e.auctions.Seller(ctx, strings.ToUpper(username)); err != nil || p.Username != username {
+		t.Fatalf("Seller(upper) = %q, %v; want %q", p.Username, err, username)
+	}
 	if _, err := e.auctions.Seller(ctx, "nobody_"+username); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("unknown seller: err = %v, want ErrNotFound", err)
 	}

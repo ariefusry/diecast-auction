@@ -90,9 +90,10 @@ type SellerProfile struct {
 }
 
 func (s *Auctions) Seller(ctx context.Context, username string) (SellerProfile, error) {
-	p := SellerProfile{Username: username}
+	var p SellerProfile // Username comes back as stored, whatever case the link used
 	var id int64
-	err := s.pool.QueryRow(ctx, "SELECT id, created_at FROM users WHERE username = $1", username).Scan(&id, &p.CreatedAt)
+	err := s.pool.QueryRow(ctx, "SELECT id, username, created_at FROM users WHERE lower(username) = lower($1)", username).
+		Scan(&id, &p.Username, &p.CreatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SellerProfile{}, ErrNotFound
 	}

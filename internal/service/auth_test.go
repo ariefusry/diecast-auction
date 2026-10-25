@@ -53,6 +53,19 @@ func TestRegisterRejectsDuplicateEmailAnyCase(t *testing.T) {
 	}
 }
 
+// Budi_64 and budi_64 would be two storefronts that look the same.
+func TestRegisterRejectsDuplicateUsernameAnyCase(t *testing.T) {
+	a := newAuth(t)
+	u := testutil.Unique()
+	if _, err := a.Register(context.Background(), "a"+u+"@x.io", "Case_"+u, "correct-horse"); err != nil {
+		t.Fatalf("Register: %v", err)
+	}
+	_, err := a.Register(context.Background(), "b"+u+"@x.io", strings.ToUpper("case_"+u), "correct-horse")
+	if !errors.Is(err, ErrConflict) {
+		t.Fatalf("err = %v, want ErrConflict", err)
+	}
+}
+
 func TestRegisterValidatesInput(t *testing.T) {
 	a := newAuth(t)
 	u := testutil.Unique()
