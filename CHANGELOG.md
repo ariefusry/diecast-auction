@@ -85,6 +85,18 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | GitHub Actions: gofmt, vet, Swagger mutakhir, test `-race` dengan Postgres, lint/test/build frontend, build image | `950562d` |
 | Vite mem-proxy `/api` ke API, jadi port dev mana pun bisa terhubung (dulu gagal karena CORS saat Vite pindah ke 5174) | `aeb9d3e` |
 
+## Sesi QA 2 (8 pemeriksa)
+
+| Perubahan | Commit |
+|---|---|
+| Form jual menampilkan harga yang terbaca (`125.000` di field angka jadi Rp125), beli langsung wajib di atas harga awal | `05c1950` |
+| Tracker profil: lelang yang waktunya habis tapi belum ditutup worker tidak lagi tampil "Kalah" bagi pemimpin | `7c07488` |
+| Cancel ditolak (409) setelah `end_time` lewat, tombol batal disembunyikan | `bf51553` |
+| Chat mengembalikan 500 pesan terbaru, bukan 500 terlama | `efefd1f` |
+| Chat: poll basi tidak menyembunyikan pesan baru, tanpa duplikat | `5667c22` |
+| Banner "Kamu disalip!" menampilkan tawaran tertinggi terkini | `710fdc2` |
+| Rate limit bid, chat, dan upload memakai bucket terpisah | `48f89de` |
+
 ---
 
 ## Referensi cepat
@@ -126,3 +138,4 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 - Migrasi `down` 000004 dan 000005 belum pernah dijalankan.
 - Kuota upload per pengguna, index trigram untuk pencarian, draf yang bisa dibaca siapa pun lewat ID.
 - Dua listing diorama uji tanpa foto di database dev.
+- Temuan QA 2 yang menunggu keputusan: Postgres dipublish ke host, `bidder_id` publik membongkar nama yang disamarkan, pesan error mentah berbahasa Inggris, login tidak kembali ke halaman asal, countdown memakai jam klien, settlement gagal tanpa alert, username peka huruf besar/kecil, field isi saldo punya jebakan titik ribuan yang sama.
