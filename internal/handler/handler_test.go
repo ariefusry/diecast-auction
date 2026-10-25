@@ -373,6 +373,23 @@ func TestChatAndSellerPage(t *testing.T) {
 		t.Fatalf("anonymous reads = %d, want 401", code)
 	}
 
+	var inbox []service.Conversation
+	if code := seller.do("GET", "/chats", nil, &inbox); code != http.StatusOK || len(inbox) == 0 || inbox[0].AuctionID != a.ID || inbox[0].Unread != 1 {
+		t.Fatalf("seller inbox = %d %+v", code, inbox)
+	}
+	if raw := seller.raw("GET", "/chats"); strings.Contains(raw, "sender_id") || strings.Contains(raw, "winner_id") || strings.Contains(raw, "seller_id") {
+		t.Fatalf("inbox leaks a user id: %s", raw)
+	}
+	if code := seller.do("POST", "/auctions/"+id+"/read", map[string]int64{"up_to": m.ID}, nil); code != http.StatusOK {
+		t.Fatalf("mark read = %d", code)
+	}
+	if seller.do("GET", "/chats", nil, &inbox); inbox[0].Unread != 0 {
+		t.Fatalf("after read: %+v", inbox[0])
+	}
+	if code := stranger.do("POST", "/auctions/"+id+"/read", map[string]int64{"up_to": m.ID}, nil); code != http.StatusForbidden {
+		t.Fatalf("stranger mark read = %d, want 403", code)
+	}
+
 	var p service.SellerProfile
 	anon := &client{t: t, base: base}
 	if code := anon.do("GET", "/sellers/"+a.Seller, nil, &p); code != http.StatusOK || p.Sold != 1 || p.Username != a.Seller {

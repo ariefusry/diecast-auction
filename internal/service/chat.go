@@ -80,3 +80,62 @@ func (s *Auctions) Send(ctx context.Context, userID, auctionID int64, body strin
 		auctionID, userID, body).Scan(&m.ID, &m.CreatedAt, &m.Sender)
 	return m, err
 }
+
+// Conversation is one chat in a user's inbox, as that user sees it.
+type Conversation struct {
+	AuctionID int64      `json:"auction_id"`
+	Title     string     `json:"title"`
+	ImageURL  string     `json:"image_url"`
+	Price     int64      `json:"price"`   // what the winner paid
+	Other     string     `json:"other"`   // the other side's username
+	Selling   bool       `json:"selling"` // the viewer is the seller
+	LastBody  string     `json:"last_body"`
+	LastMine  bool       `json:"last_mine"` // the last message is the viewer's
+	LastAt    *time.Time `json:"last_at"`   // nil until someone writes
+	Unread    int        `json:"unread"`    // messages from the other side after the read marker
+}
+
+// inboxLimit caps the inbox; older chats stay reachable from the auction page.
+const inboxLimit = 100
+
+// Conversations lists every won auction userID sold or won, latest activity first.
+func (s *Auctions) Conversations(ctx context.Context, userID int64) ([]Conversation, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT a.id, i.model_name, coalesce(i.image_url, ''), coalesce(a.current_highest_bid, a.buy_now_price, 0),
+		       CASE WHEN i.seller_id = $1 THEN w.username ELSE su.username END, i.seller_id = $1,
+		       coalesce(lm.body, ''), coalesce(lm.sender_id = $1, false), lm.created_at,
+		       (SELECT count(*) FROM messages m
+		        WHERE m.auction_id = a.id AND m.sender_id <> $1 AND m.id > coalesce(r.last_read_message_id, 0))
+		FROM auctions a
+		JOIN items i ON i.id = a.item_id
+		JOIN users su ON su.id = i.seller_id
+		JOIN users w ON w.id = a.winner_id
+		LEFT JOIN LATERAL (SELECT body, sender_id, created_at FROM messages
+		                   WHERE auction_id = a.id ORDER BY id DESC LIMIT 1) lm ON true
+		LEFT JOIN chat_reads r ON r.auction_id = a.id AND r.user_id = $1
+		WHERE i.seller_id = $1 OR a.winner_id = $1
+		ORDER BY coalesce(lm.created_at, a.end_time) DESC, a.id DESC
+		LIMIT $2`, userID, inboxLimit)
+	if err != nil {
+		return nil, err
+	}
+	return pgx.CollectRows(rows, func(r pgx.CollectableRow) (Conversation, error) {
+		var c Conversation
+		return c, r.Scan(&c.AuctionID, &c.Title, &c.ImageURL, &c.Price, &c.Other, &c.Selling,
+			&c.LastBody, &c.LastMine, &c.LastAt, &c.Unread)
+	})
+}
+
+// MarkRead records that userID has read the auction's chat up to message upTo.
+// The marker only moves forward, so a late request cannot unread anything.
+func (s *Auctions) MarkRead(ctx context.Context, userID, auctionID, upTo int64) error {
+	if err := s.participant(ctx, userID, auctionID); err != nil {
+		return err
+	}
+	_, err := s.pool.Exec(ctx, `
+		INSERT INTO chat_reads (auction_id, user_id, last_read_message_id) VALUES ($1, $2, $3)
+		ON CONFLICT (auction_id, user_id)
+		DO UPDATE SET last_read_message_id = GREATEST(chat_reads.last_read_message_id, EXCLUDED.last_read_message_id)`,
+		auctionID, userID, upTo)
+	return err
+}

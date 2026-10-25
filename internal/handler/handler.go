@@ -90,6 +90,10 @@ type messageRequest struct {
 	Body string `json:"body" example:"Tolong kirim pakai bubble wrap ya"`
 }
 
+type readRequest struct {
+	UpTo int64 `json:"up_to" example:"42"` // id of the newest message seen
+}
+
 type searchRequest struct {
 	Query string `json:"query" example:"jdm merah mint di bawah 100k"`
 }
@@ -139,6 +143,8 @@ func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auction
 	mux.Handle("GET /auctions/{id}/messages", authed(h.listMessages))
 	mux.Handle("POST /auctions/{id}/messages", chatLimit(authed(h.sendMessage)))
 	mux.Handle("GET /sellers/{username}", viewing(h.seller))
+	mux.Handle("GET /chats", authed(h.conversations))
+	mux.Handle("POST /auctions/{id}/read", authed(h.markRead))
 	mux.Handle("POST /auctions/{id}/publish", authed(h.publish))
 	mux.Handle("POST /auctions/{id}/cancel", authed(h.cancel))
 	mux.Handle("POST /auctions/{id}/buy-now", authed(h.buyNow))
@@ -405,6 +411,47 @@ func (h *handler) sendMessage(w http.ResponseWriter, r *http.Request) {
 	}
 	m.Mine = true
 	writeJSON(w, http.StatusCreated, m)
+}
+
+// conversations godoc
+// @Summary  The signed-in user's chats (won or sold auctions), latest activity first, with unread counts
+// @Tags     chat
+// @Produce  json
+// @Security BearerAuth
+// @Success  200 {array}  service.Conversation
+// @Failure  401 {object} errorResponse
+// @Router   /chats [get]
+func (h *handler) conversations(w http.ResponseWriter, r *http.Request) {
+	list, err := h.auctions.Conversations(r.Context(), middleware.UserID(r.Context()))
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, list)
+}
+
+// markRead godoc
+// @Summary  Mark an auction's chat read up to a message (the marker only moves forward)
+// @Tags     chat
+// @Accept   json
+// @Security BearerAuth
+// @Param    id   path int         true "Auction ID"
+// @Param    body body readRequest true "Newest message seen"
+// @Success  200 {object} object "empty: every response is JSON"
+// @Failure  401 {object} errorResponse
+// @Failure  403 {object} errorResponse
+// @Failure  404 {object} errorResponse
+// @Router   /auctions/{id}/read [post]
+func (h *handler) markRead(w http.ResponseWriter, r *http.Request) {
+	var req readRequest
+	if !decode(w, r, &req) {
+		return
+	}
+	if err := h.auctions.MarkRead(r.Context(), middleware.UserID(r.Context()), pathID(r), req.UpTo); err != nil {
+		writeError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, struct{}{})
 }
 
 // seller godoc

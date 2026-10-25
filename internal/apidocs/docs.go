@@ -615,6 +615,66 @@ const docTemplate = `{
                 }
             }
         },
+        "/auctions/{id}/read": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chat"
+                ],
+                "summary": "Mark an auction's chat read up to a message (the marker only moves forward)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Auction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Newest message seen",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.readRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "empty: every response is JSON",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "consumes": [
@@ -704,6 +764,39 @@ const docTemplate = `{
                     },
                     "429": {
                         "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/chats": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chat"
+                ],
+                "summary": "The signed-in user's chats (won or sold auctions), latest activity first, with unread counts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.Conversation"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/handler.errorResponse"
                         }
@@ -1020,6 +1113,16 @@ const docTemplate = `{
                 }
             }
         },
+        "handler.readRequest": {
+            "type": "object",
+            "properties": {
+                "up_to": {
+                    "description": "id of the newest message seen",
+                    "type": "integer",
+                    "example": 42
+                }
+            }
+        },
         "handler.registerRequest": {
             "type": "object",
             "properties": {
@@ -1156,6 +1259,47 @@ const docTemplate = `{
                 "mine": {
                     "description": "placed by the viewer",
                     "type": "boolean"
+                }
+            }
+        },
+        "service.Conversation": {
+            "type": "object",
+            "properties": {
+                "auction_id": {
+                    "type": "integer"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "last_at": {
+                    "description": "nil until someone writes",
+                    "type": "string"
+                },
+                "last_body": {
+                    "type": "string"
+                },
+                "last_mine": {
+                    "description": "the last message is the viewer's",
+                    "type": "boolean"
+                },
+                "other": {
+                    "description": "the other side's username",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "what the winner paid",
+                    "type": "integer"
+                },
+                "selling": {
+                    "description": "the viewer is the seller",
+                    "type": "boolean"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "unread": {
+                    "description": "messages from the other side after the read marker",
+                    "type": "integer"
                 }
             }
         },

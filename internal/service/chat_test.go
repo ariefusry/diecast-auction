@@ -134,3 +134,55 @@ func TestMineTracksMyHighestBid(t *testing.T) {
 		t.Fatalf("my highest bid = %d, want 120000 (%+v)", got, mine.MyBids)
 	}
 }
+
+func TestConversationsListsChatsWithUnreadCounts(t *testing.T) {
+	e := newAuctionEnv(t)
+	ctx := context.Background()
+	seller, winner, stranger := e.user(0), e.user(1_000_000), e.user(1_000_000)
+	older := wonAuction(t, e, seller, winner)
+	newer := wonAuction(t, e, seller, winner)
+	e.active(seller, sampleAuction()) // no winner: no conversation
+
+	for _, body := range []string{"halo", "sudah dikirim?"} {
+		if _, err := e.auctions.Send(ctx, winner, older.ID, body); err != nil {
+			t.Fatal(err)
+		}
+	}
+	reply, err := e.auctions.Send(ctx, seller, older.ID, "besok ya")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	got, err := e.auctions.Conversations(ctx, seller)
+	if err != nil {
+		t.Fatalf("Conversations: %v", err)
+	}
+	if len(got) != 2 || got[0].AuctionID != older.ID || got[1].AuctionID != newer.ID {
+		t.Fatalf("want the chat with messages first, then the silent one: %+v", got)
+	}
+	c := got[0]
+	// The seller's own reply is the last message but not unread for them.
+	if c.Unread != 2 || c.LastBody != "besok ya" || !c.LastMine || !c.Selling || c.Price != 300_000 || c.Other == "" {
+		t.Fatalf("seller's view = %+v", c)
+	}
+	if mine, _ := e.auctions.Conversations(ctx, winner); len(mine) != 2 || mine[0].Unread != 1 || mine[0].Selling {
+		t.Fatalf("winner's view = %+v", mine)
+	}
+
+	if err := e.auctions.MarkRead(ctx, seller, older.ID, reply.ID); err != nil {
+		t.Fatalf("MarkRead: %v", err)
+	}
+	// A late, older marker must not bring messages back to unread.
+	if err := e.auctions.MarkRead(ctx, seller, older.ID, 1); err != nil {
+		t.Fatalf("MarkRead older: %v", err)
+	}
+	if got, _ := e.auctions.Conversations(ctx, seller); got[0].Unread != 0 {
+		t.Fatalf("after read: unread = %d", got[0].Unread)
+	}
+	if err := e.auctions.MarkRead(ctx, stranger, older.ID, reply.ID); !errors.Is(err, ErrForbidden) {
+		t.Fatalf("stranger MarkRead err = %v, want ErrForbidden", err)
+	}
+	if none, _ := e.auctions.Conversations(ctx, stranger); len(none) != 0 {
+		t.Fatalf("stranger sees %+v", none)
+	}
+}
