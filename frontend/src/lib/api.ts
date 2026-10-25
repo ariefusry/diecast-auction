@@ -1,4 +1,5 @@
-// Thin client for the Go API. Errors carry the server's {"error": ...} message.
+// Thin client for the Go API. Errors carry the server's {"error": ...} message, in Indonesian.
+import { serverError } from "./errors";
 
 // Same origin by default: Vite (dev) and nginx (production) proxy /api to the Go API.
 export const API_URL: string = import.meta.env.VITE_API_URL ?? "/api";
@@ -111,7 +112,7 @@ export async function api<T>(path: string, init: { method?: string; body?: unkno
       setToken(null); // expired or revoked session
       window.dispatchEvent(new Event("auth:expired"));
     }
-    throw new ApiError(res.status, data.error ?? `HTTP ${res.status}`);
+    throw new ApiError(res.status, serverError(res.status, data.error ?? ""));
   }
   return data as T;
 }

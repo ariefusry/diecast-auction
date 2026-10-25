@@ -112,6 +112,8 @@ export function Wallet() {
             Isi saldo
           </Button>
         </div>
+        {/* A number field reads "500.000" as 500: show what will actually be added. */}
+        {amount && <p className="text-sm text-ink-soft">= {rupiah(Number(amount))}</p>}
         <ErrorNote message={error} />
         {notice && (
           <p role="status" className="text-sm font-medium text-lead">
