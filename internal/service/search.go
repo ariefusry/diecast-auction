@@ -6,7 +6,6 @@ import (
 	"reflect"
 	"slices"
 	"strings"
-	"unicode/utf8"
 )
 
 // Brands are the catalog's brands, as stored in items.brand.
@@ -53,11 +52,8 @@ type SearchResult struct {
 // a hallucinated field should narrow nothing rather than break the search.
 func (f Filter) Normalize() Filter {
 	short := func(s string) string {
-		s = strings.Join(strings.Fields(s), " ")
-		for utf8.RuneCountInString(s) > 100 {
-			s = s[:len(s)-1]
-		}
-		return strings.ToValidUTF8(s, "")
+		r := []rune(strings.Join(strings.Fields(strings.ReplaceAll(s, "\x00", "")), " "))
+		return strings.ToValidUTF8(string(r[:min(len(r), 100)]), "")
 	}
 	out := Filter{Series: short(f.Series), Color: strings.ToLower(short(f.Color)), Text: short(f.Text)}
 	for _, b := range Brands {
@@ -84,11 +80,13 @@ func (f Filter) Normalize() Filter {
 	return out
 }
 
-// Search returns active auctions matching f. When nothing matches it relaxes
+// Search returns active auctions matching f. With relax, when nothing matches it relaxes
 // step by step: first color, series, tags and condition, then price, and
 // finally any single text word may match instead of all of them. Brand always
 // stays, since it carries what the user is looking for.
-func (s *Auctions) Search(ctx context.Context, f Filter) (SearchResult, error) {
+// Explicit catalog filters pass relax=false: a user who picked a condition
+// must not silently get other conditions back.
+func (s *Auctions) Search(ctx context.Context, f Filter, relax bool) (SearchResult, error) {
 	f = f.Normalize()
 	soft := f
 	soft.Color, soft.Series, soft.Tags, soft.Condition = "", "", nil, ""
@@ -101,11 +99,14 @@ func (s *Auctions) Search(ctx context.Context, f Filter) (SearchResult, error) {
 	}
 	tries := []try{{f: f}}
 	for _, next := range []Filter{soft, loose} {
+		if !relax {
+			break
+		}
 		if !reflect.DeepEqual(next, tries[len(tries)-1].f) {
 			tries = append(tries, try{f: next})
 		}
 	}
-	if len(strings.Fields(f.Text)) > 1 {
+	if relax && len(strings.Fields(f.Text)) > 1 {
 		tries = append(tries, try{f: loose, anyWord: true})
 	}
 	for i, t := range tries {

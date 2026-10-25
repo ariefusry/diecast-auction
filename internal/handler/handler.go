@@ -322,8 +322,10 @@ func (h *handler) searchAI(w http.ResponseWriter, r *http.Request) {
 	h.search(w, r, service.Filter{Text: req.Query}, false)
 }
 
+// search runs f. Only free-text searches (AI or keywords) relax when nothing
+// matches; the catalog's explicit filters are applied as given.
 func (h *handler) search(w http.ResponseWriter, r *http.Request, f service.Filter, ai bool) {
-	res, err := h.auctions.Search(r.Context(), f)
+	res, err := h.auctions.Search(r.Context(), f, r.URL.Path == "/auctions/search/ai")
 	if err != nil {
 		writeError(w, err)
 		return

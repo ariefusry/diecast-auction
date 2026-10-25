@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/ariefusry/diecast-auction/internal/testutil"
@@ -22,6 +23,10 @@ func TestNormalizeDropsValuesOutsideTheAllowedSets(t *testing.T) {
 	}
 	if f := (Filter{Brand: "Tomica", MinPrice: 200, MaxPrice: 100}).Normalize(); f.Brand != "" || f.MaxPrice != 0 {
 		t.Fatalf("unknown brand / inverted range kept: %+v", f)
+	}
+	// Long or hostile input is cut cheaply and never carries NUL into SQL.
+	if f := (Filter{Text: strings.Repeat("é", 200_000) + "\x00", Color: "re\x00d"}).Normalize(); len([]rune(f.Text)) != 100 || f.Color != "red" {
+		t.Fatalf("long/NUL input = %d runes, color %q", len([]rune(f.Text)), f.Color)
 	}
 }
 
@@ -80,7 +85,7 @@ func TestSearchAppliesFilters(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			res, err := e.auctions.Search(context.Background(), c.f)
+			res, err := e.auctions.Search(context.Background(), c.f, true)
 			if err != nil {
 				t.Fatalf("Search: %v", err)
 			}
@@ -97,14 +102,19 @@ func TestSearchRelaxesWhenNothingMatches(t *testing.T) {
 	ctx := context.Background()
 
 	// No purple car: color is dropped, brand and price still apply.
-	res, err := e.auctions.Search(ctx, Filter{Text: token, Brand: "Mini GT", Color: "purple", MaxPrice: 160_000})
+	// The catalog's explicit filters never relax.
+	if res, _ := e.auctions.Search(ctx, Filter{Text: token, Color: "purple"}, false); res.Relaxed || len(res.Auctions) != 0 {
+		t.Fatalf("strict search relaxed: %+v", res)
+	}
+
+	res, err := e.auctions.Search(ctx, Filter{Text: token, Brand: "Mini GT", Color: "purple", MaxPrice: 160_000}, true)
 	if err != nil || !res.Relaxed {
 		t.Fatalf("Search = %+v, %v; want relaxed", res, err)
 	}
 	assertIDs(t, res.Auctions, ids, []string{"blue-mgt"})
 
 	// Still nothing within budget: price is dropped too, brand stays.
-	res, _ = e.auctions.Search(ctx, Filter{Text: token, Brand: "Mini GT", Color: "purple", MaxPrice: 10_000, Sort: "price_asc"})
+	res, _ = e.auctions.Search(ctx, Filter{Text: token, Brand: "Mini GT", Color: "purple", MaxPrice: 10_000, Sort: "price_asc"}, true)
 	if !res.Relaxed {
 		t.Fatal("want relaxed")
 	}
@@ -128,7 +138,7 @@ func assertIDs(t *testing.T, got []Auction, ids map[string]int64, want []string)
 // A raw sentence (the no-LLM fallback) still finds items through any one word.
 func TestSearchFallsBackToAnyWord(t *testing.T) {
 	e, token, ids := searchEnv(t)
-	res, err := e.auctions.Search(context.Background(), Filter{Text: "carikan " + token + " di bawah", Sort: "price_asc"})
+	res, err := e.auctions.Search(context.Background(), Filter{Text: "carikan " + token + " di bawah", Sort: "price_asc"}, true)
 	if err != nil || !res.Relaxed {
 		t.Fatalf("Search = %+v, %v; want relaxed", res, err)
 	}
