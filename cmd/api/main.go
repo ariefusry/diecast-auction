@@ -59,8 +59,14 @@ func main() {
 	} else {
 		log.Print("GEMINI_API_KEY not set: AI search uses keyword search")
 	}
+	// Timeouts bound slow or idle clients (slowloris). WriteTimeout stays above
+	// the 10s LLM timeout so AI search can still answer.
 	srv := &http.Server{
-		Addr: ":" + cfg.Port,
+		Addr:              ":" + cfg.Port,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       30 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       2 * time.Minute,
 		Handler: middleware.Log(slog.Default())(middleware.CORS(cfg.CORSOrigins)(
 			handler.New(service.NewAuth(pool, cfg.JWTSecret), service.NewWallets(pool), auctions, parse, cfg.UploadDir))),
 	}

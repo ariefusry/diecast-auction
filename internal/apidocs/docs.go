@@ -174,6 +174,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/handler.errorResponse"
                         }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
                     }
                 }
             }
@@ -578,6 +584,12 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
                         "schema": {
                             "$ref": "#/definitions/handler.errorResponse"
                         }

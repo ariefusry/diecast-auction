@@ -37,10 +37,12 @@ import (
 	"github.com/ariefusry/diecast-auction/internal/service"
 )
 
-// Per-IP limits against bots: auth refills one request per 6s (10/min), bids 2/s.
+// Per-IP limits against bots: auth refills one request per 6s (10/min), bids 2/s,
+// AI search one per 3s (20/min) since each may cost an LLM call.
 const (
 	authBurst = 10
 	bidBurst  = 5
+	aiBurst   = 5
 )
 
 // maxUpload caps one item photo at 5 MiB.
@@ -103,6 +105,7 @@ func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auction
 	authed := func(f http.HandlerFunc) http.Handler { return middleware.RequireAuth(auth.ParseToken)(f) }
 	authLimit := middleware.RateLimit(rate.Every(6*time.Second), authBurst)
 	bidLimit := middleware.RateLimit(2, bidBurst)
+	aiLimit := middleware.RateLimit(rate.Every(3*time.Second), aiBurst)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -118,7 +121,7 @@ func New(auth *service.Auth, wallets *service.Wallets, auctions *service.Auction
 	mux.Handle("POST /wallet/deposit", authed(h.deposit))
 	mux.Handle("POST /auctions", authed(h.createAuction))
 	mux.HandleFunc("GET /auctions", h.listAuctions)
-	mux.HandleFunc("POST /auctions/search/ai", h.searchAI)
+	mux.Handle("POST /auctions/search/ai", aiLimit(http.HandlerFunc(h.searchAI)))
 	mux.HandleFunc("GET /auctions/{id}", h.getAuction)
 	mux.Handle("POST /auctions/{id}/publish", authed(h.publish))
 	mux.Handle("POST /auctions/{id}/cancel", authed(h.cancel))
@@ -296,6 +299,7 @@ func (h *handler) listAuctions(w http.ResponseWriter, r *http.Request) {
 // @Param        body body     searchRequest true "Query, 1-200 bytes"
 // @Success      200  {object} searchResponse
 // @Failure      400  {object} errorResponse
+// @Failure      429  {object} errorResponse
 // @Router       /auctions/search/ai [post]
 func (h *handler) searchAI(w http.ResponseWriter, r *http.Request) {
 	var req searchRequest
@@ -411,6 +415,7 @@ func (h *handler) bid(w http.ResponseWriter, r *http.Request) {
 // @Success  201   {object} uploadResponse "use url as item.image_url"
 // @Failure  400   {object} errorResponse
 // @Failure  401   {object} errorResponse
+// @Failure  429   {object} errorResponse
 // @Router   /uploads [post]
 func (h *handler) upload(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, maxUpload+64<<10) // room for multipart headers

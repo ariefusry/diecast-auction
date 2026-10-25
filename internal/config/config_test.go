@@ -79,3 +79,11 @@ func TestLoadCORSOrigins(t *testing.T) {
 		t.Fatalf("list = %v", cfg.CORSOrigins)
 	}
 }
+
+func TestLoadRejectsTheExampleJWTSecret(t *testing.T) {
+	setValidEnv(t)
+	t.Setenv("JWT_SECRET", "change-me-to-a-random-secret-of-at-least-32-bytes")
+	if _, err := Load(); err == nil {
+		t.Fatal("accepted the placeholder secret from .env.example")
+	}
+}

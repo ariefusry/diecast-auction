@@ -35,6 +35,9 @@ func Load() (Config, error) {
 	if len(cfg.JWTSecret) < 32 {
 		return Config{}, errors.New("config: JWT_SECRET must be at least 32 bytes")
 	}
+	if strings.HasPrefix(string(cfg.JWTSecret), "change-me") {
+		return Config{}, errors.New("config: JWT_SECRET is the .env.example placeholder; generate one with openssl rand -hex 32")
+	}
 	if cfg.Port == "" {
 		cfg.Port = "8080"
 	}

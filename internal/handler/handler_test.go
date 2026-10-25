@@ -289,3 +289,22 @@ func TestUploadImage(t *testing.T) {
 		t.Fatalf("directory listing = %d", resp.StatusCode)
 	}
 }
+
+// Every AI search may cost an LLM call, so it is rate limited per IP.
+func TestSearchAIIsRateLimited(t *testing.T) {
+	parse := func(context.Context, string) (service.Filter, error) { return service.Filter{Text: "zz"}, nil }
+	anon := &client{t: t, base: newServerWithParser(t, parse)}
+	for i := range aiBurst + 5 {
+		code := anon.do("POST", "/auctions/search/ai", map[string]string{"query": "skyline"}, nil)
+		if code == http.StatusTooManyRequests {
+			if i < aiBurst {
+				t.Fatalf("limited after only %d searches", i)
+			}
+			return
+		}
+		if code != http.StatusOK {
+			t.Fatalf("search %d = %d", i, code)
+		}
+	}
+	t.Fatal("never rate limited")
+}
