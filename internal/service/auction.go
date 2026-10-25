@@ -4,8 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -14,6 +16,10 @@ import (
 
 // MaxDurationMinutes caps an auction at 30 days.
 const MaxDurationMinutes = 30 * 24 * 60
+
+// MaxMoney caps every price and bid (Rp1 triliun). Far above any diecast, and
+// small enough that bid + increment can never overflow int64.
+const MaxMoney int64 = 1_000_000_000_000
 
 type Item struct {
 	ID          int64    `json:"id,omitempty"`
@@ -72,20 +78,19 @@ func NewAuctions(pool *pgxpool.Pool) *Auctions {
 
 // Create stores the item and a draft auction for it.
 func (s *Auctions) Create(ctx context.Context, sellerID int64, in NewAuction) (Auction, error) {
-	it := in.Item
-	it.Brand, it.ModelName = strings.TrimSpace(it.Brand), strings.TrimSpace(it.ModelName)
-	if it.Brand == "" || it.ModelName == "" {
-		return Auction{}, fmt.Errorf("%w: brand and model_name are required", ErrInvalidInput)
+	it, err := validItem(in.Item)
+	if err != nil {
+		return Auction{}, err
 	}
 	if in.DurationMinutes < 1 || in.DurationMinutes > MaxDurationMinutes {
 		return Auction{}, fmt.Errorf("%w: duration_minutes must be 1-%d", ErrInvalidInput, MaxDurationMinutes)
 	}
-	if it.Tags == nil {
-		it.Tags = []string{}
+	if in.StartPrice > MaxMoney || in.MinIncrement > MaxMoney || in.BuyNowPrice != nil && *in.BuyNowPrice > MaxMoney {
+		return Auction{}, fmt.Errorf("%w: prices must be at most %d", ErrInvalidInput, MaxMoney)
 	}
 
 	var id int64
-	err := pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
+	err = pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
 		var itemID int64
 		err := tx.QueryRow(ctx,
 			`INSERT INTO items (seller_id, brand, model_name, series, year, color, tags, condition, image_url, source_url, description)
@@ -171,8 +176,8 @@ func (s *Auctions) Cancel(ctx context.Context, userID, id int64) (Auction, error
 // Bid escrows amount from the bidder, releases the previous leader's escrow,
 // and extends end_time by 2 minutes when the bid lands in the final 2 minutes.
 func (s *Auctions) Bid(ctx context.Context, bidderID, id, amount int64) (Auction, error) {
-	if amount <= 0 {
-		return Auction{}, fmt.Errorf("%w: amount must be positive", ErrInvalidInput)
+	if amount <= 0 || amount > MaxMoney {
+		return Auction{}, fmt.Errorf("%w: amount must be 1-%d", ErrInvalidInput, MaxMoney)
 	}
 	return s.mutate(ctx, id, func(tx pgx.Tx, l locked) error {
 		if err := l.open(); err != nil {
@@ -314,6 +319,67 @@ func (s *Auctions) CloseExpired(ctx context.Context) (int, error) {
 			n++
 		}
 	}
+}
+
+// validItem checks and cleans seller input before it is stored and later
+// rendered by clients: known brand, bounded text without NUL bytes, sane
+// year, lowercase tags, and URLs limited to http(s) or our own /uploads/.
+func validItem(it Item) (Item, error) {
+	bad := func(msg string) (Item, error) { return Item{}, fmt.Errorf("%w: %s", ErrInvalidInput, msg) }
+	brand := it.Brand
+	it.Brand = ""
+	for _, b := range Brands {
+		if strings.EqualFold(b, strings.TrimSpace(brand)) {
+			it.Brand = b
+		}
+	}
+	if it.Brand == "" {
+		return bad("brand must be one of " + strings.Join(Brands, ", "))
+	}
+	it.ModelName, it.Series, it.Color = strings.TrimSpace(it.ModelName), strings.TrimSpace(it.Series), strings.TrimSpace(it.Color)
+	for _, f := range []struct {
+		name, value string
+		max         int
+	}{
+		{"model_name", it.ModelName, 200}, {"series", it.Series, 100}, {"color", it.Color, 100},
+		{"description", it.Description, 2000}, {"image_url", it.ImageURL, 500}, {"source_url", it.SourceURL, 500},
+	} {
+		if utf8.RuneCountInString(f.value) > f.max {
+			return bad(fmt.Sprintf("%s must be at most %d characters", f.name, f.max))
+		}
+		if strings.ContainsRune(f.value, 0) {
+			return bad(f.name + " contains a NUL character")
+		}
+	}
+	if it.ModelName == "" {
+		return bad("model_name is required")
+	}
+	if it.Year != 0 && (it.Year < 1950 || it.Year > 2100) {
+		return bad("year must be 1950-2100")
+	}
+	tags := []string{}
+	for _, t := range it.Tags {
+		t = strings.ToLower(strings.TrimSpace(t))
+		if utf8.RuneCountInString(t) > 30 || strings.ContainsRune(t, 0) {
+			return bad("each tag must be at most 30 characters")
+		}
+		if t != "" && !slices.Contains(tags, t) {
+			tags = append(tags, t)
+		}
+	}
+	if len(tags) > 10 {
+		return bad("at most 10 tags")
+	}
+	it.Tags = tags
+	web := func(u string) bool { return strings.HasPrefix(u, "https://") || strings.HasPrefix(u, "http://") }
+	upload := strings.HasPrefix(it.ImageURL, "/uploads/") && !strings.Contains(it.ImageURL[len("/uploads/"):], "/")
+	if it.ImageURL != "" && !web(it.ImageURL) && !upload {
+		return bad("image_url must be an http(s) URL or a /uploads/ path from POST /uploads")
+	}
+	if it.SourceURL != "" && !web(it.SourceURL) {
+		return bad("source_url must be an http(s) URL")
+	}
+	return it, nil
 }
 
 // locked is the auction state read under its row lock.

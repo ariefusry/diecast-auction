@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"errors"
+	"math"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -97,11 +99,14 @@ func TestCreateAuctionStartsAsDraft(t *testing.T) {
 	e := newAuctionEnv(t)
 	seller := e.user(0)
 
-	a := e.draft(seller, sampleAuction())
+	in := sampleAuction()
+	in.Item.Tags = []string{"JDM"}
+	in.Item.ImageURL = "/uploads/abc.png"
+	a := e.draft(seller, in)
 	if a.ID == 0 || a.SellerID != seller || a.Status != "draft" || a.StartTime != nil || a.EndTime != nil {
 		t.Fatalf("draft = %+v", a)
 	}
-	if a.DurationMinutes != 60 || a.Item.ModelName != "Nissan Skyline GT-R R34" || a.Item.Tags[0] != "jdm" ||
+	if a.DurationMinutes != 60 || a.Item.ModelName != "Nissan Skyline GT-R R34" || a.Item.Tags[0] != "jdm" || a.Item.ImageURL != "/uploads/abc.png" ||
 		a.Item.SourceURL != "https://minigt.fandom.com/wiki/Nissan_Skyline" {
 		t.Fatalf("draft fields = %+v", a)
 	}
@@ -126,6 +131,14 @@ func TestCreateAuctionValidates(t *testing.T) {
 		"buy now below start": func(n *NewAuction) { n.BuyNowPrice = ptr(int64(100_000)) },
 		"zero duration":       func(n *NewAuction) { n.DurationMinutes = 0 },
 		"too long":            func(n *NewAuction) { n.DurationMinutes = MaxDurationMinutes + 1 },
+		"unknown brand":       func(n *NewAuction) { n.Item.Brand = "Tomica" },
+		"year out of range":   func(n *NewAuction) { n.Item.Year = 3_000_000_000 },
+		"NUL byte":            func(n *NewAuction) { n.Item.ModelName = "R34\x00" },
+		"model too long":      func(n *NewAuction) { n.Item.ModelName = strings.Repeat("x", 201) },
+		"too many tags":       func(n *NewAuction) { n.Item.Tags = strings.Fields("a b c d e f g h i j k") },
+		"script source url":   func(n *NewAuction) { n.Item.SourceURL = "javascript:alert(1)" },
+		"script image url":    func(n *NewAuction) { n.Item.ImageURL = "javascript:alert(1)" },
+		"relative image path": func(n *NewAuction) { n.Item.ImageURL = "/etc/passwd" },
 	}
 	for name, mutate := range cases {
 		t.Run(name, func(t *testing.T) {
@@ -475,5 +488,28 @@ func TestConcurrentCancelAndFirstBid(t *testing.T) {
 			t.Fatalf("auction %d in mixed state %+v, bidder wallet %+v", a.ID, got, w)
 		}
 		e.assertLedger(bidder)
+	}
+}
+
+// A huge min_increment must not wrap the minimum bid around int64 and let a
+// lower bid replace the leader.
+func TestCreateRejectsMoneyAboveCap(t *testing.T) {
+	e := newAuctionEnv(t)
+	seller := e.user(0)
+	for name, mutate := range map[string]func(*NewAuction){
+		"start":     func(n *NewAuction) { n.StartPrice = MaxMoney + 1 },
+		"increment": func(n *NewAuction) { n.MinIncrement = math.MaxInt64 - 50_000 },
+		"buy now":   func(n *NewAuction) { n.BuyNowPrice = ptr(int64(MaxMoney + 1)) },
+	} {
+		t.Run(name, func(t *testing.T) {
+			in := sampleAuction()
+			mutate(&in)
+			if _, err := e.auctions.Create(context.Background(), seller, in); !errors.Is(err, ErrInvalidInput) {
+				t.Fatalf("err = %v, want ErrInvalidInput", err)
+			}
+		})
+	}
+	if _, err := e.auctions.Bid(context.Background(), e.user(0), -1, MaxMoney+1); !errors.Is(err, ErrInvalidInput) {
+		t.Fatalf("bid above cap err = %v", err)
 	}
 }
