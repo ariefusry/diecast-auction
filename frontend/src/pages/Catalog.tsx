@@ -1,12 +1,13 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { AuctionCard } from "../components/AuctionCard";
+import { BrandLogo } from "../components/BrandLogo";
 import { Button, ErrorNote } from "../components/ui";
 import { api, errorMessage, type Filter, type SearchResult } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { conditionLabel, conditions, rupiah } from "../lib/format";
 import { useNow } from "../lib/useNow";
 
-const brands = ["Hot Wheels", "Mini GT", "Inno64"];
+const brands = ["Hot Wheels", "Mini GT", "Inno64", "Matchbox", "Tomica", "Tarmac Works", "M2 Machines"];
 const sorts: Record<string, string> = {
   ending_soon: "Segera berakhir",
   newest: "Terbaru",
@@ -133,9 +134,9 @@ export function Catalog() {
               key={b || "all"}
               onClick={() => setBrand(b)}
               aria-pressed={brand === b}
-              className={`press rounded-full border px-4 py-1.5 font-semibold ${brand === b ? "border-ink bg-ink text-white" : "border-line bg-card hover:border-ink"}`}
+              className={`press flex h-10 items-center rounded-full border bg-card px-4 font-semibold ${brand === b ? "border-ink ring-2 ring-ink" : "border-line hover:border-ink"}`}
             >
-              {b || "Semua merek"}
+              {b ? <BrandLogo brand={b} className="h-6 max-w-28" /> : "Semua merek"}
             </button>
           ))}
           <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">

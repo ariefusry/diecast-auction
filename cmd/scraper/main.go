@@ -1,5 +1,5 @@
-// Command scraper pulls real 1:64 castings from the Hot Wheels, Mini GT and
-// Inno64 Fandom wikis into data/seeds.json. It uses the MediaWiki API
+// Command scraper pulls real 1:64 castings from the Hot Wheels, Mini GT,
+// Inno64, Matchbox, Tomica, Tarmac Works and M2 Machines Fandom wikis into data/seeds.json. It uses the MediaWiki API
 // (the HTML pages sit behind a Cloudflare challenge), one request per second.
 // Wiki content is CC-BY-SA, so every item keeps its page URL as source_url.
 package main
@@ -34,6 +34,10 @@ var sources = []source{
 	{"hotwheels", "Hot Wheels", "JDM Cars", 40},
 	{"minigt", "Mini GT", "Models", 40},
 	{"inno64", "Inno64", "", 40},
+	{"matchbox", "Matchbox", "1:64", 40},
+	{"tomica", "Tomica", "Scale 1/64", 40},
+	{"tarmacworks", "Tarmac Works", "", 40},
+	{"m2machines", "M2 Machines", "164th", 40},
 }
 
 func main() {
@@ -94,6 +98,10 @@ func scrape(s source) ([]service.Item, error) {
 				continue
 			}
 			it := parsePage(s.brand, p.Title, p.Revisions[0].Slots.Main.Content)
+			// Tarmac Works wheel sets (PARTS64) and its 1:43 line (HOBBY43).
+			if it.Series == "PARTS64" || strings.Contains(it.Series, "43") {
+				continue
+			}
 			it.ImageURL, it.SourceURL = p.Original.Source, p.FullURL
 			items = append(items, it)
 		}
@@ -154,9 +162,10 @@ func pick[T any](xs []T, n int) []T {
 }
 
 // isCasting drops pages that are not single 1:64 castings: other scales such
-// as "(1:20)" and a make's own index page such as "Mazda".
+// as "(1:20)" or Tarmac Works' T43 line, cancelled releases, and a make's own
+// index page such as "Mazda".
 func isCasting(title string) bool {
-	if strings.Contains(title, "(1:") {
+	if strings.Contains(title, "(1:") || strings.HasPrefix(title, "T43") || strings.Contains(title, "Cancelled") {
 		return false
 	}
 	w := words(title)
@@ -191,13 +200,15 @@ var (
 	infoboxYear   = regexp.MustCompile(`(?i)\|\s*years?\s*=\s*\[*(\d{4})`)
 	infoboxSeries = regexp.MustCompile(`(?i)\|\s*series\s*=\s*((?:\[\[[^\]]*\]\]|[^\n|}])+)`)
 	fourDigits    = regexp.MustCompile(`\b(19|20)\d{2}\b`)
+	// Tomica pages only say "was released July 16, 2016" in prose.
+	releasedYear  = regexp.MustCompile(`released [^.]*?\b((?:19|20)\d{2})\b`)
 	japaneseMakes = []string{"acura", "datsun", "daihatsu", "honda", "infiniti", "isuzu", "lexus",
 		"mazda", "mitsubishi", "nissan", "subaru", "suzuki", "toyota"}
 	// makes maps a title word to its make; aliases cover model-only names like "Skyline".
 	makes = map[string]string{
 		"skyline": "nissan", "prince": "nissan", "silvia": "nissan", "eunos": "mazda", "lancer": "mitsubishi",
 		"altezza": "toyota", "supra": "toyota", "chevy": "chevrolet", "vw": "volkswagen",
-		"mercedes": "mercedes-benz", "land": "land rover", "aston": "aston martin", "alfa": "alfa romeo",
+		"mercedes": "mercedes-benz", "mercedes-amg": "mercedes-benz", "land": "land rover", "aston": "aston martin", "alfa": "alfa romeo",
 	}
 	colors = []string{"white", "black", "red", "blue", "green", "yellow", "orange", "silver",
 		"grey", "gray", "gold", "purple", "pink", "brown", "bronze"}
@@ -249,13 +260,37 @@ func parsePage(brand, title, text string) service.Item {
 	if m := infoboxSeries.FindStringSubmatch(text); m != nil {
 		it.Series = clean(m[1])
 	}
-	row := firstVersion(text)
+	row := firstRow(text, "Color", "Livery")
+	if len(row) == 0 {
+		// Tarmac Works titles pages by SKU and writes "[[Model]] <br/> Color"
+		// in one Description cell.
+		row = firstRow(brTag.ReplaceAllString(text, " ¦ "), "Description")
+		// On SKU pages the last line is the color and earlier lines name the
+		// model; a page titled by model lists only colors there.
+		d := row["description"]
+		if sku.MatchString(title) {
+			i := strings.LastIndex(d, "¦")
+			if i < 0 {
+				i = len(d) // a single line is just the model
+			}
+			it.ModelName = strings.Join(strings.Fields(strings.ReplaceAll(d[:i], "¦", "")), " ")
+			d = strings.TrimPrefix(d[i:], "¦")
+		}
+		row["color"] = strings.Join(strings.Fields(strings.ReplaceAll(d, "¦", "")), " ")
+		// Some series names are spelled one letter per line (G<br/>L<br/>O...).
+		row["series"] = strings.ReplaceAll(row["series"], " ¦ ", "")
+	}
 	if it.Year == 0 {
 		for _, k := range []string{"year", "prod. yr", "date"} {
 			if y := fourDigits.FindString(row[k]); y != "" {
 				it.Year, _ = strconv.Atoi(y)
 				break
 			}
+		}
+	}
+	if it.Year == 0 {
+		if m := releasedYear.FindStringSubmatch(text); m != nil {
+			it.Year, _ = strconv.Atoi(m[1])
 		}
 	}
 	if it.Series == "" {
@@ -270,7 +305,7 @@ func parsePage(brand, title, text string) service.Item {
 		it.Color = colorIn(title)
 	}
 	it.Tags = []string{}
-	if m := makeIn(title); m != "" {
+	if m := makeIn(it.ModelName); m != "" {
 		it.Tags = append(it.Tags, m)
 		if slices.Contains(japaneseMakes, m) {
 			it.Tags = append(it.Tags, "jdm")
@@ -279,9 +314,9 @@ func parsePage(brand, title, text string) service.Item {
 	return it
 }
 
-// firstVersion returns the first data row of the first wiki table that has a
-// Color or Livery column, keyed by lowercased header text.
-func firstVersion(text string) map[string]string {
+// firstRow returns the first data row of the first wiki table that has one of
+// the given columns, keyed by lowercased header text.
+func firstRow(text string, columns ...string) map[string]string {
 	for _, table := range tables(text) {
 		rows := strings.Split(table, "\n|-")
 		// The header is the first row with cells; some tables open with a bare |-.
@@ -290,7 +325,7 @@ func firstVersion(text string) map[string]string {
 			continue
 		}
 		header := cells(rows[h])
-		if !slices.Contains(header, "Color") && !slices.Contains(header, "Livery") {
+		if !slices.ContainsFunc(columns, func(c string) bool { return slices.Contains(header, c) }) {
 			continue
 		}
 		for _, r := range rows[h+1:] {
@@ -346,6 +381,8 @@ func cells(row string) []string {
 
 var (
 	cellSep  = regexp.MustCompile(`\|\||!!`)
+	brTag    = regexp.MustCompile(`<br\s*/?>`)
+	sku      = regexp.MustCompile(`^(T\d+[A-Z]*-|MGT\d)`)
 	fileLink = regexp.MustCompile(`\[\[(?:File|Image):[^\]]*\]\]`)
 	wikiLink = regexp.MustCompile(`\[\[(?:[^\]|]*\|)?([^\]]*)\]\]`)
 	template = regexp.MustCompile(`\{\{[^}]*\}\}`)

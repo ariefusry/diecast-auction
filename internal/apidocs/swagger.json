@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Escrow auctions for 1:64 diecast (Hot Wheels, Mini GT, Inno64). Money is whole rupiah.",
+        "description": "Escrow auctions for 1:64 diecast (Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works, M2 Machines). Money is whole rupiah.",
         "title": "Diecast Auction API",
         "contact": {},
         "version": "1.0"
@@ -26,7 +26,7 @@
                     },
                     {
                         "type": "string",
-                        "description": "Hot Wheels, Mini GT or Inno64",
+                        "description": "Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works or M2 Machines",
                         "name": "brand",
                         "in": "query"
                     },

@@ -9,7 +9,7 @@ import (
 )
 
 // Brands are the catalog's brands, as stored in items.brand.
-var Brands = []string{"Hot Wheels", "Mini GT", "Inno64"}
+var Brands = []string{"Hot Wheels", "Mini GT", "Inno64", "Matchbox", "Tomica", "Tarmac Works", "M2 Machines"}
 
 // Conditions mirrors the items.condition CHECK constraint.
 var Conditions = []string{"mint_on_card", "sealed_box", "acrylic_case", "loose_mint", "damaged_packaging"}

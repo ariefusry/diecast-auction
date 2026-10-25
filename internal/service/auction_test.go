@@ -131,7 +131,7 @@ func TestCreateAuctionValidates(t *testing.T) {
 		"buy now below start": func(n *NewAuction) { n.BuyNowPrice = ptr(int64(100_000)) },
 		"zero duration":       func(n *NewAuction) { n.DurationMinutes = 0 },
 		"too long":            func(n *NewAuction) { n.DurationMinutes = MaxDurationMinutes + 1 },
-		"unknown brand":       func(n *NewAuction) { n.Item.Brand = "Tomica" },
+		"unknown brand":       func(n *NewAuction) { n.Item.Brand = "Maisto" },
 		"year out of range":   func(n *NewAuction) { n.Item.Year = 3_000_000_000 },
 		"NUL byte":            func(n *NewAuction) { n.Item.ModelName = "R34\x00" },
 		"model too long":      func(n *NewAuction) { n.Item.ModelName = strings.Repeat("x", 201) },

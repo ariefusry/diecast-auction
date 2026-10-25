@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router";
+import { BrandLogo } from "../components/BrandLogo";
 import { Photo } from "../components/Photo";
 import { Button, ErrorNote } from "../components/ui";
 import { api, errorMessage, type Auction } from "../lib/api";
@@ -100,10 +101,15 @@ export function AuctionDetail() {
 
       <section className="space-y-5">
         <div>
-          <div className="text-ink-soft">
-            {a.item.brand}
-            {a.item.series && `, ${a.item.series}`}
-            {a.item.year > 0 && ` (${a.item.year})`}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-ink-soft">
+            <BrandLogo brand={a.item.brand} className="h-7 max-w-32" />
+            {(a.item.series || a.item.year > 0) && (
+              <span>
+                {a.item.series}
+                {a.item.series && a.item.year > 0 && ", "}
+                {a.item.year > 0 && a.item.year}
+              </span>
+            )}
           </div>
           <h1 className="font-display text-4xl leading-tight font-extrabold italic">{a.item.model_name}</h1>
           <div className="mt-2 flex flex-wrap gap-2 text-sm">

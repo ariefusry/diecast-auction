@@ -46,7 +46,7 @@ export function Layout() {
         <Outlet />
       </main>
       <footer className="mx-auto max-w-6xl px-4 pb-8 text-sm text-ink-soft">
-        Data katalog dari wiki Fandom Hot Wheels, Mini GT dan Inno64 (CC-BY-SA). Saldo adalah uang simulasi.
+        Data katalog dari wiki Fandom Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works dan M2 Machines (CC-BY-SA). Logo dan merek dagang milik pemiliknya masing-masing; situs ini tidak berafiliasi dengan mereka. Saldo adalah uang simulasi.
       </footer>
     </div>
   );

@@ -32,7 +32,7 @@ func NewGemini(key, model string) *Gemini {
 
 const prompt = `You convert a diecast (1:64 scale) auction search, usually in Indonesian, into a JSON filter.
 Rules:
-- brand: only when the user names Hot Wheels, Mini GT or Inno64 (e.g. "hw" means Hot Wheels).
+- brand: only when the user names Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works or M2 Machines (e.g. "hw" means Hot Wheels, "mb" means Matchbox, "tarmac" means Tarmac Works, "m2" means M2 Machines).
 - color: one English color word in lowercase, translated (merah=red, putih=white, hitam=black, biru=blue, hijau=green, kuning=yellow, abu-abu=grey, perak=silver, emas=gold, oranye=orange, ungu=purple).
 - tags: lowercase car makes (nissan, honda, toyota, ...) and "jdm" for Japanese cars or when the user says jdm.
 - condition: mint/moc/mint on card=mint_on_card, segel/sealed/box=sealed_box, akrilik/acrylic=acrylic_case, loose=loose_mint, box rusak/penyok=damaged_packaging.

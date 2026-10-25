@@ -72,6 +72,27 @@ const inno64Page = `{{Casting|image=Honda_NSXR_NA2_Championship_White_Front.webp
 "Team 5ZIGEN"
 |}`
 
+// Tarmac Works pages are titled by SKU; the model and color share the Description cell.
+const tarmacPage = `{| class="wikitable" style="width: 100%;""
+|+
+|bgcolor="#7b8b63" align="center"|<font color="#ffffff"> '''Series'''
+|bgcolor="#7b8b63" align="center"|<font color="#ffffff"> '''SKU'''
+|bgcolor="#7b8b63" align="center"|<font color="#ffffff"> '''Date'''
+|bgcolor="#7b8b63" align="center"|<font color="#ffffff"> '''Description'''
+|-
+|align="center"|[[HOBBY64]]
+|align="center"|T64-006-BB
+|align="center"|[[2017|September 2017]] <br/> Release 2
+|align="center"|[[Mercedes-AMG GTR]] <br/> Brilliant Blue Metallic
+|}
+<div>[[File:T64-006-BB front.jpg|363x363px]]</div>`
+
+// Tomica pages have no infobox or versions table; the year is only in prose.
+const tomicaPage = `'''Tomica No. 76 Honda Civic Type R''' is a toy released within the classic [[Tomica]] toyline.
+
+==Overview==
+The Honda Civic Type R was released July 16, 2016, and retired May, 2018. It replaced the [[No. 76 Isuzu Giga Dump Truck]].`
+
 func TestParsePage(t *testing.T) {
 	cases := []struct {
 		name  string
@@ -91,6 +112,13 @@ func TestParsePage(t *testing.T) {
 		{"inno64", "Inno64", "Honda NSX-R (NA2)", inno64Page, service.Item{
 			Brand: "Inno64", ModelName: "Honda NSX-R (NA2)",
 			Year: 2018, Color: "Championship White", Tags: []string{"honda", "jdm"},
+		}},
+		{"tomica prose", "Tomica", "No. 76 Honda Civic Type R", tomicaPage, service.Item{
+			Brand: "Tomica", ModelName: "No. 76 Honda Civic Type R", Year: 2016, Tags: []string{"honda", "jdm"},
+		}},
+		{"tarmac works sku page", "Tarmac Works", "T64-006-BB", tarmacPage, service.Item{
+			Brand: "Tarmac Works", ModelName: "Mercedes-AMG GTR", Series: "HOBBY64",
+			Year: 2017, Color: "Brilliant Blue Metallic", Tags: []string{"mercedes-benz"},
 		}},
 		{"photos only, color from title", "Mini GT", "1/64 McLaren Senna Victory Grey", "[[File:MGT1.jpg|thumb]]", service.Item{
 			Brand: "Mini GT", ModelName: "McLaren Senna Victory Grey", Color: "Grey", Tags: []string{"mclaren"},
@@ -131,6 +159,8 @@ func TestIsCasting(t *testing.T) {
 		"1999 Nissan Skyline (1:20)":  false, // another scale
 		"Mazda":                       false, // a make's index page
 		"Mitsubishi":                  false,
+		"T64-006-BB":                  true,
+		"T43-008-08HEC96 (Cancelled)": false, // Tarmac Works 1:43, never released
 	} {
 		if got := isCasting(title); got != want {
 			t.Errorf("isCasting(%q) = %v, want %v", title, got, want)

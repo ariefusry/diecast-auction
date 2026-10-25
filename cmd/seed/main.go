@@ -24,7 +24,9 @@ const DemoPassword = "demo-password"
 const bidderFunds = 2 * service.MaxDeposit
 
 var (
-	basePrice  = map[string]int64{"Hot Wheels": 25_000, "Mini GT": 150_000, "Inno64": 300_000}
+	basePrice = map[string]int64{"Hot Wheels": 25_000, "Mini GT": 150_000, "Inno64": 300_000,
+		"Matchbox": 25_000, "Tomica": 60_000,
+		"Tarmac Works": 200_000, "M2 Machines": 120_000}
 	conditions = []string{"mint_on_card", "sealed_box", "acrylic_case", "loose_mint", "damaged_packaging"}
 	durations  = []int{30, 180, 720, 1440, 4320} // minutes; the short ones show settlement soon after seeding
 )

@@ -33,7 +33,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Hot Wheels, Mini GT or Inno64",
+                        "description": "Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works or M2 Machines",
                         "name": "brand",
                         "in": "query"
                     },
@@ -959,7 +959,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Diecast Auction API",
-	Description:      "Escrow auctions for 1:64 diecast (Hot Wheels, Mini GT, Inno64). Money is whole rupiah.",
+	Description:      "Escrow auctions for 1:64 diecast (Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works, M2 Machines). Money is whole rupiah.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

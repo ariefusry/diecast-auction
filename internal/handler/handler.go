@@ -6,7 +6,7 @@
 //
 // @title                      Diecast Auction API
 // @version                    1.0
-// @description                Escrow auctions for 1:64 diecast (Hot Wheels, Mini GT, Inno64). Money is whole rupiah.
+// @description                Escrow auctions for 1:64 diecast (Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works, M2 Machines). Money is whole rupiah.
 // @BasePath                   /
 // @securityDefinitions.apikey BearerAuth
 // @in                         header
@@ -266,7 +266,7 @@ func (h *handler) getAuction(w http.ResponseWriter, r *http.Request) {
 // @Tags     auctions
 // @Produce  json
 // @Param    q         query    string false "Keywords"
-// @Param    brand     query    string false "Hot Wheels, Mini GT or Inno64"
+// @Param    brand     query    string false "Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works or M2 Machines"
 // @Param    condition query    string false "mint_on_card, sealed_box, acrylic_case, loose_mint, damaged_packaging"
 // @Param    color     query    string false "Color substring"
 // @Param    series    query    string false "Series substring"

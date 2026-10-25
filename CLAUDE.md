@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Panduan ringkas untuk Claude Code CLI dalam mengembangkan platform lelang diecast skala 1:64 (Hot Wheels, Mini GT, Inno64).
+Panduan ringkas untuk Claude Code CLI dalam mengembangkan platform lelang diecast skala 1:64 (Hot Wheels, Mini GT, Inno64, Matchbox, Tomica, Tarmac Works, M2 Machines).
 
 ---
 

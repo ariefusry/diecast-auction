@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import type { Auction } from "../lib/api";
 import { conditionLabel, rupiah, timeLeft } from "../lib/format";
+import { BrandLogo } from "./BrandLogo";
 import { Photo } from "./Photo";
 
 export function AuctionCard({ auction: a, now, myId }: { auction: Auction; now: number; myId: number | null }) {
@@ -11,7 +12,7 @@ export function AuctionCard({ auction: a, now, myId }: { auction: Auction; now: 
     <Link to={`/lelang/${a.id}`} className="blister press group flex flex-col gap-3 [--press:0.985]">
       <Photo url={a.item.image_url} alt={a.item.model_name} />
       <div className="flex items-center justify-between gap-2 text-sm">
-        <span className="font-semibold text-ink-soft">{a.item.brand}</span>
+        <BrandLogo brand={a.item.brand} className="h-5 max-w-24" />
         <span className="text-ink-soft">{conditionLabel(a.item.condition)}</span>
       </div>
       <h3 className="font-display text-xl leading-tight font-bold">{a.item.model_name}</h3>

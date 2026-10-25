@@ -107,6 +107,10 @@ export function Sell() {
               <option>Hot Wheels</option>
               <option>Mini GT</option>
               <option>Inno64</option>
+              <option>Matchbox</option>
+              <option>Tomica</option>
+              <option>Tarmac Works</option>
+              <option>M2 Machines</option>
             </Select>
           </Field>
           <Field label="Kondisi">

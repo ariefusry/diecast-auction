@@ -21,7 +21,7 @@ func TestNormalizeDropsValuesOutsideTheAllowedSets(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got  %+v\nwant %+v", got, want)
 	}
-	if f := (Filter{Brand: "Tomica", MinPrice: 200, MaxPrice: 100}).Normalize(); f.Brand != "" || f.MaxPrice != 0 {
+	if f := (Filter{Brand: "Maisto", MinPrice: 200, MaxPrice: 100}).Normalize(); f.Brand != "" || f.MaxPrice != 0 {
 		t.Fatalf("unknown brand / inverted range kept: %+v", f)
 	}
 	// Long or hostile input is cut cheaply and never carries NUL into SQL.

@@ -15,313 +15,302 @@
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Honda Civic Type R",
-    "series": "2003 First Editions",
-    "year": 2003,
-    "color": "Silver",
+    "model_name": "2008 Lancer Evolution",
+    "series": "2008 New Models",
+    "year": 2008,
+    "color": "Metalflake Red",
+    "tags": [
+      "mitsubishi",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/9/92/Esheet_Evo.png/revision/latest?cb=20260331213627",
+    "source_url": "https://hotwheels.fandom.com/wiki/2008_Lancer_Evolution",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Mazda MX-5 Miata (1991)",
+    "series": "Mainline",
+    "year": 1991,
+    "color": "Red",
+    "tags": [
+      "mazda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/0/0a/1991NM-MMMX5_%28Large%29.JPG/revision/latest?cb=20200914020556",
+    "source_url": "https://hotwheels.fandom.com/wiki/Mazda_MX-5_Miata_(1991)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan 370Z",
+    "series": "2010 New Models",
+    "year": 2010,
+    "color": "Pearl Yellow",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/78/4449323061_f90bd81b56_b.jpg/revision/latest?cb=20100329204910",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_370Z",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Mazda RX-7",
+    "series": "2012 New Models",
+    "year": 2012,
+    "color": "Black",
+    "tags": [
+      "mazda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/1/1c/2012-MazdaRX7.jpg/revision/latest?cb=20120122185149",
+    "source_url": "https://hotwheels.fandom.com/wiki/Mazda_RX-7",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "'90 Honda Civic EF",
+    "series": "HW City: Night Burnerz",
+    "year": 2014,
+    "color": "Red",
     "tags": [
       "honda",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/1/1c/2003_Honda_Civic_Si_-_03FE.jpg/revision/latest?cb=20081204233414",
-    "source_url": "https://hotwheels.fandom.com/wiki/Honda_Civic_Type_R",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/a/a7/Civic_EF_29th_Annual_Collectors_Convention.jpg/revision/latest?cb=20260812220156",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2790_Honda_Civic_EF",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "HKS Altezza ('Tooned)",
-    "series": "2003 First Editions",
-    "year": 2003,
-    "color": "Matte Black",
+    "model_name": "'15 Mazda MX-5 Miata",
+    "series": "Night Burnerz",
+    "year": 2016,
+    "color": "Red",
     "tags": [
-      "toyota",
+      "mazda",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/f5/AltezzaSketch.png/revision/latest?cb=20210817025042",
-    "source_url": "https://hotwheels.fandom.com/wiki/HKS_Altezza_(%27Tooned)",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/5/5c/15MX5MiataDHP05.jpg/revision/latest?cb=20160901062442",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2715_Mazda_MX-5_Miata",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Honda S2000",
-    "series": "2011 New Models",
-    "year": 2011,
+    "model_name": "'17 Nissan GT-R (R35)",
+    "series": "Nightburnerz",
+    "year": 2017,
+    "color": "Metalflake Orange",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/4/4a/%2717_Nissan_GT-R_%28R35%29-2017_282_%282%29.jpg/revision/latest?cb=20170811160733",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2717_Nissan_GT-R_(R35)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "'69 Nissan Skyline Van",
+    "series": "Car Culture: Cargo Carriers",
+    "year": 2018,
+    "color": "Light Green",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/6/6a/CargoCarrierNis.JPG/revision/latest?cb=20180415052714",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2769_Nissan_Skyline_Van",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan 300ZX Twin Turbo",
+    "series": "Nissan",
+    "year": 2019,
+    "color": "Pearl White",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/4/44/2019NM16_%28Large%29.JPG/revision/latest?cb=20200712013818",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_300ZX_Twin_Turbo",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan 240SX (S14)",
+    "series": "Fast \u0026 Furious: Original Fast",
+    "year": 2019,
+    "color": "Burgundy",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/8/89/2019FFP-OF01_%28Large%29.JPG/revision/latest?cb=20210411072740",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_240SX_(S14)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Silvia (CSP311)",
+    "series": "Fast \u0026 Furious: Fast Rewind",
+    "year": 2019,
+    "color": "Dark Blue",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/7f/CSP311.jpg/revision/latest?cb=20210926023112",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Silvia_(CSP311)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Honda Civic EG",
+    "series": "Fast \u0026 Furious: Fast Tuners",
+    "year": 2020,
     "color": "Yellow",
     "tags": [
       "honda",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/c/cd/Honda_s2000_2011_yellow.png/revision/latest?cb=20110129025520",
-    "source_url": "https://hotwheels.fandom.com/wiki/Honda_S2000",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/3/3a/HondaCivicEG.jpg/revision/latest?cb=20210926003845",
+    "source_url": "https://hotwheels.fandom.com/wiki/Honda_Civic_EG",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "1985 Honda CR-X",
-    "series": "The Hot Ones",
-    "year": 2012,
-    "color": "Red \u0026 Chrome",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/2012THO-85HRCX_%28Large%29.JPG/revision/latest?cb=20191231053915",
-    "source_url": "https://hotwheels.fandom.com/wiki/1985_Honda_CR-X",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'96 Nissan 180SX Type X",
-    "series": "HW Workshop: Night Burnerz",
-    "year": 2015,
-    "color": "Metalflake Dark Red",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/3/35/Nissan180-hotwheels-2015.jpg/revision/latest?cb=20150927201414",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2796_Nissan_180SX_Type_X",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Fairlady 2000",
-    "series": "Legends of Speed",
-    "year": 2017,
-    "color": "Light Yellow",
-    "tags": [],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/8/8f/Fairlady_2000-2017_022_.jpg/revision/latest?cb=20161030123349",
-    "source_url": "https://hotwheels.fandom.com/wiki/Fairlady_2000",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Nissan Laurel 2000 SGX",
-    "series": "Car Culture: Japan Historics 2",
-    "year": 2018,
-    "color": "Metalflake Dark Green",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b7/2018CC-JH24_%28Large%29.JPG/revision/latest?cb=20210102022927",
-    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Laurel_2000_SGX",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'88 Honda CR-X",
-    "series": "Nightburnerz",
-    "year": 2019,
-    "color": "Red",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/e/e0/2019_%2788_Honda_CR-X.jpg/revision/latest?cb=20250214020326",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2788_Honda_CR-X",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'91 Mazda MX-5 Miata",
-    "series": "HW Speed Graphics",
-    "year": 2019,
-    "color": "Blue",
-    "tags": [
-      "mazda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/1/1d/2019NM25_%28Large%29.JPG/revision/latest?cb=20200712013928",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2791_Mazda_MX-5_Miata",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'98 Subaru Impreza 22B STi-Version",
-    "series": "HW Turbo",
-    "year": 2020,
-    "color": "Rally Blue Pearl",
-    "tags": [
-      "subaru",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/a/a7/2020-22B.JPG/revision/latest?cb=20191013050007",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2798_Subaru_Impreza_22B_STi-Version",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "1968 Mazda Cosmo Sport",
-    "series": "Car Culture: Japan Historics 3",
-    "year": 2020,
-    "color": "Swan White",
-    "tags": [
-      "mazda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/7f/2020CC-JH3-MCS_%28Large%29.JPG/revision/latest?cb=20200126064826",
-    "source_url": "https://hotwheels.fandom.com/wiki/1968_Mazda_Cosmo_Sport",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'20 Toyota GR Supra",
-    "series": "HW Speed Graphics",
+    "model_name": "1972 Skyline H/T 2000GT-R",
+    "series": "RLC Exclusive",
     "year": 2021,
-    "color": "Absolute Zero White",
-    "tags": [
-      "toyota",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/f2/2021NM28_%28Large%29.JPG/revision/latest?cb=20210405025159",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2720_Toyota_GR_Supra",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'81 Toyota Starlet KP61",
-    "series": "Car Culture: Toyota",
-    "year": 2021,
-    "color": "Red",
-    "tags": [
-      "toyota",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/1/15/%2781ToyotaStarlet.jpg/revision/latest?cb=20211217004028",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2781_Toyota_Starlet_KP61",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "LB Super Silhouette Nissan Silvia (S15)",
-    "series": "HW Turbo",
-    "year": 2022,
-    "color": "White",
+    "color": "Spectraflame Shadowchrome",
     "tags": [
       "nissan",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/a/a1/LBWKSilvia.jpg/revision/latest?cb=20211231074315",
-    "source_url": "https://hotwheels.fandom.com/wiki/LB_Super_Silhouette_Nissan_Silvia_(S15)",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/fe/RLCHako.jpg/revision/latest?cb=20220415090602",
+    "source_url": "https://hotwheels.fandom.com/wiki/1972_Skyline_H/T_2000GT-R",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Lancer Evolution VII Interceptor Version",
-    "series": "Charawheels Ultimate Edition",
-    "year": 2003,
-    "color": "Silver",
+    "model_name": "2004 Mitsubishi Lancer EVOLUTION 8",
+    "series": "Hot Tunerz",
+    "year": 2004,
+    "color": "Red",
     "tags": [
       "mitsubishi",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/5/57/2003_SE_Taxi_3_CWUE_%285%29.jpg/revision/latest?cb=20250514155401",
-    "source_url": "https://hotwheels.fandom.com/wiki/Lancer_Evolution_VII_Interceptor_Version",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/71/Mitsubishi-evo-wrc-enkei-red.jpg/revision/latest?cb=20250604132534",
+    "source_url": "https://hotwheels.fandom.com/wiki/2004_Mitsubishi_Lancer_EVOLUTION_8",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "1971 Nissan Skyline H/T 2000 GT-R",
-    "series": "Fast \u0026 Furious (Series 3)",
+    "model_name": "Fast and Furious Nissan Skyline",
+    "series": "Hot Wheels Monster Trucks: Fast \u0026 Furious",
     "year": 2023,
-    "color": "Black",
+    "color": "Silver",
     "tags": [
       "nissan",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/8/88/1971NissanSkyline.jpg/revision/latest?cb=20230906103512",
-    "source_url": "https://hotwheels.fandom.com/wiki/1971_Nissan_Skyline_H/T_2000_GT-R",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/9/97/R34MT.jpg/revision/latest?cb=20230225070154",
+    "source_url": "https://hotwheels.fandom.com/wiki/Fast_and_Furious_Nissan_Skyline",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Mazda RX-3 (Tooned)",
-    "series": "HW J-Imports",
+    "model_name": "'98 Toyota Altezza",
+    "series": "Car Culture: Modern Classics",
+    "year": 2023,
+    "color": "Silver",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/6/6f/%2798ToyotaAltezza.jpg/revision/latest?cb=20231027134029",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2798_Toyota_Altezza",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Mazda Autozam",
+    "series": "HW Dream Garage",
     "year": 2024,
-    "color": "Orange",
+    "color": "White",
     "tags": [
       "mazda",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/e/e4/%27ToonedMazdaRX-3.jpg/revision/latest?cb=20240331131033",
-    "source_url": "https://hotwheels.fandom.com/wiki/Mazda_RX-3_(Tooned)",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/4/4d/TexasToot.jpg/revision/latest?cb=20231002120349",
+    "source_url": "https://hotwheels.fandom.com/wiki/Mazda_Autozam",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "'17 Nissan GT-R (R35) (RC)",
-    "series": "Hot Wheels RC",
-    "year": 2020,
+    "model_name": "'64 Prince Skyline GT",
+    "series": "Car Culture: Japan Historics 4",
+    "year": 2024,
+    "color": "Blue",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/e/e1/PrinceSkyline.jpg/revision/latest?cb=20240915120931",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2764_Prince_Skyline_GT",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Mazda MX-5 Miata (2025)",
+    "series": "HW Dream Garage",
+    "year": 2025,
+    "color": "Metalflake gunmetal gray",
+    "tags": [
+      "mazda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b9/MazdaChimera.jpg/revision/latest?cb=20241109072114",
+    "source_url": "https://hotwheels.fandom.com/wiki/Mazda_MX-5_Miata_(2025)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "1999 Nissan Skyline GT-R (Monster Truck)",
+    "series": "Hot Wheels Monster Trucks: Freestyle Wreckers",
+    "year": 2026,
     "color": "Black",
     "tags": [
       "nissan",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/5/5c/R35RC.jpg/revision/latest?cb=20240318060208",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2717_Nissan_GT-R_(R35)_(RC)",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/0/06/1999NissanGTRR34FreestyleWreckersFront.jpg/revision/latest?cb=20260123033852",
+    "source_url": "https://hotwheels.fandom.com/wiki/1999_Nissan_Skyline_GT-R_(Monster_Truck)",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "'07 Honda Civic Type R",
-    "series": "Car Culture: Ronin Run II",
-    "year": 2025,
-    "color": "Championship White",
-    "tags": [
-      "honda",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/d/d3/2007HondaCivicTypeR.jpg/revision/latest?cb=20250913091659",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2707_Honda_Civic_Type_R",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'01 Toyota Celica",
-    "series": "Fast \u0026 Furious: Race-Off",
-    "year": 2026,
-    "color": "Red",
-    "tags": [
-      "toyota",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/4/4d/2001ToyotaCelica.jpg/revision/latest?cb=20260410125930",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2701_Toyota_Celica",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "LB-Kaido Works Nissan R32 Skyline GT-R",
-    "series": "Car Culture: Aerostyles",
-    "year": 2026,
-    "color": "White",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/3/34/KaidoGT-R.jpg/revision/latest?cb=20260702081646",
-    "source_url": "https://hotwheels.fandom.com/wiki/LB-Kaido_Works_Nissan_R32_Skyline_GT-R",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "'24 Toyota GR86 Pandem",
+    "model_name": "'88 Mitsubishi Starion",
     "series": "HW J-Imports",
-    "year": 2027,
+    "year": 2026,
     "color": "White",
     "tags": [
-      "toyota",
+      "mitsubishi",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/Image_Not_Available.jpg/revision/latest?cb=20151025125428",
-    "source_url": "https://hotwheels.fandom.com/wiki/%2724_Toyota_GR86_Pandem",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/d/d3/MitsubishiStarion.jpg/revision/latest?cb=20260410125415",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2788_Mitsubishi_Starion",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "1999 Mitsubishi Evo VI",
-    "series": "Elite 64",
+    "model_name": "1995 Mitsubishi Lancer Evolution III",
+    "series": "Car Culture: Mountain Drifters",
     "year": 2027,
     "color": "Scotia White",
     "tags": [
@@ -329,158 +318,175 @@
       "jdm"
     ],
     "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/Image_Not_Available.jpg/revision/latest?cb=20151025125428",
-    "source_url": "https://hotwheels.fandom.com/wiki/1999_Mitsubishi_Evo_VI",
+    "source_url": "https://hotwheels.fandom.com/wiki/1995_Mitsubishi_Lancer_Evolution_III",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "1999 Honda Civic Type R",
-    "series": "RLC Exclusive",
+    "model_name": "1991 Mazda RX-7 GTO",
+    "series": "Racing Culture",
     "year": 2027,
-    "color": "Spectraflame Milano Red",
+    "color": "White",
     "tags": [
-      "honda",
+      "mazda",
       "jdm"
     ],
     "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/Image_Not_Available.jpg/revision/latest?cb=20151025125428",
-    "source_url": "https://hotwheels.fandom.com/wiki/1999_Honda_Civic_Type_R",
+    "source_url": "https://hotwheels.fandom.com/wiki/1991_Mazda_RX-7_GTO",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Pikes Peak Celica",
-    "series": "1998 First Editions",
-    "year": 1998,
+    "model_name": "'20 Toyota GR Supra (Pull-Back Speeders)",
+    "series": "Pull-Back Speeders",
+    "year": 2027,
+    "color": "Nocturnal Black",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/Image_Not_Available.jpg/revision/latest?cb=20151025125428",
+    "source_url": "https://hotwheels.fandom.com/wiki/%2720_Toyota_GR_Supra_(Pull-Back_Speeders)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "2001 Mazda RX-7 Spirit R",
+    "series": "Car Culture",
+    "year": 2027,
+    "color": "Unknown",
+    "tags": [
+      "mazda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/b5/Image_Not_Available.jpg/revision/latest?cb=20151025125428",
+    "source_url": "https://hotwheels.fandom.com/wiki/2001_Mazda_RX-7_Spirit_R",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Toyota Celica",
+    "series": "2001 First Editions",
+    "year": 2001,
     "color": "Yellow",
-    "tags": [],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/77/1998-652a-xdroop.jpg/revision/latest?cb=20080906022108",
-    "source_url": "https://hotwheels.fandom.com/wiki/Pikes_Peak_Celica",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/8/83/Celica_-_01FE.JPG/revision/latest?cb=20160128065516",
+    "source_url": "https://hotwheels.fandom.com/wiki/Toyota_Celica",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Nissan Skyline GT-R (R32)",
-    "series": "2002 First Editions",
-    "year": 2002,
+    "model_name": "Toyota AE-86 Corolla",
+    "series": "2006 First Editions",
+    "year": 2006,
+    "color": "Matte Grey",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/0/0a/CorollaAE86_-_Gray.jpg/revision/latest?cb=20081127004721",
+    "source_url": "https://hotwheels.fandom.com/wiki/Toyota_AE-86_Corolla",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Skyline H/T 2000GT-X",
+    "series": "2011 New Models",
+    "year": 2011,
+    "color": "Pearl White",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/4/48/Sky2000GTX_2001_Poster.jpg/revision/latest?cb=20260331103339",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_H/T_2000GT-X",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Subaru WRX STI",
+    "series": "2012 New Models",
+    "year": 2012,
+    "color": "Metalflake Blue",
+    "tags": [
+      "subaru",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/6/67/2012-SubaruWRXSTI-Blue.jpg/revision/latest?cb=20120420222720",
+    "source_url": "https://hotwheels.fandom.com/wiki/Subaru_WRX_STI",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Toyota 2000GT",
+    "series": "HW Showroom: HW All Stars",
+    "year": 2013,
+    "color": "Red",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/c/c8/Toyota_2000_GT-2013.jpg/revision/latest?cb=20130515185151",
+    "source_url": "https://hotwheels.fandom.com/wiki/Toyota_2000GT",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Skyline RS (KDR30)",
+    "series": "Factory Fresh",
+    "year": 2018,
+    "color": "Red",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/a/a4/82NissanSkylineR30Red.JPG/revision/latest?cb=20180916030859",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_RS_(KDR30)",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Subaru Impreza WRX",
+    "series": "Car Culture: Cars \u0026 Donuts",
+    "year": 2017,
+    "color": "Metalflake Blue",
+    "tags": [
+      "subaru",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/2/23/DWH89_Subaru_Impreza_WRX-2.jpg/revision/latest?cb=20190501153720",
+    "source_url": "https://hotwheels.fandom.com/wiki/Subaru_Impreza_WRX",
+    "description": ""
+  },
+  {
+    "brand": "Hot Wheels",
+    "model_name": "Nissan Skyline GT-R (BNR32)",
+    "series": "Nissan",
+    "year": 2019,
     "color": "Metallic Dark Blue",
     "tags": [
       "nissan",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/2/20/NissanSkylineR32Sketch.jpg/revision/latest?cb=20230322095624",
-    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_GT-R_(R32)",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/72/Nissan_skyline_gt-r_bnr32.JPG/revision/latest?cb=20181016164417",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_GT-R_(BNR32)",
     "description": ""
   },
   {
     "brand": "Hot Wheels",
-    "model_name": "Toyota Celica (Hardnoze)",
-    "series": "2004 First Editions",
-    "year": 2004,
-    "color": "Orange",
-    "tags": [
-      "toyota",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/f2/HardnozeToyotaCelicaSketch.jpg/revision/latest?cb=20230301093015",
-    "source_url": "https://hotwheels.fandom.com/wiki/Toyota_Celica_(Hardnoze)",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Nissan Skyline 2000GT-R",
-    "series": "2011 New Models",
-    "year": 2011,
-    "color": "White",
+    "model_name": "Nissan Skyline 2000GT-R LBWK",
+    "series": "HW J-Imports",
+    "year": 2022,
+    "color": "Sky blue",
     "tags": [
       "nissan",
       "jdm"
     ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/7/72/SKYLINE_HT_2000GT-R_B.jpg/revision/latest?cb=20111006195756",
-    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_2000GT-R",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Toyota Supra",
-    "series": "HW City: Street Power",
-    "year": 2013,
-    "color": "Metalflake Orange",
-    "tags": [
-      "toyota",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/0/06/Toyota_Supra_-_13NM-1024.jpg/revision/latest?cb=20160108005645",
-    "source_url": "https://hotwheels.fandom.com/wiki/Toyota_Supra",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Toyota 2000GT Roadster",
-    "series": "Hot Wheels Entertainment: You Only Live Twice",
-    "year": 2015,
-    "color": "White",
-    "tags": [
-      "toyota",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/c/c4/Toyota_2000GT_Roadster%28arriba%29-2015_Entertainment.jpg/revision/latest?cb=20170312171810",
-    "source_url": "https://hotwheels.fandom.com/wiki/Toyota_2000GT_Roadster",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Nissan Skyline GT-R (BCNR33)",
-    "series": "Then and Now",
-    "year": 2018,
-    "color": "Metalflake Blue",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/f/f8/R33Blue_%281%29.JPG/revision/latest?cb=20180218050438",
-    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_GT-R_(BCNR33)",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Nissan Silvia (S15)",
-    "series": "Replica Entertainment: Forza Motorsport",
-    "year": 2018,
-    "color": "Blue",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/9/93/SilviaS15Forza_%281%29.JPG/revision/latest?cb=20181226073446",
-    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Silvia_(S15)",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Pandem Subaru BRZ",
-    "series": "Car Culture: Street Tuners",
-    "year": 2019,
-    "color": "Blue",
-    "tags": [
-      "subaru",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/6/63/2019-car-culture-street-tuners-pandemsubarubrz-1200pxotd.png/revision/latest?cb=20190808184306",
-    "source_url": "https://hotwheels.fandom.com/wiki/Pandem_Subaru_BRZ",
-    "description": ""
-  },
-  {
-    "brand": "Hot Wheels",
-    "model_name": "Nissan Skyline GT-R (BNR34) V·spec II Nür",
-    "series": "1:43",
-    "year": 2023,
-    "color": "Millennium Jade",
-    "tags": [
-      "nissan",
-      "jdm"
-    ],
-    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/4/4c/NISMOR34.jpg/revision/latest?cb=20240415120357",
-    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_GT-R_(BNR34)_V%C2%B7spec_II_N%C3%BCr",
+    "image_url": "https://static.wikia.nocookie.net/hotwheels/images/b/bd/KatoSkyline.jpg/revision/latest?cb=20220414040537",
+    "source_url": "https://hotwheels.fandom.com/wiki/Nissan_Skyline_2000GT-R_LBWK",
     "description": ""
   },
   {
@@ -1400,6 +1406,2046 @@
     ],
     "image_url": "https://static.wikia.nocookie.net/inno64/images/e/ea/Honda_City_Turbo_II_White_Front.png/revision/latest?cb=20251018122137",
     "source_url": "https://inno64.fandom.com/wiki/Honda_City_Turbo_II",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Chrysler Atlantic",
+    "series": "1-75",
+    "year": 1996,
+    "color": "Metalflake Champagne",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/8/8d/Chrysler_Atlantic_package_front.png/revision/latest?cb=20160520182658",
+    "source_url": "https://matchbox.fandom.com/wiki/Chrysler_Atlantic",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Bulldozer (2004)",
+    "series": "1-75: Hero City Construction",
+    "year": 2004,
+    "color": "Yellow",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/9/92/BulldozerConstruction5packorange.jpg/revision/latest?cb=20110926150558",
+    "source_url": "https://matchbox.fandom.com/wiki/Bulldozer_(2004)",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Jaguar XJ6",
+    "series": "1-75",
+    "year": 1987,
+    "color": "Metallic Red",
+    "tags": [
+      "jaguar"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/1/1e/Screenshot_2025-11-22_170253.png/revision/latest?cb=20251122233933",
+    "source_url": "https://matchbox.fandom.com/wiki/Jaguar_XJ6",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "MBX Street Cleaner",
+    "series": "1-100: City Action",
+    "year": 2009,
+    "color": "Yellow",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/b/bc/2012_MBX_Street_Cleaner_MB776_National_Parks.jpg/revision/latest?cb=20250101021152",
+    "source_url": "https://matchbox.fandom.com/wiki/MBX_Street_Cleaner",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Camper",
+    "series": "1-75",
+    "year": 1981,
+    "color": "Red \u0026 cream",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/c/cf/L1180266.JPG/revision/latest?cb=20180818171930",
+    "source_url": "https://matchbox.fandom.com/wiki/Camper",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Colet K/30E Jaguar (RW018)",
+    "series": "Real Working Rigs",
+    "year": 2010,
+    "color": "Silver",
+    "tags": [
+      "jaguar"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/2/29/Colet_K_30E_Jaguar_%282011_RWR_Red%29.jpg/revision/latest?cb=20190925052115",
+    "source_url": "https://matchbox.fandom.com/wiki/Colet_K/30E_Jaguar_(RW018)",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "2014 Chevy Silverado 1500",
+    "series": "1-120: MBX Explorers",
+    "year": 2014,
+    "color": "Metalflake Electric Blue",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/0/0b/14_Chevy_Silverado.jpg/revision/latest?cb=20260922004631",
+    "source_url": "https://matchbox.fandom.com/wiki/2014_Chevy_Silverado_1500",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "2015 Ford F-150 Contractor Truck",
+    "series": "1-120: MBX Construction",
+    "year": 2015,
+    "color": "White",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/8/83/0324.JPG/revision/latest?cb=20200117155602",
+    "source_url": "https://matchbox.fandom.com/wiki/2015_Ford_F-150_Contractor_Truck",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "'15 Corvette Stingray",
+    "series": "1-125: MBX Heroic Rescue",
+    "year": 2016,
+    "color": "Yellow",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/1/14/2017-03-22_20.53.04.jpg/revision/latest?cb=20170322211017",
+    "source_url": "https://matchbox.fandom.com/wiki/%2715_Corvette_Stingray",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "BMC 1800 Pininfarina",
+    "series": "1-75",
+    "year": 1969,
+    "color": "Gold",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/7/7e/Unnamed_%281%29.jpg/revision/latest?cb=20210226024910",
+    "source_url": "https://matchbox.fandom.com/wiki/BMC_1800_Pininfarina",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "'16 Chevy Camaro",
+    "series": "Moving Parts: MBX Road Trip",
+    "year": 2019,
+    "color": "Orange",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/3/3e/Chevrolet_Camaro_%2716_Moving_Parts_2020.jpg/revision/latest?cb=20231113145503",
+    "source_url": "https://matchbox.fandom.com/wiki/%2716_Chevy_Camaro",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Skyjacker '17 Ford F-350 Super Duty",
+    "series": "1-125: MBX Rescue",
+    "year": 2018,
+    "color": "Metalflake Gray",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/4/42/DSC_0018.JPG/revision/latest?cb=20191201084515",
+    "source_url": "https://matchbox.fandom.com/wiki/Skyjacker_%2717_Ford_F-350_Super_Duty",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "1964 Ford Fairlane",
+    "series": "1-125: MBX Road Trip",
+    "year": 2018,
+    "color": "Metalflake Blue",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/9/9a/Ford_Fairlane_Wagon_%282018_Rear_side%29.JPG/revision/latest?cb=20180713012151",
+    "source_url": "https://matchbox.fandom.com/wiki/1964_Ford_Fairlane",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Kawasaki Teryx4 LE",
+    "series": "Jurassic World",
+    "year": 2018,
+    "color": "Metalflake Matte Dark Grey",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/6/61/Kawasaki_Teryx4_LE_%28Jurassic_World_2018%29.jpg/revision/latest?cb=20180810012733",
+    "source_url": "https://matchbox.fandom.com/wiki/Kawasaki_Teryx4_LE",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Abrams M1A1 Main Battle Tank (RW014)",
+    "series": "Real Working Rigs",
+    "year": 2010,
+    "color": "Army Green",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/6/66/IMG_1550.jpg/revision/latest?cb=20181210034710",
+    "source_url": "https://matchbox.fandom.com/wiki/Abrams_M1A1_Main_Battle_Tank_(RW014)",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "DAF Skip Truck (RW-016)",
+    "series": "Real Working Rigs",
+    "year": 2010,
+    "color": "Green",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/5/59/DAF_Skip_Truck_%282010_in_card%29.jpg/revision/latest?cb=20190417025417",
+    "source_url": "https://matchbox.fandom.com/wiki/DAF_Skip_Truck_(RW-016)",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Big Banana Car",
+    "series": "1-100: MBX Jungle",
+    "year": 2020,
+    "color": "Yellow",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/b/b1/2020bigbananacarcarded.JPG/revision/latest?cb=20200127201756",
+    "source_url": "https://matchbox.fandom.com/wiki/Big_Banana_Car",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Box Trailer",
+    "series": "Convoys",
+    "year": 2020,
+    "color": "Red",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/c/ce/ConvoysBoxTrailer12020.jpg/revision/latest?cb=20200117022328",
+    "source_url": "https://matchbox.fandom.com/wiki/Box_Trailer",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "2018 Dodge Durango",
+    "series": "1-100: MBX Metro",
+    "year": 2021,
+    "color": "Red",
+    "tags": [
+      "dodge"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/6/64/-5_2022_MB1266_-_2018_Dodge_Durango.jpg/revision/latest?cb=20211214134124",
+    "source_url": "https://matchbox.fandom.com/wiki/2018_Dodge_Durango",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "1963 Honda T360",
+    "series": "Moving Parts",
+    "year": 2021,
+    "color": "Light Blue",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/4/4c/2021_Moving_Parts_-_MB1252_1963_Honda_T360.jpg/revision/latest?cb=20211030065524",
+    "source_url": "https://matchbox.fandom.com/wiki/1963_Honda_T360",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Jeep Gladiator (MB1272)",
+    "series": "Jurassic World Dominion",
+    "year": 2022,
+    "color": "Tan",
+    "tags": [
+      "jeep"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/c/c9/HBH83.JPG/revision/latest?cb=20221217214007",
+    "source_url": "https://matchbox.fandom.com/wiki/Jeep_Gladiator_(MB1272)",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "2019 Lamborghini Aventador SVJ Roadster",
+    "series": "Moving Parts",
+    "year": 2024,
+    "color": "Arancio Argos",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/b/bd/2024_MBX_Moving_Parts_43.jpg/revision/latest?cb=20240105214953",
+    "source_url": "https://matchbox.fandom.com/wiki/2019_Lamborghini_Aventador_SVJ_Roadster",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "1983 Ford Fiesta MK2",
+    "series": "1-100: MBX Metro",
+    "year": 2024,
+    "color": "Sunburst Red",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/f/fb/Ford_Fiesta_MK2%2C_1983_%282024_1-100%29.jpg/revision/latest?cb=20241126085924",
+    "source_url": "https://matchbox.fandom.com/wiki/1983_Ford_Fiesta_MK2",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "1996 Audi A4 Super Touring",
+    "series": "Mattel Creations",
+    "year": 2025,
+    "color": "Silver",
+    "tags": [
+      "audi"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/7/79/A4_Touring.jpg/revision/latest?cb=20250521013150",
+    "source_url": "https://matchbox.fandom.com/wiki/1996_Audi_A4_Super_Touring",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "2025 BMW M5 Touring",
+    "series": "Moving Parts",
+    "year": 2026,
+    "color": "Isle of Man Green Metallic",
+    "tags": [
+      "bmw"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/9/9f/2025_BMW_M5_Touring_-_1.jpg/revision/latest?cb=20260826001128",
+    "source_url": "https://matchbox.fandom.com/wiki/2025_BMW_M5_Touring",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Tractor (2007)",
+    "series": "1-75: MBX Metal",
+    "year": 2007,
+    "color": "Red \u0026 Black",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/0/0f/Tractor_%282008_and_2018%29.jpg/revision/latest?cb=20181016013027",
+    "source_url": "https://matchbox.fandom.com/wiki/Tractor_(2007)",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Vauxhall Guildsman",
+    "series": "1-75",
+    "year": 1971,
+    "color": "Pink",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/5/5e/Vauxhall_Guidsman_%284562%29_MX_L1190583.JPG/revision/latest?cb=20190119155101",
+    "source_url": "https://matchbox.fandom.com/wiki/Vauxhall_Guildsman",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Western Star 6900XD Wrecker (RW004)",
+    "series": "Real Working Rigs",
+    "year": 2008,
+    "color": "Green / White",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/9/9e/Western_star_6900_wrecker_2026.jpg/revision/latest?cb=20260428003350",
+    "source_url": "https://matchbox.fandom.com/wiki/Western_Star_6900XD_Wrecker_(RW004)",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Snow Ripper",
+    "series": "1-120: MBX Explorers",
+    "year": 2014,
+    "color": "White \u0026 Black",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/4/4d/Snow_Ripper.jpg/revision/latest?cb=20260725031614",
+    "source_url": "https://matchbox.fandom.com/wiki/Snow_Ripper",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Tesla Model S",
+    "series": "1-120: MBX Adventure City",
+    "year": 2015,
+    "color": "Metalflake Dark Red",
+    "tags": [
+      "tesla"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/a/a4/225.JPG/revision/latest?cb=20160402020321",
+    "source_url": "https://matchbox.fandom.com/wiki/Tesla_Model_S",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Swamp Commander",
+    "series": "1-125: MBX Explorers",
+    "year": 2016,
+    "color": "Matte Metalflake Green",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/a/a3/Swamp_Commander_2016-%28Cast%29.jpg/revision/latest?cb=20160316065723",
+    "source_url": "https://matchbox.fandom.com/wiki/Swamp_Commander",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Tilt 'n Tip",
+    "series": "1-125: MBX Construction",
+    "year": 2016,
+    "color": "Green",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/0/08/Tilt%C2%B4n%C2%B4Tip_%28Rear%29.jpg/revision/latest?cb=20160406015919",
+    "source_url": "https://matchbox.fandom.com/wiki/Tilt_%27n_Tip",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "2018 Renault Kangoo Express",
+    "series": "1-100: MBX City",
+    "year": 2020,
+    "color": "White",
+    "tags": [
+      "renault"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/4/4e/Kangoo.PNG/revision/latest?cb=20190805155726",
+    "source_url": "https://matchbox.fandom.com/wiki/2018_Renault_Kangoo_Express",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "New Holland TV6070 (RW-26)",
+    "series": "Real Working Rigs",
+    "year": 2011,
+    "color": "Blue",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/d/d3/New_Holland_TV6070_%282011_RW-26%29.jpg/revision/latest?cb=20190923022831",
+    "source_url": "https://matchbox.fandom.com/wiki/New_Holland_TV6070_(RW-26)",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Opel Kadett Coupe",
+    "series": "1-100: MBX Road Trip",
+    "year": 2022,
+    "color": "White",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/8/8c/LamleyOpelKadett.JPG/revision/latest?cb=20210727143824",
+    "source_url": "https://matchbox.fandom.com/wiki/Opel_Kadett_Coupe",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "1975 Range Rover",
+    "series": "Moving Parts",
+    "year": 2022,
+    "color": "Bahama Gold",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/8/8a/1975_Range_Rover_Package.jpg/revision/latest?cb=20251016125241",
+    "source_url": "https://matchbox.fandom.com/wiki/1975_Range_Rover",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "1969 Triumph TR6",
+    "series": "Collectors Series (2023)",
+    "year": 2023,
+    "color": "Dark Green",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/9/98/2023_Collectors_18_-_1969_Triumph_TR6.jpg/revision/latest?cb=20230702212718",
+    "source_url": "https://matchbox.fandom.com/wiki/1969_Triumph_TR6",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "Porsche Targa",
+    "series": "1-100: MBX Showroom",
+    "year": 2024,
+    "color": "Metalflake Dark Blue",
+    "tags": [
+      "porsche"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/f/fb/Porsche_911_Targa_4.jpg/revision/latest?cb=20250226182523",
+    "source_url": "https://matchbox.fandom.com/wiki/Porsche_Targa",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "1985 Nissan Pathfinder",
+    "series": "1-100: MBX Off-Road",
+    "year": 2024,
+    "color": "Gloss Red",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/f/f2/IMAG1877.jpg/revision/latest?cb=20241109084839",
+    "source_url": "https://matchbox.fandom.com/wiki/1985_Nissan_Pathfinder",
+    "description": ""
+  },
+  {
+    "brand": "Matchbox",
+    "model_name": "'17 Toyota Land Cruiser 78",
+    "series": "1-125: MBX Rescue",
+    "year": 2025,
+    "color": "Tan",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/matchbox/images/8/8a/2025Matcbox2017ToyotaLandCruiser78Art.png/revision/latest?cb=20251024004917",
+    "source_url": "https://matchbox.fandom.com/wiki/%2717_Toyota_Land_Cruiser_78",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 31 Chevrolet Corvette ZR1",
+    "series": "",
+    "year": 2019,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/d/db/31chevroletcorvettezr1.jpg/revision/latest?cb=20190312124933",
+    "source_url": "https://tomica.fandom.com/wiki/No._31_Chevrolet_Corvette_ZR1",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 113 Toyota Hiace",
+    "series": "",
+    "year": 2019,
+    "color": "",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/1/18/113toyotahiace.jpg/revision/latest?cb=20190312132900",
+    "source_url": "https://tomica.fandom.com/wiki/No._113_Toyota_Hiace",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 54 Toyota Town Ace Hamburger Car",
+    "series": "",
+    "year": 2014,
+    "color": "",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/1/14/54toyotatownacehamburgercarbox.jpg/revision/latest?cb=20190317204942",
+    "source_url": "https://tomica.fandom.com/wiki/No._54_Toyota_Town_Ace_Hamburger_Car",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 19 Ford GT Concept Car (Special First Edition)",
+    "series": "",
+    "year": 2017,
+    "color": "",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/1/15/19fordgtspecial.jpg/revision/latest?cb=20190319135315",
+    "source_url": "https://tomica.fandom.com/wiki/No._19_Ford_GT_Concept_Car_(Special_First_Edition)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 18 Jeep Wrangler",
+    "series": "",
+    "year": 2008,
+    "color": "",
+    "tags": [
+      "jeep"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/4/4e/18jeepwranglerbox.jpg/revision/latest?cb=20190328123453",
+    "source_url": "https://tomica.fandom.com/wiki/No._18_Jeep_Wrangler",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 117 Porsche 911 Carrera",
+    "series": "",
+    "year": 2013,
+    "color": "",
+    "tags": [
+      "porsche"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/3/37/117porsche911carrera.jpg/revision/latest?cb=20190509135226",
+    "source_url": "https://tomica.fandom.com/wiki/No._117_Porsche_911_Carrera",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 5 Chevrolet Corvette Z06",
+    "series": "",
+    "year": 2013,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/8/80/5chevorletcorvettez06.jpg/revision/latest?cb=20190509135753",
+    "source_url": "https://tomica.fandom.com/wiki/No._5_Chevrolet_Corvette_Z06",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 64 Porsche Boxster",
+    "series": "",
+    "year": 2013,
+    "color": "",
+    "tags": [
+      "porsche"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/1/1a/64porscheboxster.jpg/revision/latest?cb=20190509143231",
+    "source_url": "https://tomica.fandom.com/wiki/No._64_Porsche_Boxster",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 104 Lotus Evora GTE (First Edition Special Color)",
+    "series": "",
+    "year": 2013,
+    "color": "",
+    "tags": [
+      "lotus"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/8/82/104lotusevoragtespecial.jpg/revision/latest?cb=20190506015814",
+    "source_url": "https://tomica.fandom.com/wiki/No._104_Lotus_Evora_GTE_(First_Edition_Special_Color)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 104 Toyota Vitz (First Edition Special Color)",
+    "series": "",
+    "year": 2011,
+    "color": "",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/d/d2/104toyotavitzspecial.jpg/revision/latest?cb=20190523120325",
+    "source_url": "https://tomica.fandom.com/wiki/No._104_Toyota_Vitz_(First_Edition_Special_Color)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 48 Toyota Hiace Multi Purpose Car",
+    "series": "",
+    "year": 2005,
+    "color": "",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/c/c0/48toyotahiacemultipurposecar.jpg/revision/latest?cb=20190424121214",
+    "source_url": "https://tomica.fandom.com/wiki/No._48_Toyota_Hiace_Multi_Purpose_Car",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 27 Mitsubishi Grandis",
+    "series": "",
+    "year": 2004,
+    "color": "",
+    "tags": [
+      "mitsubishi",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/a/ad/27mitsubishigrandis.jpg/revision/latest?cb=20190627115738",
+    "source_url": "https://tomica.fandom.com/wiki/No._27_Mitsubishi_Grandis",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "Fire Engine Type Collection Vol. 1: Toyota Himedic (Firefighting Command Car)",
+    "series": "",
+    "year": 2009,
+    "color": "",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/3/3f/Toyotahimedicfirefightingaeon.jpg/revision/latest?cb=20190409134643",
+    "source_url": "https://tomica.fandom.com/wiki/Fire_Engine_Type_Collection_Vol._1:_Toyota_Himedic_(Firefighting_Command_Car)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 50 Toyota Ipsum",
+    "series": "",
+    "year": 1997,
+    "color": "",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/2/2e/50toyotaipsumbox.jpg/revision/latest?cb=20190806114624",
+    "source_url": "https://tomica.fandom.com/wiki/No._50_Toyota_Ipsum",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "LV-Neo Nissan Concept 2020 Vision Gran Turismo (White)",
+    "series": "",
+    "year": 2016,
+    "color": "White",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/5/5a/Nissanvisiongranturismowhite.jpg/revision/latest?cb=20191028151240",
+    "source_url": "https://tomica.fandom.com/wiki/LV-Neo_Nissan_Concept_2020_Vision_Gran_Turismo_(White)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "LV-Neo Nissan Concept 2020 Vision Gran Turismo (Red)",
+    "series": "",
+    "year": 2015,
+    "color": "Red",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/b/b8/Nissanvisiongranturismored.jpg/revision/latest?cb=20191028152207",
+    "source_url": "https://tomica.fandom.com/wiki/LV-Neo_Nissan_Concept_2020_Vision_Gran_Turismo_(Red)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 105 Sigma MC74 Mazda",
+    "series": "",
+    "year": 1975,
+    "color": "",
+    "tags": [
+      "mazda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/d/d1/105sigmamc74mazda.jpg/revision/latest?cb=20200109164152",
+    "source_url": "https://tomica.fandom.com/wiki/No._105_Sigma_MC74_Mazda",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 40 Honda Civic Type R (Special First Edition)",
+    "series": "",
+    "year": 2021,
+    "color": "",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/5/50/40hondacivictyperspecial.jpg/revision/latest?cb=20201211124007",
+    "source_url": "https://tomica.fandom.com/wiki/No._40_Honda_Civic_Type_R_(Special_First_Edition)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "AO-06 Chevrolet Corvette ZR1",
+    "series": "",
+    "year": 2023,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/8/8a/AO06ChevroletCorvetteZR1.jpg/revision/latest?cb=20231006013055",
+    "source_url": "https://tomica.fandom.com/wiki/AO-06_Chevrolet_Corvette_ZR1",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "Honda Civic Type R Type R Challenge 2018 Design Type",
+    "series": "",
+    "year": 2023,
+    "color": "",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/b/be/Typerchallenge2018.jpeg/revision/latest?cb=20231016170205",
+    "source_url": "https://tomica.fandom.com/wiki/Honda_Civic_Type_R_Type_R_Challenge_2018_Design_Type",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 107 Lamborghini Revuelto",
+    "series": "",
+    "year": 2024,
+    "color": "",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/a/ab/107LamborghiniRevuelto.jpeg/revision/latest?cb=20240607011029",
+    "source_url": "https://tomica.fandom.com/wiki/No._107_Lamborghini_Revuelto",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 33 Nissan Skyline Patrol Car",
+    "series": "",
+    "year": 2025,
+    "color": "",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/8/8c/33NissanSkylinePatrolCar.jpeg/revision/latest?cb=20241213010328",
+    "source_url": "https://tomica.fandom.com/wiki/No._33_Nissan_Skyline_Patrol_Car",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 10 Honda Prelude",
+    "series": "",
+    "year": 2025,
+    "color": "",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/f/fc/Pdf_56cf211e-c600-11f0-9cea-c944da93b4c1-30395303.jpg/revision/latest?cb=20251213174524",
+    "source_url": "https://tomica.fandom.com/wiki/No._10_Honda_Prelude",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 43 Lamborghini Temerario (Special First Edition)",
+    "series": "",
+    "year": 2026,
+    "color": "",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/6/62/43Temerario.png/revision/latest?cb=20260228124230",
+    "source_url": "https://tomica.fandom.com/wiki/No._43_Lamborghini_Temerario_(Special_First_Edition)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "LV-N360a Lexus LFA (White)",
+    "series": "",
+    "year": 2026,
+    "color": "White",
+    "tags": [
+      "lexus",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/0/01/LFAwhite.jpg/revision/latest?cb=20260318121743",
+    "source_url": "https://tomica.fandom.com/wiki/LV-N360a_Lexus_LFA_(White)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 91 CoCo Ichibanya Kitchen Car",
+    "series": "",
+    "year": 2019,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/4/46/Cocoichibanyakitchencar.jpg/revision/latest?cb=20190312130109",
+    "source_url": "https://tomica.fandom.com/wiki/No._91_CoCo_Ichibanya_Kitchen_Car",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 94 Toyota C-HR (Special First Edition)",
+    "series": "",
+    "year": 2018,
+    "color": "",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/b/bc/94toyotachrspecial.jpg/revision/latest?cb=20190314125055",
+    "source_url": "https://tomica.fandom.com/wiki/No._94_Toyota_C-HR_(Special_First_Edition)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 88 Nissan Elgrand Road Patrol Car",
+    "series": "",
+    "year": 2016,
+    "color": "",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/b/b9/88nissanelgrandroadpatrolcar.jpg/revision/latest?cb=20190320151932",
+    "source_url": "https://tomica.fandom.com/wiki/No._88_Nissan_Elgrand_Road_Patrol_Car",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 76 Honda Civic Type R",
+    "series": "",
+    "year": 2016,
+    "color": "",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/3/35/76hondacivictyper.jpg/revision/latest?cb=20190321141059",
+    "source_url": "https://tomica.fandom.com/wiki/No._76_Honda_Civic_Type_R",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 84 Peugeot RCZ",
+    "series": "",
+    "year": 2012,
+    "color": "",
+    "tags": [
+      "peugeot"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/9/99/84peugeotrcz.jpg/revision/latest?cb=20190516162801",
+    "source_url": "https://tomica.fandom.com/wiki/No._84_Peugeot_RCZ",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 79 Toyota Himedic",
+    "series": "",
+    "year": 2006,
+    "color": "",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/9/95/79toyotahimedic.jpg/revision/latest?cb=20190409135702",
+    "source_url": "https://tomica.fandom.com/wiki/No._79_Toyota_Himedic",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 76 Nissan Skyline (Special First Edition)",
+    "series": "",
+    "year": 2020,
+    "color": "",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/6/69/76NissanSkylineSpecial1.jpg/revision/latest?cb=20200526001514",
+    "source_url": "https://tomica.fandom.com/wiki/No._76_Nissan_Skyline_(Special_First_Edition)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "TLV-N '99 Lexus IS200 (White)",
+    "series": "",
+    "year": 2021,
+    "color": "White",
+    "tags": [
+      "lexus",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/4/46/LexusIS200alwhite.jpg/revision/latest?cb=20210315132500",
+    "source_url": "https://tomica.fandom.com/wiki/TLV-N_%2799_Lexus_IS200_(White)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "TCD-025 Honda Civic Type R (White)",
+    "series": "",
+    "year": 0,
+    "color": "White",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/6/63/TCD-025_Honda_Civic_Type_R_%28White%29.jpg/revision/latest?cb=20210316141828",
+    "source_url": "https://tomica.fandom.com/wiki/TCD-025_Honda_Civic_Type_R_(White)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "Premium No. 33 Ferrari FXX K",
+    "series": "",
+    "year": 2022,
+    "color": "",
+    "tags": [
+      "ferrari"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/6/61/33ferrarifxxk.jpg/revision/latest?cb=20211112121630",
+    "source_url": "https://tomica.fandom.com/wiki/Premium_No._33_Ferrari_FXX_K",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 74 Lamborghini Countach LPI 800-4 (Special First Edition)",
+    "series": "",
+    "year": 2022,
+    "color": "",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/8/83/74LamborghiniCountachLPI8004special.jpg/revision/latest?cb=20230115165837",
+    "source_url": "https://tomica.fandom.com/wiki/No._74_Lamborghini_Countach_LPI_800-4_(Special_First_Edition)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "No. 78 Honda Civic Type R",
+    "series": "",
+    "year": 2022,
+    "color": "",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/1/16/78HondaCivicTypeR.jpeg/revision/latest?cb=20221019132626",
+    "source_url": "https://tomica.fandom.com/wiki/No._78_Honda_Civic_Type_R",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "Tomica Slider Parking 50",
+    "series": "",
+    "year": 2023,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/8/85/Sliderparking502.jpeg/revision/latest?cb=20230512090722",
+    "source_url": "https://tomica.fandom.com/wiki/Tomica_Slider_Parking_50",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "Tomica Transporter Honda Civic Type R (FD2)",
+    "series": "",
+    "year": 2024,
+    "color": "",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/3/3e/Transportertyper.jpeg/revision/latest?cb=20231210153246",
+    "source_url": "https://tomica.fandom.com/wiki/Tomica_Transporter_Honda_Civic_Type_R_(FD2)",
+    "description": ""
+  },
+  {
+    "brand": "Tomica",
+    "model_name": "TLV-N 1998 Lexus LS400 (Gold/Beige)",
+    "series": "",
+    "year": 2026,
+    "color": "Gold",
+    "tags": [
+      "lexus",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tomica6057/images/a/a6/LS400Gold.jpg/revision/latest?cb=20260104231837",
+    "source_url": "https://tomica.fandom.com/wiki/TLV-N_1998_Lexus_LS400_(Gold/Beige)",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Mercedes-AMG GT3 Macau GT Cup - FIA GT World Cup",
+    "series": "",
+    "year": 0,
+    "color": "2019 Winner Raffaele Marciello",
+    "tags": [
+      "mercedes-benz"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/e/e4/T64-008-19MGP999.jpg/revision/latest?cb=20220311205647",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-008-19MGP999",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Mercedes-Benz 190E 2.5-16 Evolution II DTM 1992",
+    "series": "",
+    "year": 0,
+    "color": "Keke Rosberg",
+    "tags": [
+      "mercedes-benz"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/f/f6/T64-024-92DTM06.jpg/revision/latest?cb=20220311232551",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-024-92DTM06",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Honda Civic EG6",
+    "series": "HOBBY64",
+    "year": 2016,
+    "color": "Macau Cup Race 1994 #99",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/b/b5/T12-MAC_a.jpg/revision/latest?cb=20220315182850",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T12-MAC",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Honda Civic Type R FK2",
+    "series": "Special Edition",
+    "year": 2017,
+    "color": "Polished Metal Grey",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/9/9a/T64-003-GR_front.jpg/revision/latest?cb=20220325031129",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-003-GR",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Mitsubishi Lancer Evolution X",
+    "series": "HOBBY64",
+    "year": 2017,
+    "color": "Pikes Peak Safety Car",
+    "tags": [
+      "mitsubishi",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/3/3b/T64-004-PP_front.jpg/revision/latest?cb=20220326010430",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-004-PP",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Nissan GT-R Nismo GT3 Super Taikyu 2019",
+    "series": "",
+    "year": 0,
+    "color": "ST-X Class Champion \u003e GTNET Motor Sports #1",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/9/93/T64-005-19ST01.jpg/revision/latest?cb=20220326233600",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-005-19ST01",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Mercedes-AMG GTR",
+    "series": "HOBBY64",
+    "year": 2019,
+    "color": "Safety Car",
+    "tags": [
+      "mercedes-benz"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/9/9c/T64-006-F1ME_pkg.jpg/revision/latest?cb=20220328235128",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-006-F1ME",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "BMW M3 E30",
+    "series": "HOBBY64",
+    "year": 2019,
+    "color": "Macau Cup Race 1991 #21",
+    "tags": [
+      "bmw"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/6/68/T64-009-91MCR21_front.jpg/revision/latest?cb=20220331170345",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-009-91MCR21",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Honda Civic Type R EK9",
+    "series": "HOBBY64",
+    "year": 2019,
+    "color": "Super Taikyu 2000 Champion #54",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/e/ec/T64-010-ADV_front.jpg/revision/latest?cb=20220402045547",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-010-ADV",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Honda Civic Type R FK8",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "honda",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/d/df/TAS2019.jpg/revision/latest?cb=20220403015232",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-014-WHT",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Mercedes-AMG G63",
+    "series": "ROAD64",
+    "year": 2021,
+    "color": "Matte Grey",
+    "tags": [
+      "mercedes-benz"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/c/cc/T64R-040-GR_pkg.jpg/revision/latest?cb=20220311225733",
+    "source_url": "https://tarmacworks.fandom.com/wiki/Mercedes-AMG_G63",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Mitsubishi Lancer Evolution V",
+    "series": "HOBBY64",
+    "year": 2019,
+    "color": "Luxembourg Rally 1999 #3",
+    "tags": [
+      "mitsubishi",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/c/c9/T64-012-99LUX03_pkg.jpg/revision/latest?cb=20220405032432",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-012-99LUX03",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Subaru WRX STI",
+    "series": "HOBBY64",
+    "year": 2019,
+    "color": "Super Taikyu 2018 ST2 Champion #59",
+    "tags": [
+      "subaru",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/7/76/T64-016-18ST59_front.jpg/revision/latest?cb=20220406052958",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-016-18ST59",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Audi R8 LMS",
+    "series": "HOBBY64",
+    "year": 2017,
+    "color": "Audi R8 LMS Cup 2016 Sepang Winner #48",
+    "tags": [
+      "audi"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/6/63/T64-007-CUP16EM_front.jpg/revision/latest?cb=20220410073902",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-007-CUP16EM",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Audi R8 LMS",
+    "series": "HOBBY64",
+    "year": 2018,
+    "color": "Super Taikyu 2018 #83",
+    "tags": [
+      "audi"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/a/a7/T64-007-18ST83_front.jpg/revision/latest?cb=20220411001920",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-007-18ST83",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "RWB 993",
+    "series": "",
+    "year": 0,
+    "color": "Gulf",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/8/81/T64-017-MIJO.jpg/revision/latest?cb=20220501203555",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-017-MIJO",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "RWB 993",
+    "series": "",
+    "year": 0,
+    "color": "火の鳥",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/2/26/T64-017-BF.jpg/revision/latest?cb=20220501220615",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-017-BF",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Audi RS 3 LMS",
+    "series": "HOBBY64",
+    "year": 2018,
+    "color": "TCR Asia 2017",
+    "tags": [
+      "audi"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/9/91/T64-013-17TCR3_front.jpg/revision/latest?cb=20220529205719",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-013-17TCR3",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Audi RS 3 LMS",
+    "series": "HOBBY64",
+    "year": 2018,
+    "color": "BLKTGR Gold",
+    "tags": [
+      "audi"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/f/f9/T64-013-DPGT_front.jpg/revision/latest?cb=20220529210019",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-013-DPGT",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Mercedes-AMG GT3",
+    "series": "HOBBY64",
+    "year": 2018,
+    "color": "Nürburgring 24h 2016 #88",
+    "tags": [
+      "mercedes-benz"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/8/8d/T64-008-HRT16_front.jpg/revision/latest?cb=20220531170649",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-008-HRT16",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "MiniCar Festival Hong Kong 2018",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/7/7d/T64-011-WH_pkg.jpg/revision/latest?cb=20220404070828",
+    "source_url": "https://tarmacworks.fandom.com/wiki/MiniCar_Festival_Hong_Kong_2018",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Ford GT",
+    "series": "",
+    "year": 0,
+    "color": "Liquid Red",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/c/ce/MGT00273-L.jpg/revision/latest?cb=20220727185939",
+    "source_url": "https://tarmacworks.fandom.com/wiki/MGT00273-L",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Porsche 911 (993) GT2",
+    "series": "COLLAB64",
+    "year": 2021,
+    "color": "Red",
+    "tags": [
+      "porsche"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/b/bd/T64S-004-RD_pkgc.jpg/revision/latest?cb=20220904034615",
+    "source_url": "https://tarmacworks.fandom.com/wiki/Porsche_911_(993)_GT2",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Animation-Comic-Game Hong Kong 2022",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/b/ba/T64G-012-RE_a.jpg/revision/latest?cb=20220904090651",
+    "source_url": "https://tarmacworks.fandom.com/wiki/Animation-Comic-Game_Hong_Kong_2022",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Ford RS200",
+    "series": "Hobby64+",
+    "year": 2022,
+    "color": "",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/4/48/Ford_RS200_Lombard_RAC_Rally_1986_S._Blomqvist_%26_B._Berglund_Box.webp/revision/latest?cb=20250811012710",
+    "source_url": "https://tarmacworks.fandom.com/wiki/Ford_RS200",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Nissan GT-R NISMO GT3 Blancpain GT Series Endurance Cup 2018",
+    "series": "",
+    "year": 0,
+    "color": "Pre-season Testing",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/a/a8/T64-035-18BGT23.jpg/revision/latest?cb=20220311205702",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-035-18BGT23",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Audi R8 LMS 2019 Intercontinental GT Challenge 2019 | Suzuka 10 Hours Winner",
+    "series": "",
+    "year": 0,
+    "color": "Vanthoor \u003e Van der Linde \u003e Vervish",
+    "tags": [
+      "audi"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/b/bd/T64-043-19SUZ.jpg/revision/latest?cb=20220312045102",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-043-19SUZ",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Toyota GR Supra",
+    "series": "",
+    "year": 0,
+    "color": "CUSCO",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/2/2c/T64K-002-CUS.jpg/revision/latest?cb=20220312071738",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64K-002-CUS",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Porsche 934",
+    "series": "",
+    "year": 0,
+    "color": "24h Le Mans 1987",
+    "tags": [
+      "porsche"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/c/c9/T64MC-003-JAG.jpg/revision/latest?cb=20220313005136",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64MC-003-JAG",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "TOYSOUL 2021",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/8/81/T64-035-ANDY_pkg.jpg/revision/latest?cb=20220330005913",
+    "source_url": "https://tarmacworks.fandom.com/wiki/TOYSOUL_2021",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Audi R8 V10 Plus",
+    "series": "GLOBAL64",
+    "year": 2018,
+    "color": "NFS Police",
+    "tags": [
+      "audi"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/e/e7/T64G-001-PS_front.jpg/revision/latest?cb=20220401002641",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64G-001-PS",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Lamborghini Aventador SV",
+    "series": "GLOBAL64",
+    "year": 2017,
+    "color": "NFS Police",
+    "tags": [
+      "lamborghini"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/4/49/T64G-002-PO_front.jpg/revision/latest?cb=20220401054600",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64G-002-PO",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Toyota Corolla Levin AE92",
+    "series": "",
+    "year": 0,
+    "color": "Macau Guia Race 1989",
+    "tags": [
+      "toyota",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/b/b3/MCGP2020.jpg/revision/latest?cb=20220401065623",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-036-89MGP17",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "RWB 964",
+    "series": "",
+    "year": 0,
+    "color": "White",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/d/d5/TAS2021.jpg/revision/latest?cb=20220503225340",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-037-WHT",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "VERTEX Nissan Silvia S14",
+    "series": "GLOBAL64",
+    "year": 2021,
+    "color": "Light Green",
+    "tags": [
+      "nissan",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/3/38/T64G-TL018-LG_pkgc.jpg/revision/latest?cb=20220525133307",
+    "source_url": "https://tarmacworks.fandom.com/wiki/VERTEX_Nissan_Silvia_S14",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Pagani Zonda Revolución",
+    "series": "",
+    "year": 0,
+    "color": "Blanco Benny",
+    "tags": [
+      "pagani"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/7/7d/T64G-TL016-WH.jpg/revision/latest?cb=20220530025755",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64G-TL016-WH",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Koenigsegg Agera RS",
+    "series": "GLOBAL64",
+    "year": 2019,
+    "color": "Orange",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/2/2c/T64G-005-OR_front.jpg/revision/latest?cb=20220530230818",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64G-005-OR",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "January 2022",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/9/90/T64-064-87MGP36.jpg/revision/latest?cb=20220603182235",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64-064-87MGP36",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Datsun Bluebird 510 Wagon",
+    "series": "",
+    "year": 0,
+    "color": "Red",
+    "tags": [
+      "datsun",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/0/06/T64G-026-RE.jpg/revision/latest?cb=20220718084037",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64G-026-RE",
+    "description": ""
+  },
+  {
+    "brand": "Tarmac Works",
+    "model_name": "Land Rover Defender 90",
+    "series": "",
+    "year": 0,
+    "color": "Matt Blue Grey",
+    "tags": [
+      "land rover"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/tarmacworks/images/9/9a/T64G-019-BL.jpg/revision/latest?cb=20220904041627",
+    "source_url": "https://tarmacworks.fandom.com/wiki/T64G-019-BL",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1949 Studebaker 2R Tow Truck",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/5/50/31500-S07.jpg/revision/latest?cb=20220809120850",
+    "source_url": "https://m2machines.fandom.com/wiki/1949_Studebaker_2R_Tow_Truck",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1957 Fargo COE Truck",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/6/60/Auto-Trucks_12-13.jpg/revision/latest?cb=20220215023851",
+    "source_url": "https://m2machines.fandom.com/wiki/1957_Fargo_COE_Truck",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1953 Ford Crestline Victoria",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/3/32/Auto-Drags_10-11.jpg/revision/latest?cb=20210220061206",
+    "source_url": "https://m2machines.fandom.com/wiki/1953_Ford_Crestline_Victoria",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1966 Chevrolet Corvette 427",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/a/ad/Auto-Drivers_10-19.jpg/revision/latest?cb=20210329194511",
+    "source_url": "https://m2machines.fandom.com/wiki/1966_Chevrolet_Corvette_427",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1954 Mercury Sun Valley",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/2/25/Auto-Dreams12_08-35.jpg/revision/latest?cb=20210304010122",
+    "source_url": "https://m2machines.fandom.com/wiki/1954_Mercury_Sun_Valley",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1955 Chevrolet Bel Air Gasser",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/a/aa/Auto-Haulers_22-14.jpg/revision/latest?cb=20220822205653",
+    "source_url": "https://m2machines.fandom.com/wiki/1955_Chevrolet_Bel_Air_Gasser",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1958 Chevrolet Spartan LCF",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/8/83/Auto-Haulers_11-01.jpg/revision/latest?cb=20210709054733",
+    "source_url": "https://m2machines.fandom.com/wiki/1958_Chevrolet_Spartan_LCF",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1968 Chevrolet Camaro SS 350",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/3/38/Auto-Drivers_17-53.jpg/revision/latest?cb=20210425193733",
+    "source_url": "https://m2machines.fandom.com/wiki/1968_Chevrolet_Camaro_SS_350",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1966 Ford Mustang Fastback 2+2 289",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/0/04/1-24th_Scale_10-22.jpg/revision/latest?cb=20220219015350",
+    "source_url": "https://m2machines.fandom.com/wiki/1966_Ford_Mustang_Fastback_2%2B2_289",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1959 Chevrolet LCF Truck",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/c/ce/Auto-DreamsC1_11-02.jpg/revision/latest?cb=20210321235413",
+    "source_url": "https://m2machines.fandom.com/wiki/1959_Chevrolet_LCF_Truck",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1965 Ford Mustang 2+2 Fastback",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/7/72/Auto-Drivers_14-03.jpg/revision/latest?cb=20210410132004",
+    "source_url": "https://m2machines.fandom.com/wiki/1965_Ford_Mustang_2%2B2_Fastback",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1966 Shelby G.T.350H",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "shelby"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/6/65/Auto-Drivers_16-15.jpg/revision/latest?cb=20210417203110",
+    "source_url": "https://m2machines.fandom.com/wiki/1966_Shelby_G.T.350H",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1968 Ford Mustang Custom",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/2/2d/Auto-Drivers_19-37.jpg/revision/latest?cb=20210605061316",
+    "source_url": "https://m2machines.fandom.com/wiki/1968_Ford_Mustang_Custom",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1968 Mercury Cougar",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/a/aa/Auto-Lift_15-06.jpg/revision/latest?cb=20210617114818",
+    "source_url": "https://m2machines.fandom.com/wiki/1968_Mercury_Cougar",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1969 Chevrolet Camaro RS/SS",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/d/d0/Model-Kit_18-01.jpg/revision/latest?cb=20210621214839",
+    "source_url": "https://m2machines.fandom.com/wiki/1969_Chevrolet_Camaro_RS/SS",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1958 Chevrolet Impala (Stretched)",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/d/da/Auto-Haulers_14-01.jpg/revision/latest?cb=20210713071707",
+    "source_url": "https://m2machines.fandom.com/wiki/1958_Chevrolet_Impala_(Stretched)",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1956 Mercury M-100 Truck",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/a/ac/Auto-Haulers_19-03.jpg/revision/latest?cb=20210804001724",
+    "source_url": "https://m2machines.fandom.com/wiki/1956_Mercury_M-100_Truck",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1967 VW Beetle Deluxe European Model",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "volkswagen"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/d/da/Volkswagen_13-03.jpg/revision/latest?cb=20210810040016",
+    "source_url": "https://m2machines.fandom.com/wiki/1967_VW_Beetle_Deluxe_European_Model",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1968 Pontiac Firebird H.O. 350",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "pontiac"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/4/4e/36000-S09_14-09.jpg/revision/latest?cb=20211010190335",
+    "source_url": "https://m2machines.fandom.com/wiki/1968_Pontiac_Firebird_H.O._350",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1958 Chevrolet Apache 4x4",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/1/1b/Auto-Trucks_14-20.jpg/revision/latest?cb=20220215080421",
+    "source_url": "https://m2machines.fandom.com/wiki/1958_Chevrolet_Apache_4x4",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1965 Dodge A100 Camper Van",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "dodge"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/4/49/Detroit-Muscle_21-02.jpg/revision/latest?cb=20220201183141",
+    "source_url": "https://m2machines.fandom.com/wiki/1965_Dodge_A100_Camper_Van",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1967 Chevrolet Camaro \"Panther\" Z/28 RS",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/7/71/Detroit-Muscle_19-03.jpg/revision/latest?cb=20220131144448",
+    "source_url": "https://m2machines.fandom.com/wiki/1967_Chevrolet_Camaro_%22Panther%22_Z/28_RS",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1968 Mercury Cougar XR-7G 390",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/4/44/Detroit-Muscle_11-02.jpg/revision/latest?cb=20220115011625",
+    "source_url": "https://m2machines.fandom.com/wiki/1968_Mercury_Cougar_XR-7G_390",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1951 Studebaker",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/a/aa/Auto-Trucks_12-05.jpg/revision/latest?cb=20220216041740",
+    "source_url": "https://m2machines.fandom.com/wiki/1951_Studebaker",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1957 Mercury Turnpike",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/c/cd/Auto-Thentics_12-27.jpg/revision/latest?cb=20220221114655",
+    "source_url": "https://m2machines.fandom.com/wiki/1957_Mercury_Turnpike",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1970 Chevrolet C60 Truck Custom",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/e/ec/Auto-Club_03.jpg/revision/latest?cb=20210219094532",
+    "source_url": "https://m2machines.fandom.com/wiki/1970_Chevrolet_C60_Truck_Custom",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1969 Pontiac GTO",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "pontiac"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/6/67/Auto-Drags_10-08.jpg/revision/latest?cb=20210220061135",
+    "source_url": "https://m2machines.fandom.com/wiki/1969_Pontiac_GTO",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1971 Plymouth HEMI Cuda",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "plymouth"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/c/cb/1-24th_Scale_10-05.jpg/revision/latest?cb=20220219002536",
+    "source_url": "https://m2machines.fandom.com/wiki/1971_Plymouth_HEMI_Cuda",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1973 Chevrolet Cheyenne Super 10 4x4",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/4/49/Auto-Haulers_22-06.jpg/revision/latest?cb=20220725025906",
+    "source_url": "https://m2machines.fandom.com/wiki/1973_Chevrolet_Cheyenne_Super_10_4x4",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1970 Dodge L600 COE",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "dodge"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/7/70/Auto-Haulers_16-19.jpg/revision/latest?cb=20210729233844",
+    "source_url": "https://m2machines.fandom.com/wiki/1970_Dodge_L600_COE",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1970 Ford Mustang Mach 1",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/c/c8/1-24th_Scale_10-03a.jpg/revision/latest?cb=20220219002505",
+    "source_url": "https://m2machines.fandom.com/wiki/1970_Ford_Mustang_Mach_1",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1973 Chevy Cheyenne Super C10 4X4",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/8/8d/AutoZone_12.jpg/revision/latest?cb=20210419015244",
+    "source_url": "https://m2machines.fandom.com/wiki/1973_Chevy_Cheyenne_Super_C10_4X4",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1971 Dodge Charger Custom",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "dodge"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/f/f5/Auto-Drivers_20-01.jpg/revision/latest?cb=20210608200033",
+    "source_url": "https://m2machines.fandom.com/wiki/1971_Dodge_Charger_Custom",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1976 Datsun Truck",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "datsun",
+      "jdm"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/7/70/Datsun_620_Truck_Flyer.jpg/revision/latest?cb=20220914122515",
+    "source_url": "https://m2machines.fandom.com/wiki/1976_Datsun_Truck",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1970 Oldsmobile Cutlass 442 W-30",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/9/90/Auto-Haulers_17-04.jpg/revision/latest?cb=20210730021159",
+    "source_url": "https://m2machines.fandom.com/wiki/1970_Oldsmobile_Cutlass_442_W-30",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1988 Ford Mustang GT - Custom",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/8/81/32500-S89_20-64.jpg/revision/latest?cb=20210915124951",
+    "source_url": "https://m2machines.fandom.com/wiki/1988_Ford_Mustang_GT_-_Custom",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1976 GMC Sierra Grande 15 4x4",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/c/c4/36000-S39_20-18.jpg/revision/latest?cb=20211016015244",
+    "source_url": "https://m2machines.fandom.com/wiki/1976_GMC_Sierra_Grande_15_4x4",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1969 Chevrolet Camaro SS/RS 350",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/e/ea/Auto-Thentics_16-36.jpg/revision/latest?cb=20220222103345",
+    "source_url": "https://m2machines.fandom.com/wiki/1969_Chevrolet_Camaro_SS/RS_350",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1972 Ford F-250 Custom 4x4",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "ford"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/d/da/1967-72_Ford_F-100_%26_F-250_Truck_Flyer.jpg/revision/latest?cb=20210522174318",
+    "source_url": "https://m2machines.fandom.com/wiki/1972_Ford_F-250_Custom_4x4",
+    "description": ""
+  },
+  {
+    "brand": "M2 Machines",
+    "model_name": "1974 Chevrolet K5 Blazer",
+    "series": "",
+    "year": 0,
+    "color": "",
+    "tags": [
+      "chevrolet"
+    ],
+    "image_url": "https://static.wikia.nocookie.net/m2machines/images/a/a0/1973-75_Chevrolet_K5_Blazer_%26_GMC_Jimmy_Flyer.jpg/revision/latest?cb=20220725090239",
+    "source_url": "https://m2machines.fandom.com/wiki/1974_Chevrolet_K5_Blazer",
     "description": ""
   }
 ]
