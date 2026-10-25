@@ -89,5 +89,6 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Riwayat tawaran dan pengalaman menawar ala game
 - [x] Profil: tab Menang/Sedang ditawar/Kalah/Dijual, tracker tawaran, konfirmasi keluar
 - [x] Riwayat dompet, halaman penjual publik, chat penjual dan pemenang untuk pengiriman
-- [ ] Notifikasi pesan chat yang belum dibaca
+- [x] Notifikasi pesan chat yang belum dibaca (inbox chat ala Shopee dengan badge, lihat `CHANGELOG.md`)
+- [x] Navigasi bawah di HP
 - [ ] Scraper memilih foto yang benar (lewati poster promo dan placeholder)

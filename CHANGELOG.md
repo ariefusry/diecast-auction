@@ -56,6 +56,8 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Polish: kolom angka tracker profil lurus, label dan angka rata kiri di HP (tracker dan statistik penjual), tombol foto berbahasa Indonesia, warna seleksi, caret dan checkbox mengikuti palet | `6044677` |
 | Pesan error dari API tampil dalam bahasa Indonesia dengan cara memulihkannya dan nominal rupiah (`frontend/src/lib/errors.ts`); field isi saldo menampilkan nominal yang terbaca | `a94213d` |
 | Tampilan HP ala aplikasi belanja: kartu lot container-aware (ringkas di bawah 14rem), grid dua kolom di katalog, profil dan penjual, pencarian satu baris, rak "Segera berakhir" jadi strip kartu kecil, profil dengan empat status satu baris | `94a194c` |
+| Inbox chat (`GET /chats`, `POST /auctions/{id}/read`, migrasi 000008): daftar percakapan dengan lot, pesan terakhir dan jumlah belum dibaca; tanda dibaca hanya maju | `f44eb8f` |
+| Chat ala Shopee: inbox dengan pencarian dan filter belum dibaca, percakapan dengan kartu lot di atas, panel melayang dua kolom di desktop, layar penuh di HP; navigasi bawah di HP dengan badge chat | `090dea8` |
 
 ## Katalog dan merek
 
@@ -123,6 +125,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | 000005 | Tabel `messages` untuk chat |
 | 000006 | Username unik tanpa peduli huruf besar/kecil |
 | 000007 | Tabel `uploads` untuk kuota foto |
+| 000008 | Tabel `chat_reads` untuk pesan belum dibaca |
 
 ### Endpoint API
 
@@ -134,7 +137,8 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | `GET /auctions` (filter `category`, `brand`, `condition`, harga, `sort`, `q`), `POST /auctions/search/ai` | publik, token opsional untuk `leading`/`won` |
 | `POST /auctions`, `POST /auctions/{id}/publish`, `/cancel`, `/buy-now`, `/bids` | login |
 | `GET /auctions/{id}`, `GET /auctions/{id}/bids`, `GET /sellers/{username}` | publik, token opsional untuk `leading`/`won`/`mine` |
-| `GET`/`POST /auctions/{id}/messages` | login, hanya penjual dan pemenang |
+| `GET`/`POST /auctions/{id}/messages`, `POST /auctions/{id}/read` | login, hanya penjual dan pemenang |
+| `GET /chats` | login, inbox chat |
 | `POST /uploads`, `GET /uploads/{nama}` | login untuk upload, 20 per hari |
 
 ### Akun demo
@@ -146,9 +150,8 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 ## Belum dikerjakan
 
 - Deploy (hosting sedang dipilih: Oracle Always Free, DigitalOcean, atau Cloudflare Tunnel dari laptop).
-- Notifikasi pesan chat yang belum dibaca.
 - Scraper kadang memilih foto yang salah (poster promo M2, placeholder "image not available" Hot Wheels).
-- Migrasi `down` 000004 sampai 000007 belum pernah dijalankan.
+- Migrasi `down` 000004 sampai 000008 belum pernah dijalankan.
 - Index trigram untuk pencarian, draf yang bisa dibaca siapa pun lewat ID.
 - Dua listing diorama uji tanpa foto di database dev.
 - `docker compose up --build` gagal sejak buildx 0.37.2 (di mesin dev: 0.38.1, Compose v5.6.1) dengan `additional privileges requested: --allow=fs.read=...`, juga untuk `Dockerfile.backend` yang ada di dalam context. Regresi upstream, bukan di repo ini. Workaround per perintah: `BUILDX_BAKE_ENTITLEMENTS_FS=0` (lihat CLAUDE.md). Hapus begitu rilis Compose dengan perbaikan izin baca Dockerfile keluar.
