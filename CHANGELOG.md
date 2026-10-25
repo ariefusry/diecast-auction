@@ -96,6 +96,8 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Chat: poll basi tidak menyembunyikan pesan baru, tanpa duplikat | `5667c22` |
 | Banner "Kamu disalip!" menampilkan tawaran tertinggi terkini | `710fdc2` |
 | Rate limit bid, chat, dan upload memakai bucket terpisah | `48f89de` |
+| Keamanan: Postgres hanya dipublish ke `127.0.0.1` (port Docker melewati `ufw` di Linux) | `12fd1cf` |
+| Keamanan: `POSTGRES_PASSWORD` wajib tanpa default, seed demo hanya lewat `docker compose --profile demo up` | `c72ee91` |
 
 ---
 
@@ -138,4 +140,5 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 - Migrasi `down` 000004 dan 000005 belum pernah dijalankan.
 - Kuota upload per pengguna, index trigram untuk pencarian, draf yang bisa dibaca siapa pun lewat ID.
 - Dua listing diorama uji tanpa foto di database dev.
-- Temuan QA 2 yang menunggu keputusan: Postgres dipublish ke host, `bidder_id` publik membongkar nama yang disamarkan, pesan error mentah berbahasa Inggris, login tidak kembali ke halaman asal, countdown memakai jam klien, settlement gagal tanpa alert, username peka huruf besar/kecil, field isi saldo punya jebakan titik ribuan yang sama.
+- `docker compose up --build` gagal di Docker Compose v5.6: buildx minta `--allow=fs.read=Dockerfile.frontend` karena Dockerfile frontend ada di luar context. Sementara: `docker build` per image seperti di CI, lalu `docker compose up --no-build`.
+- Temuan QA 2 yang menunggu keputusan: `bidder_id` publik membongkar nama yang disamarkan, pesan error mentah berbahasa Inggris, login tidak kembali ke halaman asal, countdown memakai jam klien, settlement gagal tanpa alert, username peka huruf besar/kecil, field isi saldo punya jebakan titik ribuan yang sama.
