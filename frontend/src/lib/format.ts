@@ -57,3 +57,24 @@ export function userIdFromToken(token: string): number | null {
     return null;
   }
 }
+
+/** Tomica prints a casting number on every pack ("No. 54"); split it off the name for a badge. */
+export function castingNumber(name: string): { no: string | null; name: string } {
+  const m = /^No\.\s*(\d+)\s+(.+)$/.exec(name);
+  return m ? { no: m[1], name: m[2] } : { no: null, name };
+}
+
+/** A bid's age, the way a chat app writes it. */
+export function timeAgo(iso: string, nowMs: number): string {
+  const s = Math.max(0, Math.floor((nowMs - Date.parse(iso)) / 1000));
+  if (s < 60) return "baru saja";
+  if (s < 3600) return `${Math.floor(s / 60)} mnt lalu`;
+  if (s < 86400) return `${Math.floor(s / 3600)} jam lalu`;
+  return `${Math.floor(s / 86400)} hari lalu`;
+}
+
+/** One-tap amounts: the minimum bid, one step more, and a five-step jump. */
+export function quickBids(a: { start_price: number; min_increment: number; current_highest_bid: number | null }): number[] {
+  const floor = minBid(a);
+  return [floor, floor + a.min_increment, floor + 4 * a.min_increment];
+}

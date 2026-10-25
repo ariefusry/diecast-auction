@@ -111,3 +111,10 @@ export async function api<T>(path: string, init: { method?: string; body?: unkno
 export function imageSrc(url: string): string {
   return url.startsWith("/") ? API_URL + url : url;
 }
+
+export type BidEntry = {
+  bidder_id: number;
+  bidder: string; // masked, e.g. d***1
+  amount: number;
+  created_at: string;
+};

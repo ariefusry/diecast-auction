@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { conditionLabel, minBid, rupiah, timeLeft, userIdFromToken } from "./format";
+import { castingNumber, conditionLabel, minBid, quickBids, rupiah, timeAgo, timeLeft, userIdFromToken } from "./format";
 
 describe("rupiah", () => {
   it("formats whole rupiah with dot thousands", () => {
@@ -52,5 +52,32 @@ describe("userIdFromToken", () => {
     expect(userIdFromToken("junk")).toBeNull();
     const old = btoa(JSON.stringify({ sub: "42", exp: 1 }));
     expect(userIdFromToken(`h.${old}.s`)).toBeNull();
+  });
+});
+
+describe("castingNumber", () => {
+  it("splits a Tomica-style number off the name", () => {
+    expect(castingNumber("No. 54 Toyota Town Ace")).toEqual({ no: "54", name: "Toyota Town Ace" });
+    expect(castingNumber("No.105 Sigma MC74")).toEqual({ no: "105", name: "Sigma MC74" });
+  });
+  it("leaves other names alone", () => {
+    expect(castingNumber("Nissan 300ZX")).toEqual({ no: null, name: "Nissan 300ZX" });
+  });
+});
+
+describe("timeAgo", () => {
+  const now = Date.parse("2026-10-25T10:00:00Z");
+  it("reads like a chat timestamp", () => {
+    expect(timeAgo("2026-10-25T09:59:50Z", now)).toBe("baru saja");
+    expect(timeAgo("2026-10-25T09:57:00Z", now)).toBe("3 mnt lalu");
+    expect(timeAgo("2026-10-25T07:00:00Z", now)).toBe("3 jam lalu");
+    expect(timeAgo("2026-10-23T10:00:00Z", now)).toBe("2 hari lalu");
+  });
+});
+
+describe("quickBids", () => {
+  it("offers the floor and two bigger jumps", () => {
+    expect(quickBids({ start_price: 100, min_increment: 10, current_highest_bid: 150 })).toEqual([160, 170, 200]);
+    expect(quickBids({ start_price: 100, min_increment: 10, current_highest_bid: null })).toEqual([100, 110, 140]);
   });
 });
