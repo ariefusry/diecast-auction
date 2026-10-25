@@ -15,7 +15,7 @@ Panduan ringkas untuk Claude Code CLI dalam mengembangkan platform lelang diecas
 ## Perintah Penting
 
 ```bash
-# Jalankan seluruh service (Postgres, Go API, React)
+# Jalankan seluruh service (Postgres, Go API, React). Baru tersedia setelah Phase 10; sebelumnya compose hanya berisi db dan profil test
 docker compose up --build
 
 # Pengujian wajib dengan deteksi data race (service test dibuat di Phase 1)
@@ -27,7 +27,7 @@ docker compose --profile test run --rm test
 docker compose --profile test down
 docker compose --profile test run --rm test go test -race -count=1 ./...
 
-# Loop test cepat lokal tanpa race detector
+# Loop test cepat lokal tanpa race detector. Tanpa TEST_DATABASE_URL semua test DB di-skip, jadi "ok" di sini belum berarti logika DB teruji
 go test ./...
 
 # Scraping data riil diecast ke data/seeds.json
@@ -72,7 +72,7 @@ cd frontend && npm test && npm run build
    *Alasan:* Tidak ada escrow penawar lain yang perlu dilepas, jadi jalur buy-now tetap sederhana dan bebas bug refund.
 
 8. **LLM Hanya Menghasilkan JSON Terstruktur**  
-   *Alasan:* Model LLM (Gemini / Groq) hanya memecah kalimat pengguna menjadi parameter filter (brand, seri, warna, tags, kondisi, harga). Backend Go memvalidasi struct lalu menyusun parameterized query SQL untuk mencegah halusinasi data dan SQL injection.
+   *Alasan:* Model LLM (Gemini, default `gemini-3.5-flash-lite`) hanya memecah kalimat pengguna menjadi parameter filter (brand, seri, warna, tags, kondisi, harga). Backend Go memvalidasi struct lalu menyusun parameterized query SQL untuk mencegah halusinasi data dan SQL injection.
 
 9. **`data/seeds.json` Adalah Kontrak Data Seeder, Bid Seed Lewat Service**  
    *Alasan:* File kecil manual dipakai sampai fase scraper, lalu diganti data riil agar demo menampilkan katalog otentik. Bid simulasi lewat service bid agar invariant dompet dan ledger tetap benar.
