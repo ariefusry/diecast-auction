@@ -4,6 +4,7 @@ import { AuctionCard } from "../components/AuctionCard";
 import { Button, ErrorNote } from "../components/ui";
 import { api, errorMessage, imageSrc, type Auction, type MyAuctions, type Profile } from "../lib/api";
 import { useAuth } from "../lib/auth";
+import { useChats } from "../lib/chats";
 import { castingNumber, rupiah, timeLeft, trackerStatus } from "../lib/format";
 import { useNow } from "../lib/useNow";
 
@@ -65,6 +66,7 @@ function TrackerRow({ a, myBid, now }: { a: Auction; myBid: number; now: number 
 
 export function ProfilePage() {
   const { logout } = useAuth();
+  const { openChat } = useChats();
   const navigate = useNavigate();
   const now = useNow();
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -165,10 +167,10 @@ export function ProfilePage() {
               {/* The card fills the row, so chat buttons line up across columns. */}
               <AuctionCard auction={a} now={now} className="flex-1" />
               {a.status === "completed" && a.sold && (
-                <Link to={`/lelang/${a.id}#chat`} className="press block rounded-lg bg-ink py-2 text-center text-sm font-semibold text-white">
+                <button onClick={() => openChat(a.id)} className="press block w-full rounded-lg bg-ink py-2 text-center text-sm font-semibold text-white">
                   {tab === "won" ? "Chat penjual" : "Chat pembeli"}
                   <span className="max-sm:hidden">, atur pengiriman</span>
-                </Link>
+                </button>
               )}
             </div>
           ))}

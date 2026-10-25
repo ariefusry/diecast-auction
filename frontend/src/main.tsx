@@ -4,6 +4,8 @@ import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterP
 import { Layout } from "./components/Layout";
 import "./index.css";
 import { AuthProvider, useAuth } from "./lib/auth";
+import { ChatProvider } from "./lib/chats";
+import { ChatPage } from "./pages/ChatPage";
 import { AuctionDetail } from "./pages/AuctionDetail";
 import { AuthPage } from "./pages/Auth";
 import { Catalog } from "./pages/Catalog";
@@ -19,7 +21,13 @@ function RequireLogin({ children }: { children: ReactNode }) {
 // A data router, because only it runs <Link viewTransition> (opening a lot morphs its card).
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route element={<Layout />}>
+    <Route
+      element={
+        <ChatProvider>
+          <Layout />
+        </ChatProvider>
+      }
+    >
       <Route index element={<Catalog />} />
       <Route path="lelang/:id" element={<AuctionDetail />} />
       <Route path="penjual/:username" element={<SellerPage />} />
@@ -38,6 +46,14 @@ const router = createBrowserRouter(
         element={
           <RequireLogin>
             <Sell />
+          </RequireLogin>
+        }
+      />
+      <Route
+        path="chat/:id?"
+        element={
+          <RequireLogin>
+            <ChatPage />
           </RequireLogin>
         }
       />

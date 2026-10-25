@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { Link, useParams } from "react-router";
 import { BrandLogo } from "../components/BrandLogo";
-import { Chat } from "../components/Chat";
 import { Photo } from "../components/Photo";
 import { Button, ErrorNote } from "../components/ui";
 import { api, errorMessage, type Auction, type BidEntry } from "../lib/api";
 import { useAuth } from "../lib/auth";
+import { useChats } from "../lib/chats";
 import { cardBack } from "../lib/brands";
 import { castingNumber, conditionLabel, minBid, quickBids, rupiah, timeAgo, timeLeft } from "../lib/format";
 import { useNow } from "../lib/useNow";
@@ -17,12 +17,22 @@ const statusText: Record<Auction["status"], string> = {
   cancelled: "Dibatalkan penjual",
 };
 
+function ChatButton({ label, unread, onClick }: { label: string; unread: number; onClick: () => void }) {
+  return (
+    <Button variant="ink" className="w-full" onClick={onClick}>
+      {label}
+      {unread > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-track px-1.5 text-xs font-bold tabular-nums">{unread}</span>}
+    </Button>
+  );
+}
+
 /** A short buzz on phones that support it; feedback for winning or losing the lead. */
 const buzz = (pattern: number | number[]) => navigator.vibrate?.(pattern);
 
 export function AuctionDetail() {
   const { id } = useParams();
   const { userId } = useAuth();
+  const { openChat, conversations } = useChats();
   const now = useNow();
   const [auction, setAuction] = useState<Auction | null>(null);
   const [bids, setBids] = useState<BidEntry[]>([]);
@@ -341,7 +351,8 @@ export function AuctionDetail() {
         )}
 
         {a.status === "completed" && a.sold && userId !== null && (isSeller || won) && (
-          <Chat auctionId={a.id} otherName={isSeller ? "pemenang lelang" : `penjual (${a.seller})`} now={now} />
+          // Shipping is arranged in the inbox, where every chat lives; this opens this lot's.
+          <ChatButton unread={conversations?.find((c) => c.auction_id === a.id)?.unread ?? 0} label={isSeller ? "Chat pemenang, atur pengiriman" : "Chat penjual, atur pengiriman"} onClick={() => openChat(a.id)} />
         )}
 
         {a.item.description && <p className="max-w-prose whitespace-pre-line">{a.item.description}</p>}

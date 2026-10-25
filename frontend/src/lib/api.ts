@@ -141,6 +141,20 @@ export type MyAuctions = {
 
 export type Message = { id: number; mine: boolean; sender: string; body: string; created_at: string };
 
+/** One chat in the inbox, as the signed-in user sees it. */
+export type Conversation = {
+  auction_id: number;
+  title: string;
+  image_url: string;
+  price: number; // what the winner paid
+  other: string; // the other side's username
+  selling: boolean; // I am the seller
+  last_body: string;
+  last_mine: boolean;
+  last_at: string | null; // null until someone writes
+  unread: number;
+};
+
 export type SellerProfile = { username: string; created_at: string; sold: number; active: Auction[] };
 
 export type LedgerEntry = {
