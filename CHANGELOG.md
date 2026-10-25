@@ -54,6 +54,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Membuka lot: kartu blister "diangkat dari peg" dan berubah menjadi pack di halaman detail (View Transition, router pindah ke `createBrowserRouter`), halaman baru mulai dari atas, reduced-motion tetap memberi umpan balik lewat warna dan opacity | `1bc6e7e` |
 | Katalog: filter dikelompokkan dengan grid lot dan dipisah dari pegboard; kategori dan urutan satu baris, chip merek satu baris yang bisa digeser di HP (tinggi filter di HP dari sekitar 280px ke 172px) | `1988a29` |
 | Polish: kolom angka tracker profil lurus, label dan angka rata kiri di HP (tracker dan statistik penjual), tombol foto berbahasa Indonesia, warna seleksi, caret dan checkbox mengikuti palet | `6044677` |
+| Pesan error dari API tampil dalam bahasa Indonesia dengan cara memulihkannya dan nominal rupiah (`frontend/src/lib/errors.ts`); field isi saldo menampilkan nominal yang terbaca | `a94213d` |
 
 ## Katalog dan merek
 
@@ -150,4 +151,4 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 - Index trigram untuk pencarian, draf yang bisa dibaca siapa pun lewat ID.
 - Dua listing diorama uji tanpa foto di database dev.
 - `docker compose up --build` gagal sejak buildx 0.37.2 (di mesin dev: 0.38.1, Compose v5.6.1) dengan `additional privileges requested: --allow=fs.read=...`, juga untuk `Dockerfile.backend` yang ada di dalam context. Regresi upstream, bukan di repo ini. Workaround per perintah: `BUILDX_BAKE_ENTITLEMENTS_FS=0` (lihat CLAUDE.md). Hapus begitu rilis Compose dengan perbaikan izin baca Dockerfile keluar.
-- Temuan QA 2 yang menunggu keputusan: pesan error mentah berbahasa Inggris, login tidak kembali ke halaman asal, countdown memakai jam klien, settlement gagal tanpa alert, field isi saldo punya jebakan titik ribuan yang sama.
+- Temuan QA 2 yang menunggu keputusan: login tidak kembali ke halaman asal, countdown memakai jam klien, settlement gagal tanpa alert.
