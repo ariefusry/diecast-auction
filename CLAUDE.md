@@ -26,7 +26,7 @@ docker compose up --build
 # hanya untuk satu perintah, karena compose file ini milik kita sendiri. PowerShell: $env:BUILDX_BAKE_ENTITLEMENTS_FS=0
 BUILDX_BAKE_ENTITLEMENTS_FS=0 docker compose up --build
 
-# Sama, plus katalog dan akun demo (password publik). Jangan dipakai di server publik
+# Sama, plus katalog dan akun demo. Di server publik isi DEMO_PASSWORD dengan secret, karena default-nya password publik
 docker compose --profile demo up --build
 
 # Server: HTTPS lewat Caddy di 80/443. Isi DOMAIN (DNS mengarah ke server) dan WEB_PORT=127.0.0.1:8081 di .env

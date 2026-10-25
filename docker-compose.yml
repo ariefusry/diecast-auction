@@ -21,8 +21,9 @@ services:
   # Full stack: `docker compose up --build`, then open http://localhost:8081.
   # Needs JWT_SECRET (32+ bytes, openssl rand -hex 32) in .env; GEMINI_API_KEY is optional.
 
-  # Demo catalog and demo accounts with a public password: opt in with
-  # `docker compose --profile demo up`. Never on a public server. Idempotent.
+  # Demo catalog and demo accounts: opt in with `docker compose --profile demo up`.
+  # Their password defaults to the one printed in the repo; a public server sets
+  # DEMO_PASSWORD so those accounts stay closed. Idempotent: runs once per database.
   seed:
     profiles: [demo]
     build: { context: ., dockerfile: Dockerfile.backend }
@@ -30,6 +31,7 @@ services:
     command: ["/app/seed"]
     environment:
       DATABASE_URL: &db-url postgres://${POSTGRES_USER:-diecast}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-diecast}?sslmode=disable
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-}
     depends_on:
       db: { condition: service_healthy }
     restart: "no"

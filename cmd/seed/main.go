@@ -18,7 +18,9 @@ import (
 	"github.com/ariefusry/diecast-auction/migrations"
 )
 
-// DemoPassword is shared by every demo account (demo_seller1, demo_bidder1, ...).
+// DemoPassword is shared by every demo account (demo_seller1, demo_bidder1, ...)
+// unless DEMO_PASSWORD overrides it. It is printed in the repo, so a public
+// server sets DEMO_PASSWORD to a secret of its own.
 const DemoPassword = "demo-password"
 
 const bidderFunds = 2 * service.MaxDeposit
@@ -56,7 +58,11 @@ func main() {
 	}
 	defer pool.Close()
 
-	n, err := seed(context.Background(), pool, interleave(items), "demo_")
+	password := os.Getenv("DEMO_PASSWORD")
+	if password == "" {
+		password = DemoPassword
+	}
+	n, err := seed(context.Background(), pool, interleave(items), "demo_", password)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -87,8 +93,9 @@ func interleave(items []service.Item) []service.Item {
 }
 
 // seed creates the demo users (prefix + seller1..2, bidder1..3) and one auction
-// per item, returning how many it created. Returns 0 if the users already exist.
-func seed(ctx context.Context, pool *pgxpool.Pool, items []service.Item, prefix string) (int, error) {
+// per item, all sharing password, returning how many it created. Returns 0 if
+// the users already exist (their password is then left as it was).
+func seed(ctx context.Context, pool *pgxpool.Pool, items []service.Item, prefix, password string) (int, error) {
 	var exists bool
 	if err := pool.QueryRow(ctx, "SELECT EXISTS (SELECT 1 FROM users WHERE username = $1)", prefix+"seller1").
 		Scan(&exists); err != nil || exists {
@@ -97,7 +104,7 @@ func seed(ctx context.Context, pool *pgxpool.Pool, items []service.Item, prefix 
 
 	auth, wallets, auctions := service.NewAuth(pool, nil), service.NewWallets(pool), service.NewAuctions(pool)
 	register := func(name string) (int64, error) {
-		u, err := auth.Register(ctx, prefix+name+"@demo.local", prefix+name, DemoPassword)
+		u, err := auth.Register(ctx, prefix+name+"@demo.local", prefix+name, password)
 		return u.ID, err
 	}
 	var sellers, bidders []int64

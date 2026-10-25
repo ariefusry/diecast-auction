@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/ariefusry/diecast-auction/internal/service"
@@ -18,9 +19,18 @@ func TestSeedBuildsConsistentDemoData(t *testing.T) {
 		items = append(items, service.Item{Brand: brand, ModelName: "Model " + string(rune('A'+i)), Tags: []string{"jdm"}})
 	}
 
-	n, err := seed(ctx, pool, items, prefix)
+	n, err := seed(ctx, pool, items, prefix, "server-only-secret")
 	if err != nil || n != len(items) {
 		t.Fatalf("seed = %d, %v; want %d", n, err, len(items))
+	}
+	// On a public server the demo accounts take a private password, so the
+	// one printed in the repo opens nothing.
+	auth := service.NewAuth(pool, []byte(strings.Repeat("k", 32)))
+	if _, err := auth.Login(ctx, prefix+"bidder1@demo.local", "server-only-secret"); err != nil {
+		t.Fatalf("login with the given password: %v", err)
+	}
+	if _, err := auth.Login(ctx, prefix+"bidder1@demo.local", DemoPassword); err == nil {
+		t.Fatal("the public default password still opens a demo account")
 	}
 
 	var users []int64
@@ -58,7 +68,7 @@ func TestSeedBuildsConsistentDemoData(t *testing.T) {
 	}
 
 	// Running again (every container start) must not duplicate anything.
-	if n, err := seed(ctx, pool, items, prefix); err != nil || n != 0 {
+	if n, err := seed(ctx, pool, items, prefix, "server-only-secret"); err != nil || n != 0 {
 		t.Fatalf("second seed = %d, %v; want 0", n, err)
 	}
 }
