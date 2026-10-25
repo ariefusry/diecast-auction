@@ -58,6 +58,10 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Tampilan HP ala aplikasi belanja: kartu lot container-aware (ringkas di bawah 14rem), grid dua kolom di katalog, profil dan penjual, pencarian satu baris, rak "Segera berakhir" jadi strip kartu kecil, profil dengan empat status satu baris | `94a194c` |
 | Inbox chat (`GET /chats`, `POST /auctions/{id}/read`, migrasi 000008): daftar percakapan dengan lot, pesan terakhir dan jumlah belum dibaca; tanda dibaca hanya maju | `f44eb8f` |
 | Chat ala Shopee: inbox dengan pencarian dan filter belum dibaca, percakapan dengan kartu lot di atas, panel melayang dua kolom di desktop, layar penuh di HP; navigasi bawah di HP dengan badge chat | `090dea8` |
+| Persiapan deploy: password akun demo dari `DEMO_PASSWORD` sehingga katalog demo aman di server publik | `e63691f` |
+| Persiapan deploy: Cloudflare Tunnel (`--profile tunnel`, cloudflared 2026.10.0) sebagai alternatif Caddy | `a55fbd3` |
+| Persiapan deploy: `scripts/backup.sh` (pg_dump + foto, rotasi 7 hari, opsional ke S3), diuji dengan restore | `6f2eec9` |
+| Persiapan deploy: runbook `docs/deploy.md` (EC2 t4g.small tanpa port masuk, Session Manager, role, backup, cleanup) | `5a01cf4` |
 
 ## Katalog dan merek
 
