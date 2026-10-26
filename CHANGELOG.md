@@ -90,6 +90,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Header tidak lagi bergeser antar halaman (`scrollbar-gutter`), kartu terangkat saat di-hover | `c258534` |
 | Pesan sistem pembuka chat saat lelang terjual (buy-now atau settle): menyebut pemenang dan harga, langsung memberi badge belum dibaca ke penjual dan pemenang (migrasi 000009) | `056970c` |
 | Dompet di desktop: isi saldo di samping riwayat, tidak lagi satu kolom sempit | `9dc577e` |
+| Sistem tombol (ukuran, ikon, loading tanpa geser lebar, centang selesai), CTA "Masuk untuk menawar" yang menempel di HP dan kembali ke lot setelah login, tombol tawar menyebut nominal, digit countdown bergulir di 2 menit terakhir, segmented control untuk tab Profil dan kategori Katalog; hint password demo hanya di dev; perbaikan overflow dompet di HP | `8f23abc` |
 
 ## Infrastruktur: Phase 10 (tanpa deploy)
 
