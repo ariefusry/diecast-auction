@@ -88,6 +88,8 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Halaman penjual publik `/penjual/:username` dan tautan "Dijual oleh" di setiap lelang | `88ef932`, `c258534` |
 | Chat penjual dan pemenang untuk mengatur pengiriman, hanya setelah lelang dimenangkan (migrasi 000005) | `88ef932`, `c258534` |
 | Header tidak lagi bergeser antar halaman (`scrollbar-gutter`), kartu terangkat saat di-hover | `c258534` |
+| Pesan sistem pembuka chat saat lelang terjual (buy-now atau settle): menyebut pemenang dan harga, langsung memberi badge belum dibaca ke penjual dan pemenang (migrasi 000009) | `056970c` |
+| Dompet di desktop: isi saldo di samping riwayat, tidak lagi satu kolom sempit | `9dc577e` |
 
 ## Infrastruktur: Phase 10 (tanpa deploy)
 
@@ -132,6 +134,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | 000006 | Username unik tanpa peduli huruf besar/kecil |
 | 000007 | Tabel `uploads` untuk kuota foto |
 | 000008 | Tabel `chat_reads` untuk pesan belum dibaca |
+| 000009 | `messages.sender_id` boleh NULL untuk pesan sistem |
 
 ### Endpoint API
 
@@ -158,7 +161,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 - Uji email forwarding `@ariefusry.me` setelah nameserver pindah ke Cloudflare (ditunda user).
 - Keputusan spec: bid dinilai dengan `now()` (spec) atau waktu mulai transaksi (kode).
 - Scraper kadang memilih foto yang salah (poster promo M2, placeholder "image not available" Hot Wheels).
-- Migrasi `down` 000004 sampai 000008 belum pernah dijalankan.
+- Migrasi `down` 000004 sampai 000008 belum pernah dijalankan (000009 sudah diuji di dalam transaksi).
 - Index trigram untuk pencarian, draf yang bisa dibaca siapa pun lewat ID.
 - Dua listing diorama uji tanpa foto di database dev.
 - `docker compose up --build` gagal sejak buildx 0.37.2 (di mesin dev: 0.38.1, Compose v5.6.1) dengan `additional privileges requested: --allow=fs.read=...`, juga untuk `Dockerfile.backend` yang ada di dalam context. Regresi upstream, bukan di repo ini. Workaround per perintah: `BUILDX_BAKE_ENTITLEMENTS_FS=0` (lihat CLAUDE.md). Hapus begitu rilis Compose dengan perbaikan izin baca Dockerfile keluar.
