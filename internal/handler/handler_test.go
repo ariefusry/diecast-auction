@@ -360,7 +360,8 @@ func TestChatAndSellerPage(t *testing.T) {
 		t.Fatalf("send = %d %+v", code, m)
 	}
 	var msgs []service.Message
-	if code := seller.do("GET", "/auctions/"+id+"/messages", nil, &msgs); code != http.StatusOK || len(msgs) != 1 || msgs[0].Body != "Kirim JNE ya" || msgs[0].Mine {
+	if code := seller.do("GET", "/auctions/"+id+"/messages", nil, &msgs); code != http.StatusOK || len(msgs) != 2 || !msgs[0].System || msgs[0].Mine ||
+		msgs[1].Body != "Kirim JNE ya" || msgs[1].Mine {
 		t.Fatalf("messages = %d %+v", code, msgs)
 	}
 	if !m.Mine || strings.Contains(seller.raw("GET", "/auctions/"+id+"/messages"), `"sender_id"`) {
@@ -374,7 +375,7 @@ func TestChatAndSellerPage(t *testing.T) {
 	}
 
 	var inbox []service.Conversation
-	if code := seller.do("GET", "/chats", nil, &inbox); code != http.StatusOK || len(inbox) == 0 || inbox[0].AuctionID != a.ID || inbox[0].Unread != 1 {
+	if code := seller.do("GET", "/chats", nil, &inbox); code != http.StatusOK || len(inbox) == 0 || inbox[0].AuctionID != a.ID || inbox[0].Unread != 2 { // sale notice + buyer
 		t.Fatalf("seller inbox = %d %+v", code, inbox)
 	}
 	if raw := seller.raw("GET", "/chats"); strings.Contains(raw, "sender_id") || strings.Contains(raw, "winner_id") || strings.Contains(raw, "seller_id") {

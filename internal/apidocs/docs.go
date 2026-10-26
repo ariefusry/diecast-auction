@@ -1298,7 +1298,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "unread": {
-                    "description": "messages from the other side after the read marker",
+                    "description": "messages from the other side or the system after the read marker",
                     "type": "integer"
                 }
             }
@@ -1458,8 +1458,12 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "sender": {
-                    "description": "username",
+                    "description": "username, empty for System",
                     "type": "string"
+                },
+                "system": {
+                    "description": "written by the platform, see saleNotice",
+                    "type": "boolean"
                 }
             }
         },

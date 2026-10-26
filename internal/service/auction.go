@@ -334,9 +334,11 @@ func (s *Auctions) BuyNow(ctx context.Context, buyerID, id int64) (Auction, erro
 		if err := move(ctx, tx, l.sellerID, id, "buy_now", price, price, 0); err != nil {
 			return err
 		}
-		_, err = tx.Exec(ctx,
-			"UPDATE auctions SET status = 'completed', winner_id = $2, end_time = now() WHERE id = $1", id, buyerID)
-		return err
+		if _, err := tx.Exec(ctx,
+			"UPDATE auctions SET status = 'completed', winner_id = $2, end_time = now() WHERE id = $1", id, buyerID); err != nil {
+			return err
+		}
+		return saleNotice(ctx, tx, id, buyerID, price)
 	})
 }
 
@@ -378,8 +380,13 @@ func (s *Auctions) CloseExpired(ctx context.Context) (int, error) {
 					return err
 				}
 			}
-			_, err = tx.Exec(ctx, "UPDATE auctions SET status = 'completed', winner_id = $2 WHERE id = $1", id, winner)
-			return err
+			if _, err := tx.Exec(ctx, "UPDATE auctions SET status = 'completed', winner_id = $2 WHERE id = $1", id, winner); err != nil {
+				return err
+			}
+			if winner == nil {
+				return nil
+			}
+			return saleNotice(ctx, tx, id, *winner, *bid)
 		})
 		switch {
 		case err != nil && id != 0 && ctx.Err() == nil:

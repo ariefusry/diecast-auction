@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -14,9 +15,10 @@ import (
 // Message is one line in the chat between an auction's seller and its winner.
 type Message struct {
 	ID        int64     `json:"id"`
-	SenderID  int64     `json:"-"`      // private: the seller would learn the winner's ID
+	SenderID  int64     `json:"-"`      // private: the seller would learn the winner's ID; 0 for System
 	Mine      bool      `json:"mine"`   // sent by the viewer
-	Sender    string    `json:"sender"` // username
+	System    bool      `json:"system"` // written by the platform, see saleNotice
+	Sender    string    `json:"sender"` // username, empty for System
 	Body      string    `json:"body"`
 	CreatedAt time.Time `json:"created_at"`
 }
@@ -51,8 +53,8 @@ func (s *Auctions) Messages(ctx context.Context, userID, auctionID int64) ([]Mes
 	}
 	rows, err := s.pool.Query(ctx, `
 		SELECT * FROM (
-			SELECT m.id, m.sender_id, u.username, m.body, m.created_at
-			FROM messages m JOIN users u ON u.id = m.sender_id
+			SELECT m.id, coalesce(m.sender_id, 0), m.sender_id IS NULL, coalesce(u.username, ''), m.body, m.created_at
+			FROM messages m LEFT JOIN users u ON u.id = m.sender_id
 			WHERE m.auction_id = $1 ORDER BY m.id DESC LIMIT $2
 		) latest ORDER BY id`, auctionID, chatLimit)
 	if err != nil {
@@ -60,7 +62,7 @@ func (s *Auctions) Messages(ctx context.Context, userID, auctionID int64) ([]Mes
 	}
 	return pgx.CollectRows(rows, func(r pgx.CollectableRow) (Message, error) {
 		var m Message
-		return m, r.Scan(&m.ID, &m.SenderID, &m.Sender, &m.Body, &m.CreatedAt)
+		return m, r.Scan(&m.ID, &m.SenderID, &m.System, &m.Sender, &m.Body, &m.CreatedAt)
 	})
 }
 
@@ -81,6 +83,26 @@ func (s *Auctions) Send(ctx context.Context, userID, auctionID int64, body strin
 	return m, err
 }
 
+// saleNotice opens the chat of a sold auction with a system message, inside
+// the sale's transaction, so seller and winner both get an unread badge.
+func saleNotice(ctx context.Context, tx pgx.Tx, auctionID, winnerID, price int64) error {
+	_, err := tx.Exec(ctx, `
+		INSERT INTO messages (auction_id, sender_id, body)
+		SELECT $1, NULL, 'Lelang selesai: terjual ke @' || username || ' seharga ' || $3 ||
+		       '. Penjual dan pemenang bisa mengatur pengiriman di sini.'
+		FROM users WHERE id = $2`, auctionID, winnerID, rupiah(price))
+	return err
+}
+
+// rupiah formats an amount the way the site shows it: Rp1.250.000.
+func rupiah(n int64) string {
+	s := strconv.FormatInt(n, 10)
+	for i := len(s) - 3; i > 0; i -= 3 {
+		s = s[:i] + "." + s[i:]
+	}
+	return "Rp" + s
+}
+
 // Conversation is one chat in a user's inbox, as that user sees it.
 type Conversation struct {
 	AuctionID int64      `json:"auction_id"`
@@ -92,7 +114,7 @@ type Conversation struct {
 	LastBody  string     `json:"last_body"`
 	LastMine  bool       `json:"last_mine"` // the last message is the viewer's
 	LastAt    *time.Time `json:"last_at"`   // nil until someone writes
-	Unread    int        `json:"unread"`    // messages from the other side after the read marker
+	Unread    int        `json:"unread"`    // messages from the other side or the system after the read marker
 }
 
 // inboxLimit caps the inbox; older chats stay reachable from the auction page.
@@ -105,7 +127,7 @@ func (s *Auctions) Conversations(ctx context.Context, userID int64) ([]Conversat
 		       CASE WHEN i.seller_id = $1 THEN w.username ELSE su.username END, i.seller_id = $1,
 		       coalesce(lm.body, ''), coalesce(lm.sender_id = $1, false), lm.created_at,
 		       (SELECT count(*) FROM messages m
-		        WHERE m.auction_id = a.id AND m.sender_id <> $1 AND m.id > coalesce(r.last_read_message_id, 0))
+		        WHERE m.auction_id = a.id AND m.sender_id IS DISTINCT FROM $1 AND m.id > coalesce(r.last_read_message_id, 0))
 		FROM auctions a
 		JOIN items i ON i.id = a.item_id
 		JOIN users su ON su.id = i.seller_id

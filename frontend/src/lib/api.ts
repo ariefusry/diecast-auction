@@ -139,7 +139,7 @@ export type MyAuctions = {
   my_bids: Record<string, number>; // auction id -> my highest bid
 };
 
-export type Message = { id: number; mine: boolean; sender: string; body: string; created_at: string };
+export type Message = { id: number; mine: boolean; system: boolean; sender: string; body: string; created_at: string };
 
 /** One chat in the inbox, as the signed-in user sees it. */
 export type Conversation = {

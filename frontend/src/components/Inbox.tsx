@@ -181,14 +181,21 @@ function ConversationView({ auctionId, conversation, onBack }: { auctionId: numb
 
       <div className="min-h-0 flex-1 space-y-2 overflow-y-auto bg-paper p-3" aria-live="polite">
         {messages.length === 0 && !error && <p className="py-8 text-center text-sm text-ink-soft">Belum ada pesan. Mulai dengan alamat pengiriman.</p>}
-        {messages.map((m) => (
-          <div key={m.id} className={`flex ${m.mine ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[80%] rounded-2xl px-3.5 py-2 ${m.mine ? "rounded-br-sm bg-ink text-white" : "rounded-bl-sm bg-card"}`}>
-              <p className="break-words whitespace-pre-line">{m.body}</p>
-              <p className={`mt-0.5 text-right text-xs ${m.mine ? "text-white/60" : "text-ink-soft"}`}>{timeAgo(m.created_at, now)}</p>
+        {messages.map((m) =>
+          m.system ? (
+            // The sale notice that opens every chat: a note from the site, not either party.
+            <p key={m.id} className="mx-auto max-w-[90%] rounded-lg border border-line bg-card px-3 py-2 text-center text-sm text-ink-soft">
+              {m.body}
+            </p>
+          ) : (
+            <div key={m.id} className={`flex ${m.mine ? "justify-end" : "justify-start"}`}>
+              <div className={`max-w-[80%] rounded-2xl px-3.5 py-2 ${m.mine ? "rounded-br-sm bg-ink text-white" : "rounded-bl-sm bg-card"}`}>
+                <p className="break-words whitespace-pre-line">{m.body}</p>
+                <p className={`mt-0.5 text-right text-xs ${m.mine ? "text-white/60" : "text-ink-soft"}`}>{timeAgo(m.created_at, now)}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ),
+        )}
         <div ref={end} />
       </div>
 

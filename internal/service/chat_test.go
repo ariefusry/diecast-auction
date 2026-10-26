@@ -32,10 +32,11 @@ func TestChatBetweenSellerAndWinner(t *testing.T) {
 		t.Fatalf("seller Send: %v", err)
 	}
 	got, err := e.auctions.Messages(ctx, seller, a.ID)
-	if err != nil || len(got) != 2 {
+	if err != nil || len(got) != 3 {
 		t.Fatalf("Messages = %+v, %v", got, err)
 	}
-	if got[0].SenderID != winner || got[0].Body != "Halo, kirim ke Bandung ya" || got[0].Sender == "" || got[1].SenderID != seller {
+	// got[0] is the sale notice, see TestSaleOpensChatWithNotice.
+	if got[1].SenderID != winner || got[1].Body != "Halo, kirim ke Bandung ya" || got[1].Sender == "" || got[2].SenderID != seller {
 		t.Fatalf("messages out of order or untrimmed: %+v", got)
 	}
 
@@ -161,11 +162,12 @@ func TestConversationsListsChatsWithUnreadCounts(t *testing.T) {
 		t.Fatalf("want the chat with messages first, then the silent one: %+v", got)
 	}
 	c := got[0]
-	// The seller's own reply is the last message but not unread for them.
-	if c.Unread != 2 || c.LastBody != "besok ya" || !c.LastMine || !c.Selling || c.Price != 300_000 || c.Other == "" {
+	// The seller's own reply is the last message but not unread for them; the
+	// sale notice and the winner's two messages are.
+	if c.Unread != 3 || c.LastBody != "besok ya" || !c.LastMine || !c.Selling || c.Price != 300_000 || c.Other == "" {
 		t.Fatalf("seller's view = %+v", c)
 	}
-	if mine, _ := e.auctions.Conversations(ctx, winner); len(mine) != 2 || mine[0].Unread != 1 || mine[0].Selling {
+	if mine, _ := e.auctions.Conversations(ctx, winner); len(mine) != 2 || mine[0].Unread != 2 || mine[0].Selling {
 		t.Fatalf("winner's view = %+v", mine)
 	}
 
@@ -184,5 +186,51 @@ func TestConversationsListsChatsWithUnreadCounts(t *testing.T) {
 	}
 	if none, _ := e.auctions.Conversations(ctx, stranger); len(none) != 0 {
 		t.Fatalf("stranger sees %+v", none)
+	}
+}
+
+// A sale writes a notice into the chat, so both sides get an unread badge
+// without opening their profile: through buy-now and through settlement.
+func TestSaleOpensChatWithNotice(t *testing.T) {
+	e := newAuctionEnv(t)
+	ctx := context.Background()
+	seller, winner := e.user(0), e.user(1_000_000)
+	var winnerName string
+	if err := e.auctions.pool.QueryRow(ctx, "SELECT username FROM users WHERE id = $1", winner).Scan(&winnerName); err != nil {
+		t.Fatal(err)
+	}
+
+	bought := wonAuction(t, e, seller, winner)
+	settled := e.active(seller, sampleAuction())
+	if _, err := e.auctions.Bid(ctx, winner, settled.ID, 150_000); err != nil {
+		t.Fatalf("Bid: %v", err)
+	}
+	e.setEndTime(settled.ID, "-1 second")
+	e.closeExpired()
+
+	for _, tc := range []struct {
+		id    int64
+		price string
+	}{{bought.ID, "Rp300.000"}, {settled.ID, "Rp150.000"}} {
+		for _, viewer := range []int64{seller, winner} {
+			convs, err := e.auctions.Conversations(ctx, viewer)
+			if err != nil {
+				t.Fatalf("Conversations: %v", err)
+			}
+			var c *Conversation
+			for i := range convs {
+				if convs[i].AuctionID == tc.id {
+					c = &convs[i]
+				}
+			}
+			if c == nil || c.Unread != 1 || c.LastMine || c.LastAt == nil ||
+				!strings.Contains(c.LastBody, "@"+winnerName) || !strings.Contains(c.LastBody, tc.price) {
+				t.Fatalf("auction %d, viewer %d: %+v", tc.id, viewer, c)
+			}
+		}
+		msgs, err := e.auctions.Messages(ctx, winner, tc.id)
+		if err != nil || len(msgs) != 1 || !msgs[0].System || msgs[0].SenderID != 0 || msgs[0].Sender != "" {
+			t.Fatalf("Messages = %+v, %v", msgs, err)
+		}
 	}
 }
