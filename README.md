@@ -102,3 +102,7 @@ Produksi berjalan di satu instance AWS EC2 tanpa port masuk sama sekali. Pengunj
 Foto dan data katalog berasal dari wiki Fandom [Hot Wheels](https://hotwheels.fandom.com), [Mini GT](https://minigt.fandom.com), [Inno64](https://inno64.fandom.com), [Matchbox](https://matchbox.fandom.com), [Tomica](https://tomica.fandom.com), [Tarmac Works](https://tarmacworks.fandom.com), dan [M2 Machines](https://m2machines.fandom.com), dengan lisensi [CC-BY-SA](https://creativecommons.org/licenses/by-sa/3.0/). Sumber setiap item tersimpan di `items.source_url` dan ditautkan di halaman lotnya.
 
 Nama dan logo merek adalah milik pemiliknya masing-masing. Proyek ini tidak berafiliasi dengan merek mana pun.
+
+## Lisensi
+
+Repo ini dipublikasikan sebagai portofolio. Tidak ada lisensi pakai ulang untuk kode dan desainnya; hak cipta tetap pada pemilik repo. Data katalog tetap berlisensi CC-BY-SA seperti tertulis di atas.
