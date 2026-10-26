@@ -27,6 +27,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUserId(null);
   }, []);
 
+  // A stored token can outlive its account (a deleted user, a reset database):
+  // check it once on load; a 401 from /me fires auth:expired below.
+  useEffect(() => {
+    if (getToken()) api("/me").catch(() => undefined);
+  }, []);
+
   useEffect(() => {
     const expired = () => setUserId(null);
     window.addEventListener("auth:expired", expired);

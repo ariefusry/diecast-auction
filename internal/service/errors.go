@@ -11,4 +11,6 @@ var (
 	ErrForbidden          = errors.New("forbidden")
 	ErrInvalidCredentials = errors.New("invalid email or password")
 	ErrNotFound           = errors.New("not found")
+	// ErrUnauthenticated: a valid token whose user no longer exists.
+	ErrUnauthenticated = errors.New("session expired")
 )

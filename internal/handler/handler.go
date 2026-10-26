@@ -245,6 +245,11 @@ func (h *handler) walletHistory(w http.ResponseWriter, r *http.Request) {
 // @Router   /me [get]
 func (h *handler) me(w http.ResponseWriter, r *http.Request) {
 	p, err := h.auth.Profile(r.Context(), middleware.UserID(r.Context()))
+	if errors.Is(err, service.ErrNotFound) {
+		// The token is signed but its user is gone (deleted, or the database was
+		// reset): that is no session, and a 401 makes the client log out.
+		err = service.ErrUnauthenticated
+	}
 	if err != nil {
 		writeError(w, err)
 		return
@@ -724,7 +729,7 @@ func writeError(w http.ResponseWriter, err error) {
 	switch {
 	case errors.Is(err, service.ErrInvalidInput):
 		status = http.StatusBadRequest
-	case errors.Is(err, service.ErrInvalidCredentials):
+	case errors.Is(err, service.ErrInvalidCredentials), errors.Is(err, service.ErrUnauthenticated):
 		status = http.StatusUnauthorized
 	case errors.Is(err, service.ErrForbidden):
 		status = http.StatusForbidden

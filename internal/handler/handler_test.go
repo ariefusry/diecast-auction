@@ -119,6 +119,28 @@ func TestAuthAndWalletFlow(t *testing.T) {
 	}
 }
 
+// A token whose user is gone (a database reset, a deleted account) is still
+// correctly signed, but it is no session: /me answers 401 so the client logs out.
+func TestTokenOfDeletedUserIsUnauthorized(t *testing.T) {
+	base := newServer(t)
+	c := signup(t, base)
+	var p service.Profile
+	if code := c.do("GET", "/me", nil, &p); code != http.StatusOK {
+		t.Fatalf("me = %d", code)
+	}
+	pool := testutil.Pool(t)
+	ctx := context.Background()
+	if _, err := pool.Exec(ctx, "DELETE FROM wallets WHERE user_id = (SELECT id FROM users WHERE username = $1)", p.Username); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := pool.Exec(ctx, "DELETE FROM users WHERE username = $1", p.Username); err != nil {
+		t.Fatal(err)
+	}
+	if code := c.do("GET", "/me", nil, nil); code != http.StatusUnauthorized {
+		t.Fatalf("me for a deleted user = %d, want 401", code)
+	}
+}
+
 func TestAuctionFlow(t *testing.T) {
 	base := newServer(t)
 	seller, bidder := signup(t, base), signup(t, base)
