@@ -63,6 +63,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Persiapan deploy: `scripts/backup.sh` (pg_dump + foto, rotasi 7 hari, opsional ke S3), diuji dengan restore | `6f2eec9` |
 | Persiapan deploy: runbook `docs/deploy.md` (EC2 t4g.small tanpa port masuk, Session Manager, role, backup, cleanup) | `5a01cf4` |
 | Deploy ke EC2 + tunnel bernama `blister64.ariefusry.me`; runbook diperbaiki (buildx, host key GitHub, quick tunnel, region cron) | `c679ac5` |
+| Produksi: pencarian AI (Gemini) diaktifkan lewat `GEMINI_API_KEY` di `.env` server (konfigurasi, tanpa perubahan kode) | lihat `SCRATCHPAD.md` 2026-10-26 |
 
 ## Katalog dan merek
 

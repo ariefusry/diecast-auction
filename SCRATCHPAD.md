@@ -2,7 +2,7 @@
 
 ## Current Status
 - Project Name: Blister64, lelang diecast 1:64 (7 merek) dan diorama
-- Phase: Keputusan arsitektur dikunci (spec Section 6)
+- Phase: Phase 1 sampai 10 selesai, produksi live
 - Active Focus (2026-10-26): produksi jalan di EC2, publik di `https://blister64.ariefusry.me` lewat tunnel bernama (lihat log 2026-10-26). Fitur tambahan tercatat di `CHANGELOG.md`
 
 ---
@@ -27,6 +27,8 @@
 - Sisa temuan QA (tidak wajib untuk deploy): login tidak kembali ke halaman asal, countdown memakai jam klien, settlement gagal tanpa alert.
 - Scraper memilih foto utama wiki apa adanya: beberapa M2 berupa poster promo, beberapa Hot Wheels placeholder "image not available".
 - Migrasi `down` 000004 sampai 000008 belum pernah dijalankan.
+- Keputusan spec terbuka: bid dinilai dengan `now()` (spec) atau waktu mulai transaksi (kode).
+- Produksi dan dev berbagi satu `GEMINI_API_KEY` free tier (pilihan user). Kalau kuota habis (429), pencarian jatuh ke kata kunci; pisahkan key kalau itu mulai terjadi.
 
 ---
 
@@ -82,3 +84,4 @@ Migrasi tidak punya perintah terpisah: di-embed dan dijalankan saat API start.
 - 2026-10-25: Persiapan deploy ke AWS (project paket gratis, kredit USD 100, region `ap-southeast-2`, profil CLI `blister64`, help_level HIGH). Agent Toolkit for AWS terpasang (AWS CLI 2.38.5, uv, 24 skill, MCP `aws-mcp` dengan `AWS_MCP_PROXY_PROFILES=blister64`). Keputusan user: produksi memakai katalog demo hasil scrape, HTTPS lewat Cloudflare Tunnel (domain belum ada). Dikerjakan: `DEMO_PASSWORD` untuk akun demo, service `cloudflared` (profile `tunnel`), `scripts/backup.sh` (restore terverifikasi 265 lelang dan 796 baris ledger), runbook `docs/deploy.md`. Quick tunnel tidak bisa diuji dari laptop karena auto mode menolak membuka ingress ke mesin lokal; pembacaan IP pengunjung lewat X-Forwarded-For diuji dari dalam jaringan Docker. Di Git Bash perlu `MSYS_NO_PATHCONV=1` saat menjalankan skrip yang memberi path Linux ke container.
 - 2026-10-26: Deploy ke AWS. Bucket `blister64-backups-392527209151` (privat, kedaluwarsa 30 hari), role/instance profile `blister64-server` (SSM + `s3:PutObject` saja), SG `sg-0a9527b19bbb4a230` tanpa inbound, instance `i-0126a724165a954d4` (t4g.small, AL2023 arm64, gp3 20 GB terenkripsi, IMDSv2, kredit `standard`). Server disiapkan lewat `ssm send-command` (berjalan sebagai root, repo di `/opt/blister64`, deploy key read-only `blister64-server` ditambahkan user sendiri karena auto mode menolak). Temuan runbook: buildx bawaan AL2023 0.12 terlalu lama untuk Compose v5 (pasang v0.38.1), `known_hosts` GitHub perlu `ssh-keyscan`, quick tunnel harus `run -d` tanpa `--profile tunnel` di `up`. Stack `--profile demo` sehat, katalog demo tampil lewat `https://acer-brook-somewhat-display.trycloudflare.com` (sementara). Backup diuji: dump 63 KB sampai di S3; cron 03:15 UTC.
 - 2026-10-26: Tunnel bernama. `ariefusry.me` dipindah ke nameserver Cloudflare, route `blister64.ariefusry.me` -> `http://web:80`, quick tunnel dimatikan, stack jalan dengan `--profile demo --profile tunnel`, `PUBLIC_ORIGIN=https://blister64.ariefusry.me`. Sertifikat edge terbit beberapa menit setelah zona Active (sebelumnya handshake TLS gagal). User sempat menjalankan perintah `docker run ... --token` dari dashboard di laptop; container itu dihapus agar tidak jadi konektor kedua.
+- 2026-10-26: AI search aktif di produksi. `GEMINI_API_KEY` disalin dari `.env` lokal ke `.env` server lewat SSM tanpa ditampilkan, container api dibuat ulang. Uji "nissan skyline warna biru" memberi `ai: true`, filter color/tags/text, 1 hasil tanpa relaksasi. Model memakai default compose `gemini-3.5-flash-lite`.
