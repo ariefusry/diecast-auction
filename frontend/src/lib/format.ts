@@ -97,3 +97,20 @@ export function quickBids(a: { start_price: number; min_increment: number; curre
   const floor = minBid(a);
   return [floor, floor + a.min_increment, floor + 4 * a.min_increment];
 }
+
+// Everyone reads the same end time, in the marketplace's own zone, whatever their phone is set to.
+const wib = new Intl.DateTimeFormat("id-ID", {
+  timeZone: "Asia/Jakarta",
+  weekday: "long",
+  day: "numeric",
+  month: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+/** "Senin, 26 Okt 20.15 WIB": when an auction ends, in Western Indonesia Time. */
+export function endsAtWIB(iso: string): string {
+  const p = Object.fromEntries(wib.formatToParts(new Date(iso)).map((x) => [x.type, x.value]));
+  return `${p.weekday}, ${p.day} ${p.month} ${p.hour}.${p.minute} WIB`;
+}

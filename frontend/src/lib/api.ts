@@ -1,5 +1,6 @@
 // Thin client for the Go API. Errors carry the server's {"error": ...} message, in Indonesian.
 import { serverError } from "./errors";
+import { syncClock } from "./clock";
 
 // Same origin by default: Vite (dev) and nginx (production) proxy /api to the Go API.
 export const API_URL: string = import.meta.env.VITE_API_URL ?? "/api";
@@ -100,11 +101,13 @@ export async function api<T>(path: string, init: { method?: string; body?: unkno
   }
 
   let res: Response;
+  const sentAt = Date.now();
   try {
     res = await fetch(API_URL + path, { method: init.method ?? "GET", headers, body });
   } catch {
     throw new ApiError(0, "Server tidak bisa dihubungi. Periksa koneksi lalu coba lagi.");
   }
+  syncClock(res.headers.get("Date"), sentAt);
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     // A wrong password on /auth/login is also a 401; that must not end the session.

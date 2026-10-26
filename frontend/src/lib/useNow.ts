@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { serverNow } from "./clock";
 
-/** The current time, re-rendering every `everyMs`. Drives countdowns. */
+/** The current time on the server's clock, re-rendering every `everyMs`. Drives countdowns. */
 export function useNow(everyMs = 1000): number {
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState(serverNow);
   useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), everyMs);
+    const id = setInterval(() => setNow(serverNow()), everyMs);
     return () => clearInterval(id);
   }, [everyMs]);
   return now;

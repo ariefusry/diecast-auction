@@ -1,10 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { castingNumber, conditionLabel, minBid, quickBids, rupiah, timeAgo, timeLeft, trackerStatus, userIdFromToken } from "./format";
+import { castingNumber, conditionLabel, endsAtWIB, minBid, quickBids, rupiah, timeAgo, timeLeft, trackerStatus, userIdFromToken } from "./format";
 
 describe("rupiah", () => {
   it("formats whole rupiah with dot thousands", () => {
     expect(rupiah(125000)).toBe("Rp125.000");
     expect(rupiah(0)).toBe("Rp0");
+  });
+});
+
+describe("endsAtWIB", () => {
+  it("states the end in Jakarta time whatever the phone's zone", () => {
+    // 13:15 UTC is 20:15 WIB on the same Monday.
+    expect(endsAtWIB("2026-10-26T13:15:00Z")).toBe("Senin, 26 Okt 20.15 WIB");
+    // 18:30 UTC is already Tuesday in Jakarta.
+    expect(endsAtWIB("2026-10-26T18:30:00Z")).toBe("Selasa, 27 Okt 01.30 WIB");
   });
 });
 

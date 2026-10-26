@@ -7,7 +7,7 @@ import { api, errorMessage, type Auction, type BidEntry } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { useChats } from "../lib/chats";
 import { cardBack } from "../lib/brands";
-import { castingNumber, conditionLabel, minBid, quickBids, rupiah, timeAgo, timeLeft } from "../lib/format";
+import { castingNumber, conditionLabel, endsAtWIB, minBid, quickBids, rupiah, timeAgo, timeLeft } from "../lib/format";
 import { useNow } from "../lib/useNow";
 
 const statusText: Record<Auction["status"], string> = {
@@ -243,8 +243,14 @@ export function AuctionDetail() {
               )}
             </div>
           </div>
+          {a.end_time && (a.status === "active" || a.status === "completed") && (
+            // An absolute end in the market's zone; anti-sniping moves it, and this line follows.
+            <p className="mt-3 text-sm text-ink-soft">
+              {open ? "Berakhir" : "Berakhir pada"} <span className="font-semibold text-ink">{endsAtWIB(a.end_time)}</span>
+            </p>
+          )}
           {left.closing && open && (
-            <p className="mt-3 text-sm font-medium text-signal">Detik terakhir: setiap tawaran menambah waktu 2 menit.</p>
+            <p className="mt-1 text-sm font-medium text-signal">Detik terakhir: setiap tawaran menambah waktu 2 menit.</p>
           )}
           {a.status === "completed" && (
             <p className="mt-3 font-semibold">
