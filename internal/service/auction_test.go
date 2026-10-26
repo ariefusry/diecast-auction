@@ -349,13 +349,87 @@ func TestBuyNow(t *testing.T) {
 	if _, err := e.auctions.BuyNow(ctx, buyer, noPrice.ID); !errors.Is(err, ErrConflict) {
 		t.Fatalf("buy-now without price err = %v", err)
 	}
-	bidded := e.active(seller, withBuyNow)
-	if _, err := e.auctions.Bid(ctx, poor, bidded.ID, 100_000); err != nil {
+}
+
+// Buy-now stays open while the highest bid is under the buy-now price (the
+// Yahoo Auctions model): buying refunds the leader in the same transaction,
+// and the sale is recorded at the buy-now price.
+func TestBuyNowWhileBidding(t *testing.T) {
+	e := newAuctionEnv(t)
+	ctx := context.Background()
+	seller, buyer, leader := e.user(0), e.user(1_000_000), e.user(500_000)
+	in := sampleAuction()
+	in.BuyNowPrice = ptr(int64(300_000))
+
+	a := e.active(seller, in)
+	if _, err := e.auctions.Bid(ctx, leader, a.ID, 150_000); err != nil {
 		t.Fatalf("Bid: %v", err)
 	}
-	if _, err := e.auctions.BuyNow(ctx, buyer, bidded.ID); !errors.Is(err, ErrConflict) {
-		t.Fatalf("buy-now after bid err = %v", err)
+	got, err := e.auctions.BuyNow(ctx, buyer, a.ID)
+	if err != nil {
+		t.Fatalf("BuyNow after a bid: %v", err)
 	}
+	if got.Status != "completed" || got.WinnerID == nil || *got.WinnerID != buyer ||
+		got.CurrentHighestBid == nil || *got.CurrentHighestBid != 300_000 {
+		t.Fatalf("after buy-now = %+v", got)
+	}
+	if w := e.wallet(leader); w != (Wallet{Available: 500_000}) {
+		t.Fatalf("outbid leader not refunded: %+v", w)
+	}
+	if w := e.wallet(buyer); w != (Wallet{Available: 700_000}) {
+		t.Fatalf("buyer wallet = %+v", w)
+	}
+	if w := e.wallet(seller); w != (Wallet{Available: 300_000}) {
+		t.Fatalf("seller wallet = %+v", w)
+	}
+	e.assertLedger(seller, buyer, leader)
+
+	// The leader can buy out their own lead: their escrow comes back first.
+	own := e.active(seller, in)
+	if _, err := e.auctions.Bid(ctx, leader, own.ID, 150_000); err != nil {
+		t.Fatalf("Bid: %v", err)
+	}
+	if _, err := e.auctions.BuyNow(ctx, leader, own.ID); err != nil {
+		t.Fatalf("leader BuyNow: %v", err)
+	}
+	if w := e.wallet(leader); w != (Wallet{Available: 200_000}) {
+		t.Fatalf("leader wallet after buying out = %+v", w)
+	}
+	e.assertLedger(seller, buyer, leader)
+}
+
+// A bid at or above the buy-now price is a purchase at the buy-now price:
+// the auction ends at once and the buyer never pays more than the seller asked.
+func TestBidAtBuyNowPriceBuys(t *testing.T) {
+	e := newAuctionEnv(t)
+	ctx := context.Background()
+	seller, buyer, leader := e.user(0), e.user(1_000_000), e.user(500_000)
+	in := sampleAuction()
+	in.BuyNowPrice = ptr(int64(300_000))
+
+	a := e.active(seller, in)
+	if _, err := e.auctions.Bid(ctx, leader, a.ID, 150_000); err != nil {
+		t.Fatalf("Bid: %v", err)
+	}
+	got, err := e.auctions.Bid(ctx, buyer, a.ID, 350_000)
+	if err != nil {
+		t.Fatalf("Bid over buy-now: %v", err)
+	}
+	if got.Status != "completed" || got.WinnerID == nil || *got.WinnerID != buyer ||
+		got.CurrentHighestBid == nil || *got.CurrentHighestBid != 300_000 {
+		t.Fatalf("after bid over buy-now = %+v", got)
+	}
+	if w := e.wallet(buyer); w != (Wallet{Available: 700_000}) {
+		t.Fatalf("buyer paid more than buy-now: %+v", w)
+	}
+	if w := e.wallet(leader); w != (Wallet{Available: 500_000}) {
+		t.Fatalf("leader not refunded: %+v", w)
+	}
+	msgs, err := e.auctions.Messages(ctx, seller, a.ID)
+	if err != nil || len(msgs) != 1 || !msgs[0].System {
+		t.Fatalf("sale notice = %+v, %v", msgs, err)
+	}
+	e.assertLedger(seller, buyer, leader)
 }
 
 // race runs each fn concurrently. Domain sentinels are expected losses; any
@@ -443,11 +517,14 @@ func TestConcurrentBuyNowAndFirstBid(t *testing.T) {
 			func() error { _, err := e.auctions.BuyNow(ctx, buyer, a.ID); return err },
 			func() error { _, err := e.auctions.Bid(ctx, bidder, a.ID, 100_000); return err },
 		)
+		// Either order ends sold to the buyer: a bid under the buy-now price
+		// does not close buy-now, it only gets refunded.
 		got, _ := e.auctions.Get(ctx, a.ID)
-		sold := got.Status == "completed" && got.HighestBidderID == nil
-		bid := got.Status == "active" && got.HighestBidderID != nil && *got.HighestBidderID == bidder
-		if sold == bid {
-			t.Fatalf("auction %d in mixed state %+v", a.ID, got)
+		if got.Status != "completed" || got.WinnerID == nil || *got.WinnerID != buyer {
+			t.Fatalf("auction %d not sold to the buyer: %+v", a.ID, got)
+		}
+		if w := e.wallet(bidder); w != (Wallet{Available: 1_000_000}) {
+			t.Fatalf("bidder not made whole: %+v", w)
 		}
 		total := e.wallet(seller).Available + e.wallet(buyer).Available + e.wallet(bidder).Available + e.wallet(bidder).Locked
 		if total != 2_000_000 {

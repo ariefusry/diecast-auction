@@ -96,6 +96,10 @@ describe("quickBids", () => {
     expect(quickBids({ start_price: 100, min_increment: 10, current_highest_bid: 150 })).toEqual([160, 170, 200]);
     expect(quickBids({ start_price: 100, min_increment: 10, current_highest_bid: null })).toEqual([100, 110, 140]);
   });
+  it("stops at the buy-now price, since a bid there buys the lot", () => {
+    expect(quickBids({ start_price: 100, min_increment: 10, current_highest_bid: 150, buy_now_price: 175 })).toEqual([160, 170, 175]);
+    expect(quickBids({ start_price: 100, min_increment: 10, current_highest_bid: 150, buy_now_price: 160 })).toEqual([160]);
+  });
 });
 
 describe("trackerStatus", () => {

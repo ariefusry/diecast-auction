@@ -51,7 +51,7 @@ This project showcases clean Go architecture, idiomatic database transactions, D
   - Validation rules: auction must be `active`, database `now()` must be `< end_time`, first bid must be `>= start_price` and later bids `>= current_highest_bid + min_increment`, bidder cannot be the item seller, bidder cannot already be the highest bidder, bidder must have sufficient available balance.
   - Anti-sniping rule: If a valid bid arrives within the final 2 minutes before `end_time`, automatically extend `end_time` by 2 minutes in the same transaction to guarantee fair bidding.
 - **Instant Buy-Now Option:**
-  - Dedicated endpoint `POST /auctions/{id}/buy-now` if `buy_now_price` is configured, valid only while the auction has zero bids (`highest_bidder_id IS NULL`).
+  - Dedicated endpoint `POST /auctions/{id}/buy-now` if `buy_now_price` is configured, valid while the highest bid is under `buy_now_price`; the current leader is refunded in the same transaction (revised 2026-10-27, Yahoo Auctions model).
   - Immediately ends the auction, transfers `buy_now_price` from buyer to seller, and marks status as `completed`. No refund path is needed.
 - **Background Expiration Worker:**
   - A background Go worker (goroutine with `time.Ticker`) scanning for expired active auctions (`end_time <= now()`), locking them, setting status to `completed`, and assigning `winner_id` (or `NULL` if zero bids). If a winner exists, the escrow funds are transferred to the seller's wallet balance.
@@ -143,7 +143,7 @@ This project showcases clean Go architecture, idiomatic database transactions, D
 7. **Time source:** PostgreSQL `now()` inside the transaction, not the application clock.
 8. **Anti-sniping:** `end_time = end_time + interval '2 minutes'` when a valid bid lands within 2 minutes of `end_time`.
 9. **Publish:** Draft stores `duration`. Publish sets `start_time = now()` and `end_time = now() + duration`.
-10. **Buy-now:** Only while `highest_bidder_id IS NULL`.
+10. **Buy-now:** While `current_highest_bid < buy_now_price` (revised 2026-10-27). A bid at or above `buy_now_price` is a purchase at exactly that price and ends the auction.
 11. **Worker:** `SELECT ... FOR UPDATE SKIP LOCKED` so multiple instances never settle the same auction.
 12. **Seeder:** Initial bids go through the bid service, never direct INSERTs, so wallet and ledger invariants hold. `data/seeds.json` is committed; a small hand-written file is used until the scraper phase.
 13. **Items schema:** Add `color` and `tags TEXT[]` (e.g. `jdm`) for AI search filters. Drop `scale` (always 1:64).

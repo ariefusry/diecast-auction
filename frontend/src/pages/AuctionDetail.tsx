@@ -114,7 +114,9 @@ export function AuctionDetail() {
   const canBid = open && !isSeller && userId !== null && !leading;
   const { no, name } = castingNumber(a.item.model_name);
   const bidValue = Number(amount || floor);
-  const tooLow = amount !== "" && bidValue < floor;
+  // A bid at the buy-now price buys the lot (the server does the same), so the button says so.
+  const buys = a.buy_now_price !== null && bidValue >= a.buy_now_price;
+  const tooLow = amount !== "" && bidValue < floor && !buys;
 
   async function run(key: NonNullable<typeof busy>, action: () => Promise<Auction>, done: string, landed?: () => void) {
     setBusy(key);
@@ -138,7 +140,9 @@ export function AuctionDetail() {
   }
 
   function placeBid(value: number) {
-    run("bid", () => api<Auction>(`/auctions/${a.id}/bids`, { method: "POST", body: { amount: value } }), `Tawaran ${rupiah(value)} terpasang.`, () => {
+    const buying = a.buy_now_price !== null && value >= a.buy_now_price;
+    const done = buying ? "Terbeli. Lelang selesai atas nama Anda." : `Tawaran ${rupiah(value)} terpasang.`;
+    run("bid", () => api<Auction>(`/auctions/${a.id}/bids`, { method: "POST", body: { amount: value } }), done, () => {
       setStamps((n) => n + 1);
       setOutbidBy(null);
       buzz(20);
@@ -310,8 +314,8 @@ export function AuctionDetail() {
                   className="w-0 min-w-0 flex-[2] rounded-xl border-2 border-line bg-card px-3 font-display text-xl font-bold tabular-nums placeholder:font-sans placeholder:text-base placeholder:font-medium focus:border-ink focus:outline-none"
                 />
                 {/* The button names the exact amount it will place, so a tap never surprises. */}
-                <Button type="submit" variant="track" size="lg" icon="gavel" loading={busy === "bid"} disabled={tooLow} className="flex-[3] whitespace-nowrap tabular-nums max-sm:px-3 max-sm:text-lg">
-                  Tawar {rupiah(tooLow ? floor : bidValue)}
+                <Button type="submit" variant="track" size="lg" icon={buys ? "zap" : "gavel"} loading={busy === "bid"} disabled={tooLow} className="flex-[3] whitespace-nowrap tabular-nums max-sm:px-3 max-sm:text-lg">
+                  {buys ? `Beli ${rupiah(a.buy_now_price!)}` : `Tawar ${rupiah(tooLow ? floor : bidValue)}`}
                 </Button>
               </div>
               {tooLow ? (
@@ -325,7 +329,8 @@ export function AuctionDetail() {
           </form>
         )}
 
-        {open && !isSeller && userId !== null && a.buy_now_price !== null && a.current_highest_bid === null && (
+        {/* Open while the highest bid is under the buy-now price; the leader may buy out their own lead. */}
+        {open && !isSeller && userId !== null && a.buy_now_price !== null && (a.current_highest_bid ?? 0) < a.buy_now_price && (
           <Button
             variant="ghost"
             icon="zap"

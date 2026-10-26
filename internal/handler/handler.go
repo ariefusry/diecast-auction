@@ -577,7 +577,7 @@ func (h *handler) cancel(w http.ResponseWriter, r *http.Request) {
 }
 
 // buyNow godoc
-// @Summary  Buy at buy_now_price, only before the first bid
+// @Summary  Buy at buy_now_price while the highest bid is under it; the leader is refunded
 // @Tags     auctions
 // @Produce  json
 // @Security BearerAuth

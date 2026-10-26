@@ -93,8 +93,8 @@ aws ssm send-command --profile blister64 --region ap-southeast-2 --instance-ids 
 6. **Anti-Sniping Waktu Lelang**  
    *Alasan:* Bid valid di 2 menit terakhir membuat `end_time = end_time + 2 menit` di transaksi yang sama. Ini mencegah bot merebut lelang di detik terakhir dan memberi kesempatan adil bagi penawar manusia.
 
-7. **Cancel dan Buy-Now Hanya Saat Belum Ada Bid (`highest_bidder_id IS NULL`)**  
-   *Alasan:* Tidak ada escrow penawar lain yang perlu dilepas, jadi jalur buy-now tetap sederhana dan bebas bug refund.
+7. **Cancel Hanya Saat Belum Ada Bid; Buy-Now Selama Tawaran di Bawah Harganya (model Yahoo Auctions)**  
+   *Alasan:* Cancel tanpa bid berarti tidak ada escrow yang perlu dilepas. Buy-now tetap terbuka selama `current_highest_bid < buy_now_price`, dan bid yang mencapai harga itu dihitung sebagai buy-now di harga itu, jadi lelang aktif selalu di bawah harga buy-now. Keduanya lewat `buyOut`: pemimpin (bisa pembelinya sendiri) di-release dulu, lalu harga pindah dari pembeli ke penjual, semua di transaksi yang sama dengan lock lelang.
 
 8. **LLM Hanya Menghasilkan JSON Terstruktur**  
    *Alasan:* Model LLM (Gemini, default `gemini-3.5-flash-lite`) hanya memecah kalimat pengguna menjadi parameter filter (brand, seri, warna, tags, kondisi, harga). Backend Go memvalidasi struct lalu menyusun parameterized query SQL untuk mencegah halusinasi data dan SQL injection.

@@ -18,8 +18,8 @@ export function AuctionCard({ auction: a, now, className = "" }: { auction: Auct
   const { no, name } = castingNumber(a.item.model_name);
   const live = a.status === "active" && left.ms > 0;
   const closing = live && left.closing;
-  // Buy-now only works until the first bid.
-  const buyNow = live && a.buy_now_price !== null && a.current_highest_bid === null ? a.buy_now_price : null;
+  // Buy-now stays open while the highest bid is under its price.
+  const buyNow = live && a.buy_now_price !== null && (a.current_highest_bid ?? 0) < a.buy_now_price ? a.buy_now_price : null;
   return (
     <Link
       to={`/lelang/${a.id}`}

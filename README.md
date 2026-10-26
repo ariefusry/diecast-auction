@@ -20,7 +20,7 @@ Penjual memasang lot, penawar menawar dengan dana yang dikunci di dompet, dan le
 
 - **Escrow dompet.** Tawaran mengunci dana penawar, jadi tidak ada penawar fiktif. Begitu disalip, dana kembali otomatis di transaksi yang sama. Setiap pergerakan uang tercatat di ledger yang tidak bisa diubah.
 - **Anti-sniping.** Tawaran di 2 menit terakhir menambah waktu 2 menit, jadi bot tidak bisa merebut lelang di detik terakhir.
-- **Beli langsung**, selama lot belum punya tawaran.
+- **Beli langsung** selama tawaran tertinggi masih di bawah harganya. Penawar yang sedang memimpin otomatis mendapat dananya kembali, dan tawaran yang mencapai harga itu langsung membeli lot tanpa pernah membayar lebih dari harga yang dipasang penjual.
 - **Pencarian kalimat biasa.** "jdm merah di bawah 100rb" diterjemahkan Gemini menjadi filter (merek, warna, kondisi, harga). AI hanya menghasilkan filter; query ke database tetap disusun server dengan parameter. Kalau AI gagal, pencarian jatuh ke kata kunci.
 - **Rasa game saat menawar:** stiker MEMIMPIN!, alarm "Kamu disalip!" dengan tombol balas, bonus waktu +2:00, dan digit hitung mundur yang bergulir di 2 menit terakhir.
 - **Chat penjual dan pemenang** untuk mengatur pengiriman, dibuka otomatis dengan pemberitahuan saat lot terjual, lengkap dengan badge belum dibaca.

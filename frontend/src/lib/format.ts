@@ -92,10 +92,14 @@ export function trackerStatus(
   return mine ? "Menang" : "Kalah";
 }
 
-/** One-tap amounts: the minimum bid, one step more, and a five-step jump. */
-export function quickBids(a: { start_price: number; min_increment: number; current_highest_bid: number | null }): number[] {
+/**
+ * One-tap amounts: the minimum bid, one step more, and a five-step jump. None
+ * goes past the buy-now price, because a bid there buys the lot at that price.
+ */
+export function quickBids(a: { start_price: number; min_increment: number; current_highest_bid: number | null; buy_now_price?: number | null }): number[] {
   const floor = minBid(a);
-  return [floor, floor + a.min_increment, floor + 4 * a.min_increment];
+  const cap = a.buy_now_price ?? Infinity;
+  return [...new Set([floor, floor + a.min_increment, floor + 4 * a.min_increment].map((v) => Math.min(v, cap)))];
 }
 
 // Everyone reads the same end time, in the marketplace's own zone, whatever their phone is set to.

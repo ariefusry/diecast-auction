@@ -348,7 +348,7 @@ const docTemplate = `{
                 "tags": [
                     "auctions"
                 ],
-                "summary": "Buy at buy_now_price, only before the first bid",
+                "summary": "Buy at buy_now_price while the highest bid is under it; the leader is refunded",
                 "parameters": [
                     {
                         "type": "integer",

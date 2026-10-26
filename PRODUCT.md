@@ -26,7 +26,7 @@ Dibanding lelang di grup Facebook atau WhatsApp dan marketplace umum:
 
 ## Operating Context
 
-- Lot punya siklus draf, tayang, selesai, atau dibatalkan. Penjual bisa membatalkan atau pembeli memakai beli langsung hanya selama belum ada tawaran.
+- Lot punya siklus draf, tayang, selesai, atau dibatalkan. Penjual bisa membatalkan hanya selama belum ada tawaran. Beli langsung tetap bisa dipakai selama tawaran tertinggi masih di bawah harganya, dan tawaran yang mencapai harga itu langsung membeli lot di harga tersebut.
 - Setelah lelang dimenangkan, penjual dan pemenang mengatur alamat, kurir, dan nomor resi lewat chat di halaman lelang. Pengiriman sendiri terjadi di luar aplikasi.
 - Halaman penjual publik di `/penjual/:username` menampilkan lot aktif dan jumlah lot yang terjual.
 - Antarmuka berbahasa Indonesia dan memakai istilah kolektor (casting, mint on card, loose, blister).

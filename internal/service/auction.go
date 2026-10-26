@@ -249,6 +249,7 @@ func (s *Auctions) Cancel(ctx context.Context, userID, id int64) (Auction, error
 
 // Bid escrows amount from the bidder, releases the previous leader's escrow,
 // and extends end_time by 2 minutes when the bid lands in the final 2 minutes.
+// A bid at or above the buy-now price is a purchase at that price (buyOut).
 func (s *Auctions) Bid(ctx context.Context, bidderID, id, amount int64) (Auction, error) {
 	if amount <= 0 || amount > MaxMoney {
 		return Auction{}, fmt.Errorf("%w: amount must be 1-%d", ErrInvalidInput, MaxMoney)
@@ -259,6 +260,9 @@ func (s *Auctions) Bid(ctx context.Context, bidderID, id, amount int64) (Auction
 		}
 		if l.sellerID == bidderID {
 			return fmt.Errorf("%w: sellers cannot bid on their own auction", ErrForbidden)
+		}
+		if l.buyNowPrice != nil && amount >= *l.buyNowPrice {
+			return buyOut(ctx, tx, l, bidderID, id)
 		}
 		minBid := l.startPrice
 		if l.highestBidderID != nil {
@@ -305,7 +309,8 @@ func (s *Auctions) Bid(ctx context.Context, bidderID, id, amount int64) (Auction
 }
 
 // BuyNow pays buy_now_price straight from buyer to seller and completes the
-// auction. Only allowed before the first bid, so there is no escrow to refund.
+// auction. It stays open while the highest bid is under the buy-now price (a
+// bid reaching it buys the lot itself, so a live auction is always under it).
 func (s *Auctions) BuyNow(ctx context.Context, buyerID, id int64) (Auction, error) {
 	return s.mutate(ctx, id, func(tx pgx.Tx, l locked) error {
 		if err := l.open(); err != nil {
@@ -317,29 +322,47 @@ func (s *Auctions) BuyNow(ctx context.Context, buyerID, id int64) (Auction, erro
 		if l.buyNowPrice == nil {
 			return fmt.Errorf("%w: auction has no buy-now price", ErrConflict)
 		}
-		if l.highestBidderID != nil {
-			return fmt.Errorf("%w: buy-now is closed once bidding starts", ErrConflict)
-		}
-		price := *l.buyNowPrice
-		available, err := lockWallets(ctx, tx, []int64{buyerID, l.sellerID})
-		if err != nil {
-			return err
-		}
-		if available[buyerID] < price {
-			return fmt.Errorf("%w: insufficient balance", ErrConflict)
-		}
-		if err := move(ctx, tx, buyerID, id, "buy_now", price, -price, 0); err != nil {
-			return err
-		}
-		if err := move(ctx, tx, l.sellerID, id, "buy_now", price, price, 0); err != nil {
-			return err
-		}
-		if _, err := tx.Exec(ctx,
-			"UPDATE auctions SET status = 'completed', winner_id = $2, end_time = now() WHERE id = $1", id, buyerID); err != nil {
-			return err
-		}
-		return saleNotice(ctx, tx, id, buyerID, price)
+		return buyOut(ctx, tx, l, buyerID, id)
 	})
+}
+
+// buyOut sells the auction to buyerID at the buy-now price, inside the
+// auction's lock: the current leader (who may be the buyer) gets their escrow
+// back first, then the price moves from buyer to seller. The sale is recorded
+// as the highest bid, so every view shows what the winner paid.
+func buyOut(ctx context.Context, tx pgx.Tx, l locked, buyerID, id int64) error {
+	price := *l.buyNowPrice
+	ids := []int64{buyerID, l.sellerID}
+	if l.highestBidderID != nil {
+		ids = append(ids, *l.highestBidderID)
+	}
+	available, err := lockWallets(ctx, tx, ids)
+	if err != nil {
+		return err
+	}
+	if l.highestBidderID != nil {
+		prev := *l.highestBid
+		if err := move(ctx, tx, *l.highestBidderID, id, "release", prev, prev, -prev); err != nil {
+			return err
+		}
+		available[*l.highestBidderID] += prev
+	}
+	if available[buyerID] < price {
+		return fmt.Errorf("%w: insufficient balance", ErrConflict)
+	}
+	if err := move(ctx, tx, buyerID, id, "buy_now", price, -price, 0); err != nil {
+		return err
+	}
+	if err := move(ctx, tx, l.sellerID, id, "buy_now", price, price, 0); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx,
+		`UPDATE auctions SET status = 'completed', winner_id = $2, current_highest_bid = $3,
+		   highest_bidder_id = $2, end_time = now()
+		 WHERE id = $1`, id, buyerID, price); err != nil {
+		return err
+	}
+	return saleNotice(ctx, tx, id, buyerID, price)
 }
 
 // CloseExpired completes every active auction past end_time, one transaction

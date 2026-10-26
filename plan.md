@@ -41,7 +41,7 @@ Platform lelang online khusus koleksi diecast skala 1:64 multi-brand (Hot Wheels
 - Publish: draf menyimpan `duration`, publish menetapkan `start_time = now()` dan `end_time = now() + duration`.
 - Background worker internal (`time.Ticker`) memindai lelang aktif yang melewati `end_time` dengan `FOR UPDATE SKIP LOCKED`, menetapkan pemenang, dan memindahkan dana terkunci ke dompet penjual.
 - Lelang tanpa penawar bertransisi ke `completed` dengan `winner_id = NULL`.
-- Cancel dan buy-now hanya diizinkan saat belum ada bid (`highest_bidder_id IS NULL`). Buy-now langsung menuntaskan lelang tanpa jalur refund.
+- Cancel hanya diizinkan saat belum ada bid (`highest_bidder_id IS NULL`). Buy-now terbuka selama tawaran tertinggi di bawah `buy_now_price` dan mengembalikan dana pemimpin di transaksi yang sama; bid yang mencapai harga itu dihitung sebagai buy-now (diubah 2026-10-27).
 
 ### 3.3 Data Scraping & Auto-Seeding Pipeline
 - `data/seeds.json` adalah kontrak data dan di-commit. Sampai fase scraper, isinya file kecil yang ditulis manual.
