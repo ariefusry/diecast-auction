@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { AuctionCard } from "../components/AuctionCard";
 import { BrandLogo } from "../components/BrandLogo";
 import { PegWall } from "../components/PegWall";
-import { Button, ErrorNote } from "../components/ui";
+import { Button, ErrorNote, Segmented } from "../components/ui";
 import { api, errorMessage, type Auction, type Filter, type SearchResult } from "../lib/api";
 import { conditionLabel, conditions, dioramaConditions, rupiah } from "../lib/format";
 import { useNow } from "../lib/useNow";
@@ -108,8 +108,8 @@ export function Catalog() {
               aria-label="Pencarian"
               className="min-w-0 flex-1 rounded-xl border-2 border-ink bg-card px-3 py-2.5 text-base focus:outline-none sm:px-4 sm:py-3 sm:text-lg"
             />
-            <Button type="submit" className="px-4 text-base sm:px-6 sm:text-lg" disabled={loading}>
-              Cari
+            <Button type="submit" size="lg" icon="search" loading={searching} disabled={loading} className="sm:px-6">
+              <span className="max-sm:sr-only">Cari</span>
             </Button>
           </div>
           {!aiResult && (
@@ -152,24 +152,18 @@ export function Catalog() {
         ) : (
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-              <div role="tablist" aria-label="Kategori" className="inline-flex rounded-full border border-line bg-card p-1">
-                {Object.entries(categories).map(([v, l]) => (
-                  <button
-                    key={v || "all"}
-                    role="tab"
-                    aria-selected={category === v}
-                    onClick={() => {
-                      setCategory(v);
-                      // Brands and packaging conditions do not apply to dioramas.
-                      setBrand("");
-                      setCondition("");
-                    }}
-                    className={`press rounded-full px-5 py-1.5 font-semibold ${category === v ? "bg-ink text-white" : "text-ink-soft hover:text-ink"}`}
-                  >
-                    {l}
-                  </button>
-                ))}
-              </div>
+              <Segmented
+                label="Kategori"
+                className="max-sm:w-full"
+                value={category}
+                options={Object.entries(categories).map(([v, l]) => ({ value: v, label: l }))}
+                onChange={(v) => {
+                  setCategory(v);
+                  // Brands and packaging conditions do not apply to dioramas.
+                  setBrand("");
+                  setCondition("");
+                }}
+              />
               <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
                 <select value={condition} onChange={(e) => setCondition(e.target.value)} aria-label="Kondisi" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
                   <option value="">Semua kondisi</option>

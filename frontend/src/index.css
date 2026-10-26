@@ -222,6 +222,40 @@
   animation: tick 1s ease-in-out infinite;
 }
 
+/* In the anti-sniping window each changed digit drops in from above, the way a
+   mechanical counter turns over. */
+@keyframes roll {
+  from {
+    transform: translateY(-55%);
+    opacity: 0;
+  }
+}
+@utility roll {
+  display: inline-block;
+  animation: roll 260ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+/* A done check pops in once. */
+@keyframes pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15);
+  }
+}
+@utility pop {
+  animation: pop 320ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+/* The chosen segment's plate slides rather than jumps. */
+@media (prefers-reduced-motion: no-preference) {
+  .segment-plate {
+    transition: translate 260ms cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+}
+
 /* On phones the bid form docks to the bottom of the screen, frosted like the header. */
 @media (width < 64rem) {
   .dock {

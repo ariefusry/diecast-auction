@@ -233,7 +233,7 @@ export function Sell() {
           <span>Langsung tayangkan. Jika tidak, lelang disimpan sebagai draf.</span>
         </label>
         <ErrorNote message={error} />
-        <Button type="submit" disabled={busy} className="w-full text-lg">
+        <Button type="submit" size="lg" icon={publish ? "tag" : undefined} loading={busy} className="w-full">
           {publish ? "Tayangkan lelang" : "Simpan draf"}
         </Button>
       </div>

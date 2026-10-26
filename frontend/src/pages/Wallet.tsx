@@ -32,6 +32,8 @@ export function Wallet() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  // The top-up button shows a check for a moment after money lands.
+  const [done, setDone] = useState(false);
 
   const now = useNow(30_000);
   const [history, setHistory] = useState<LedgerEntry[]>([]);
@@ -51,6 +53,8 @@ export function Wallet() {
       const value = Number(amount);
       setWallet(await api<WalletT>("/wallet/deposit", { method: "POST", body: { amount: value } }));
       setNotice(`Saldo bertambah ${rupiah(value)}.`);
+      setDone(true);
+      setTimeout(() => setDone(false), 1600);
       loadHistory();
       setAmount("");
     } catch (err) {
@@ -80,7 +84,7 @@ export function Wallet() {
       )}
 
       {/* Desktop: top-up beside the history instead of a narrow column with empty space on the right. */}
-      <div className="grid items-start gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
         <form onSubmit={deposit} className="space-y-3 rounded-xl border border-line bg-card p-5 lg:sticky lg:top-24">
           <h2 className="font-display text-2xl font-bold">Isi saldo</h2>
           <p className="text-sm text-ink-soft">Simulasi top-up, tanpa uang sungguhan. Maksimal Rp10.000.000 per pengisian.</p>
@@ -110,7 +114,7 @@ export function Wallet() {
               aria-label="Jumlah"
               className="min-w-0 flex-1 rounded-lg border border-line px-3 py-2.5 tabular-nums focus:border-ink focus:outline-none"
             />
-            <Button type="submit" disabled={busy}>
+            <Button type="submit" icon="plus" loading={busy} done={done}>
               Isi saldo
             </Button>
           </div>

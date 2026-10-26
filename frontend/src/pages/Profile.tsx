@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuctionCard } from "../components/AuctionCard";
-import { Button, ErrorNote } from "../components/ui";
+import { Button, ErrorNote, Segmented } from "../components/ui";
 import { api, errorMessage, imageSrc, type Auction, type MyAuctions, type Profile } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { useChats } from "../lib/chats";
@@ -108,7 +108,7 @@ export function ProfilePage() {
             <span className="max-sm:hidden">Lihat halaman penjual Anda</span>
           </Link>
         </div>
-        <Button variant="ghost" className="shrink-0 px-3 sm:px-4" onClick={() => confirm.current?.showModal()}>
+        <Button variant="ghost" size="sm" icon="logout" className="shrink-0" onClick={() => confirm.current?.showModal()}>
           Keluar
         </Button>
       </section>
@@ -132,20 +132,21 @@ export function ProfilePage() {
         </form>
       </dialog>
 
-      <div role="tablist" aria-label="Lelang saya" className="grid grid-cols-4 gap-1.5 sm:gap-2">
-        {tabs.map((t) => (
-          <button
-            key={t.key}
-            role="tab"
-            aria-selected={tab === t.key}
-            onClick={() => setTab(t.key)}
-            className={`press rounded-xl border px-1 py-2.5 text-center sm:px-4 sm:py-3 sm:text-left ${tab === t.key ? "border-ink bg-ink text-white" : "border-line bg-card hover:border-ink"}`}
-          >
-            <span className="block font-display text-2xl font-bold tabular-nums sm:text-3xl">{mine[t.key].length >= listLimit ? `${listLimit}+` : mine[t.key].length}</span>
-            <span className={`block text-xs leading-tight font-semibold sm:text-sm ${tab === t.key ? "text-white/80" : "text-ink-soft"}`}>{t.label}</span>
-          </button>
-        ))}
-      </div>
+      <Segmented
+        label="Lelang saya"
+        size="lg"
+        value={tab}
+        onChange={setTab}
+        options={tabs.map((t) => ({
+          value: t.key,
+          label: (
+            <>
+              <span className="block font-display text-2xl font-bold tabular-nums sm:text-3xl">{mine[t.key].length >= listLimit ? `${listLimit}+` : mine[t.key].length}</span>
+              <span className="block text-xs leading-tight font-semibold opacity-80 sm:text-sm">{t.label}</span>
+            </>
+          ),
+        }))}
+      />
 
       {list.length === 0 ? (
         <p className="rounded-xl border border-dashed border-line px-4 py-10 text-center text-ink-soft">

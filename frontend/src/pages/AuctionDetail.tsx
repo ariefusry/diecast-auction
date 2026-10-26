@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useLocation, useParams } from "react-router";
 import { BrandLogo } from "../components/BrandLogo";
 import { Photo } from "../components/Photo";
-import { Button, ErrorNote } from "../components/ui";
+import { Button, buttonClass, Clock, ErrorNote } from "../components/ui";
 import { api, errorMessage, type Auction, type BidEntry } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { useChats } from "../lib/chats";
@@ -19,7 +19,7 @@ const statusText: Record<Auction["status"], string> = {
 
 function ChatButton({ label, unread, onClick }: { label: string; unread: number; onClick: () => void }) {
   return (
-    <Button variant="ink" className="w-full" onClick={onClick}>
+    <Button variant="ink" size="lg" icon="chat" className="w-full" onClick={onClick}>
       {label}
       {unread > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-track px-1.5 text-xs font-bold tabular-nums">{unread}</span>}
     </Button>
@@ -31,6 +31,7 @@ const buzz = (pattern: number | number[]) => navigator.vibrate?.(pattern);
 
 export function AuctionDetail() {
   const { id } = useParams();
+  const here = useLocation().pathname;
   const { userId } = useAuth();
   const { openChat, conversations } = useChats();
   const now = useNow();
@@ -46,7 +47,8 @@ export function AuctionDetail() {
   const [error, setError] = useState("");
   const [shaking, setShaking] = useState(false);
   const [notice, setNotice] = useState("");
-  const [busy, setBusy] = useState(false);
+  // Which action is waiting on the server, so only its button shows a spinner.
+  const [busy, setBusy] = useState<"bid" | "buy" | "publish" | "cancel" | null>(null);
   // Game feedback: our bid landed (sticker), someone took the lead from us,
   // anti-sniping added time. Counters remount the element so it animates again.
   const [stamps, setStamps] = useState(0);
@@ -111,9 +113,11 @@ export function AuctionDetail() {
   const floor = minBid(a);
   const canBid = open && !isSeller && userId !== null && !leading;
   const { no, name } = castingNumber(a.item.model_name);
+  const bidValue = Number(amount || floor);
+  const tooLow = amount !== "" && bidValue < floor;
 
-  async function run(action: () => Promise<Auction>, done: string, landed?: () => void) {
-    setBusy(true);
+  async function run(key: NonNullable<typeof busy>, action: () => Promise<Auction>, done: string, landed?: () => void) {
+    setBusy(key);
     setError("");
     setNotice("");
     const mine = ++seq.current;
@@ -129,12 +133,12 @@ export function AuctionDetail() {
       setShaking(true);
       load();
     } finally {
-      setBusy(false);
+      setBusy(null);
     }
   }
 
   function placeBid(value: number) {
-    run(() => api<Auction>(`/auctions/${a.id}/bids`, { method: "POST", body: { amount: value } }), `Tawaran ${rupiah(value)} terpasang.`, () => {
+    run("bid", () => api<Auction>(`/auctions/${a.id}/bids`, { method: "POST", body: { amount: value } }), `Tawaran ${rupiah(value)} terpasang.`, () => {
       setStamps((n) => n + 1);
       setOutbidBy(null);
       buzz(20);
@@ -143,7 +147,7 @@ export function AuctionDetail() {
 
   function bid(e: FormEvent) {
     e.preventDefault();
-    placeBid(Number(amount || floor));
+    placeBid(bidValue);
   }
 
   const feedback = (
@@ -158,7 +162,7 @@ export function AuctionDetail() {
   );
 
   return (
-    <div className={`grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:grid-rows-[auto_1fr] ${canBid ? "max-lg:pb-64" : ""}`}>
+    <div className={`grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:grid-rows-[auto_1fr] ${canBid ? "max-lg:pb-64" : userId === null && open ? "max-lg:pb-40" : ""}`}>
       <section className="blister relative self-start [view-transition-name:lot] lg:col-start-1 lg:row-start-1" style={{ "--back": cardBack(a.item) } as CSSProperties}>
         <Photo url={a.item.image_url} alt={a.item.model_name} />
         {no && (
@@ -230,7 +234,7 @@ export function AuctionDetail() {
                 className={`origin-right font-display text-4xl font-bold tabular-nums ${left.closing && open ? "tick text-signal" : ""}`}
                 aria-live="polite"
               >
-                {open ? left.label : a.status === "active" ? "Menunggu penutupan" : ""}
+                {open ? <Clock label={left.label} closing={left.closing} /> : a.status === "active" ? "Menunggu penutupan" : ""}
               </div>
               {bonuses > 0 && (
                 <span key={bonuses} className="bonus pointer-events-none absolute -top-3 right-0 font-display text-2xl font-extrabold text-lead">
@@ -261,7 +265,7 @@ export function AuctionDetail() {
             {outbidBy !== null && (
               <div role="alert" className="refuse flex items-center justify-between gap-3 rounded-xl bg-signal px-4 py-2.5 text-white">
                 <span className="font-display text-xl font-extrabold italic">Kamu disalip! {rupiah(a.current_highest_bid ?? outbidBy)}</span>
-                <button type="button" disabled={busy} onClick={() => placeBid(floor)} className="press shrink-0 rounded-lg bg-white px-3 py-1.5 font-bold text-signal">
+                <button type="button" disabled={busy !== null} onClick={() => placeBid(floor)} className="press shrink-0 rounded-lg bg-white px-3 py-1.5 font-bold text-signal">
                   Balas {rupiah(floor)}
                 </button>
               </div>
@@ -271,23 +275,23 @@ export function AuctionDetail() {
               <span className="text-sm text-ink-soft">
                 Tertinggi <b className="font-display text-lg text-ink tabular-nums">{rupiah(a.current_highest_bid ?? a.start_price)}</b>
               </span>
-              <span className={`font-display text-lg font-bold tabular-nums ${left.closing ? "text-signal" : ""}`}>{left.label}</span>
+              <Clock label={left.label} closing={left.closing} className={`font-display text-lg font-bold tabular-nums ${left.closing ? "text-signal" : ""}`} />
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2">
               {quickBids(a).map((v) => (
                 <button
                   key={v}
                   type="button"
                   onClick={() => setAmount(String(v))}
                   aria-pressed={amount === String(v)}
-                  className={`press rounded-full border px-3 py-1 text-sm font-semibold tabular-nums ${amount === String(v) ? "border-ink bg-ink text-white" : "border-line bg-card hover:border-ink"}`}
+                  className={`press min-h-9 flex-1 rounded-full border px-2 text-sm font-semibold tabular-nums ${(amount || String(floor)) === String(v) ? "border-ink bg-ink text-white" : "border-line bg-card hover:border-ink"}`}
                 >
                   {rupiah(v)}
                 </button>
               ))}
             </div>
             <label className="block">
-              <span className="sr-only">Tawaran Anda</span>
+              <span className="sr-only">Jumlah lain</span>
               <div className="flex gap-2">
                 <input
                   type="number"
@@ -296,14 +300,15 @@ export function AuctionDetail() {
                   step="any"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  placeholder={String(floor)}
-                  className="min-w-0 flex-1 rounded-lg border-2 border-ink bg-card px-3 py-2.5 font-display text-2xl font-bold tabular-nums focus:outline-none"
+                  placeholder="Jumlah lain"
+                  className="w-0 min-w-0 flex-[2] rounded-xl border-2 border-line bg-card px-3 font-display text-xl font-bold tabular-nums placeholder:font-sans placeholder:text-base placeholder:font-medium focus:border-ink focus:outline-none"
                 />
-                <Button type="submit" variant="track" disabled={busy} className="px-5 text-lg">
-                  {busy ? "Memasang…" : "Tawar"}
+                {/* The button names the exact amount it will place, so a tap never surprises. */}
+                <Button type="submit" variant="track" size="lg" icon="gavel" loading={busy === "bid"} disabled={tooLow} className="flex-[3] whitespace-nowrap tabular-nums max-sm:px-3 max-sm:text-lg">
+                  Tawar {rupiah(tooLow ? floor : bidValue)}
                 </Button>
               </div>
-              {amount !== "" && Number(amount) < floor ? (
+              {tooLow ? (
                 <span className="mt-1 block text-sm font-medium text-signal">Kurang dari minimal {rupiah(floor)}.</span>
               ) : (
                 <span className="mt-1 block text-sm text-ink-soft max-lg:hidden">
@@ -317,32 +322,41 @@ export function AuctionDetail() {
         {open && !isSeller && userId !== null && a.buy_now_price !== null && a.current_highest_bid === null && (
           <Button
             variant="ghost"
-            disabled={busy}
+            icon="zap"
+            loading={busy === "buy"}
+            disabled={busy !== null}
             className="w-full"
-            onClick={() => run(() => api<Auction>(`/auctions/${a.id}/buy-now`, { method: "POST" }), "Terbeli. Lelang selesai atas nama Anda.")}
+            onClick={() => run("buy", () => api<Auction>(`/auctions/${a.id}/buy-now`, { method: "POST" }), "Terbeli. Lelang selesai atas nama Anda.")}
           >
             Beli langsung {rupiah(a.buy_now_price)}
           </Button>
         )}
 
         {userId === null && open && (
-          <p>
-            <Link to="/masuk" className="font-semibold underline underline-offset-4">
-              Masuk
-            </Link>{" "}
-            untuk menawar.
-          </p>
+          // Bidding is the point of this page: logged out, the way in gets the bid form's weight and dock.
+          <div className="dock space-y-2 lg:rounded-xl lg:border lg:border-line lg:bg-card lg:p-5">
+            <p className="font-semibold max-lg:hidden">Mau menawar lot ini?</p>
+            <Link to="/masuk" state={{ from: here }} className={buttonClass({ variant: "track", size: "lg", className: "w-full" })}>
+              Masuk untuk menawar
+            </Link>
+            <p className="text-center text-sm text-ink-soft">
+              Belum punya akun?{" "}
+              <Link to="/daftar" state={{ from: here }} className="font-semibold text-ink underline underline-offset-4">
+                Daftar gratis
+              </Link>
+            </p>
+          </div>
         )}
 
         {isSeller && (
           <div className="flex flex-wrap gap-2">
             {a.status === "draft" && (
-              <Button disabled={busy} onClick={() => run(() => api<Auction>(`/auctions/${a.id}/publish`, { method: "POST" }), "Lelang ditayangkan.")}>
+              <Button loading={busy === "publish"} disabled={busy !== null} onClick={() => run("publish", () => api<Auction>(`/auctions/${a.id}/publish`, { method: "POST" }), "Lelang ditayangkan.")}>
                 Tayangkan lelang
               </Button>
             )}
             {(a.status === "draft" || open) && a.current_highest_bid === null && (
-              <Button variant="ghost" disabled={busy} onClick={() => run(() => api<Auction>(`/auctions/${a.id}/cancel`, { method: "POST" }), "Lelang dibatalkan.")}>
+              <Button variant="ghost" loading={busy === "cancel"} disabled={busy !== null} onClick={() => run("cancel", () => api<Auction>(`/auctions/${a.id}/cancel`, { method: "POST" }), "Lelang dibatalkan.")}>
                 Batalkan lelang
               </Button>
             )}
