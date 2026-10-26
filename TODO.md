@@ -80,7 +80,7 @@ Semua tabel ada di satu migrasi `migrations/000001_init_schema.{up,down}.sql`, c
 - [x] Konfigurasi `docker-compose.yml` lengkap (db, seed, api, web) siap jalan dengan satu perintah
 - [x] Siapkan GitHub Actions CI workflow untuk linting dan testing otomatis
 - [x] Pilih provider: AWS EC2 (project paket gratis, `ap-southeast-2`) + Cloudflare Tunnel; runbook `docs/deploy.md`, backup `scripts/backup.sh`
-- [ ] Deploy ke EC2 mengikuti `docs/deploy.md` (butuh persetujuan user karena memotong kredit; domain belum diputuskan)
+- [x] Deploy ke EC2 mengikuti `docs/deploy.md` (2026-10-26, instance `i-0126a724165a954d4`, https://blister64.ariefusry.me lewat Cloudflare Tunnel)
 
 ## Fitur Tambahan (di luar roadmap awal, lihat `CHANGELOG.md`)
 - [x] Desain ulang UI: kartu blister berwarna merek, rak pegboard, header buram, animasi umpan balik

@@ -88,6 +88,11 @@ sudo mkdir -p /usr/local/lib/docker/cli-plugins
 sudo curl -fsSL -o /usr/local/lib/docker/cli-plugins/docker-compose \
   https://github.com/docker/compose/releases/latest/download/docker-compose-linux-aarch64
 sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+# buildx bawaan AL2023 (0.12) terlalu lama untuk Compose v5; plugin di /usr/local didahulukan.
+V=$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/docker/buildx/releases/latest | sed 's#.*/##')
+sudo curl -fsSL -o /usr/local/lib/docker/cli-plugins/docker-buildx \
+  https://github.com/docker/buildx/releases/download/$V/buildx-$V.linux-arm64
+sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
 # Swap 2 GB: build Vite dan Go di RAM 2 GB bisa kehabisan memori.
 sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
 echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
@@ -95,6 +100,8 @@ echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
 # Deploy key, lalu tempel public key-nya di GitHub (langkah 1).
 ssh-keygen -t ed25519 -N "" -f ~/.ssh/blister64 && cat ~/.ssh/blister64.pub
 printf 'Host github.com\n  IdentityFile ~/.ssh/blister64\n' >> ~/.ssh/config
+# Tanpa ini clone berhenti di prompt host key. Cocokkan fingerprint dengan docs GitHub (SHA256:+DiY3wvv...).
+ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts && ssh-keygen -lf ~/.ssh/known_hosts
 sudo mkdir -p /opt/blister64 && sudo chown $USER /opt/blister64
 git clone git@github.com:ariefusry/diecast-auction.git /opt/blister64
 ```
@@ -123,13 +130,16 @@ chmod 600 .env
 
 ## 7. HTTPS lewat Cloudflare Tunnel
 
-Dengan domain di Cloudflare: Zero Trust > Networks > Tunnels > Create tunnel (Cloudflared), salin token ke `TUNNEL_TOKEN`, lalu tambahkan public hostname `domain-anda` dengan service `http://web:80`.
+Dengan domain di Cloudflare: Zero Trust > Networks > Tunnels > Create tunnel (Cloudflared), salin token ke `TUNNEL_TOKEN`, lalu tambahkan route Published application `domain-anda` dengan service `http://web:80`. Subdomain dari domain yang sudah dipakai juga bisa (produksi: `blister64.ariefusry.me`, apex tetap di Vercel). Jangan jalankan perintah `docker run ... --token` dari dashboard di laptop: itu menambah konektor kedua, dan sebagian pengunjung jatuh ke laptop. Token yang bocor diganti lewat Rotate token, lalu ambil token baru di Add a replica > Docker.
 
-Tanpa domain, quick tunnel memberi alamat sementara `https://*.trycloudflare.com` yang berganti setiap restart (untuk demo saja):
+Tanpa domain, quick tunnel memberi alamat sementara `https://*.trycloudflare.com` yang berganti setiap restart (untuk demo saja). Biarkan `TUNNEL_TOKEN` kosong dan jalankan langkah 8 tanpa `--profile tunnel`, karena service `cloudflared` tanpa token akan restart terus. Setelah stack jalan, nyalakan quick tunnel di latar agar tidak ikut mati saat sesi Session Manager ditutup:
 
 ```bash
-docker compose --profile tunnel run --rm cloudflared tunnel --no-autoupdate --url http://web:80
+docker compose --profile tunnel run -d --name blister64-quick cloudflared tunnel --no-autoupdate --url http://web:80
+docker logs blister64-quick 2>&1 | grep -o 'https://[a-z0-9-]*\.trycloudflare\.com'
 ```
+
+Container ini tidak hidup lagi sendiri setelah server reboot. Hapus dengan `docker rm -f blister64-quick`, lalu jalankan ulang (alamatnya akan berganti).
 
 ## 8. Jalankan
 
@@ -141,12 +151,14 @@ docker compose ps
 docker compose logs -f api
 ```
 
+Dengan quick tunnel, hilangkan `--profile tunnel` dari perintah di atas dan di langkah 10.
+
 Seed berjalan sekali (idempoten) dan mengisi katalog demo.
 
 ## 9. Backup harian
 
 ```bash
-( crontab -l 2>/dev/null; echo "15 3 * * * cd /opt/blister64 && BACKUP_S3_URI=s3://$BUCKET ./scripts/backup.sh >> backups/backup.log 2>&1" ) | crontab -
+( crontab -l 2>/dev/null; echo "15 3 * * * cd /opt/blister64 && AWS_DEFAULT_REGION=ap-southeast-2 BACKUP_S3_URI=s3://$BUCKET ./scripts/backup.sh >> backups/backup.log 2>&1" ) | crontab -
 ```
 
 Ganti `$BUCKET` dengan nama bucket dari langkah 2. Uji sekali dengan menjalankan perintah di dalam tanda kutip itu langsung.
