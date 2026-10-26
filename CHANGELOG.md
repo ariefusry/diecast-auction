@@ -2,7 +2,7 @@
 
 Catatan semua perubahan, dari fondasi sampai fitur terbaru. Hash commit ada di tiap baris agar mudah ditelusuri dengan `git show <hash>`. Detail keputusan teknis per sesi ada di `SCRATCHPAD.md`.
 
-Status: Phase 1 sampai 10 selesai kecuali deploy (menunggu pilihan hosting). Belum di-push ke GitHub.
+Status: Phase 1 sampai 10 selesai. Produksi jalan di AWS EC2, publik di https://blister64.ariefusry.me lewat Cloudflare Tunnel.
 
 ---
 
@@ -62,6 +62,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Persiapan deploy: Cloudflare Tunnel (`--profile tunnel`, cloudflared 2026.10.0) sebagai alternatif Caddy | `a55fbd3` |
 | Persiapan deploy: `scripts/backup.sh` (pg_dump + foto, rotasi 7 hari, opsional ke S3), diuji dengan restore | `6f2eec9` |
 | Persiapan deploy: runbook `docs/deploy.md` (EC2 t4g.small tanpa port masuk, Session Manager, role, backup, cleanup) | `5a01cf4` |
+| Deploy ke EC2 + tunnel bernama `blister64.ariefusry.me`; runbook diperbaiki (buildx, host key GitHub, quick tunnel, region cron) | `c679ac5` |
 
 ## Katalog dan merek
 
