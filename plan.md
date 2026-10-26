@@ -21,7 +21,7 @@ Platform lelang online khusus koleksi diecast skala 1:64 multi-brand (Hot Wheels
 | **AI Integration**| Gemini Flash / Groq LLM | Natural language search parsing into structured JSON filters |
 | **Frontend** | React + Vite + Tailwind CSS | Responsive SPA for catalog, countdown, bid box, wallet UI |
 | **DevOps** | Docker multi-stage & Docker Compose | Isolated multi-container environment (API, DB, UI, test) |
-| **Deployment** | Linux VPS generik + Docker Compose | Provider dipilih di fase deployment, CI via GitHub Actions |
+| **Deployment** | AWS EC2 t4g.small + Docker Compose + Cloudflare Tunnel | Live di `https://blister64.ariefusry.me`, tanpa port masuk, runbook `docs/deploy.md`, CI via GitHub Actions |
 
 ---
 

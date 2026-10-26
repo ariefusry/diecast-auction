@@ -149,13 +149,14 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 
 ### Akun demo
 
-`demo_seller1`, `demo_seller2`, `demo_bidder1` sampai `demo_bidder3`, email `<nama>@demo.local`, password `demo-password`.
+`demo_seller1`, `demo_seller2`, `demo_bidder1` sampai `demo_bidder3`, email `<nama>@demo.local`, password `demo-password` di lokal. Di produksi `DEMO_PASSWORD` acak, jadi akun demo hanya mengisi katalog dan tidak bisa dipakai login.
 
 ---
 
 ## Belum dikerjakan
 
-- Deploy (hosting sedang dipilih: Oracle Always Free, DigitalOcean, atau Cloudflare Tunnel dari laptop).
+- Uji email forwarding `@ariefusry.me` setelah nameserver pindah ke Cloudflare (ditunda user).
+- Keputusan spec: bid dinilai dengan `now()` (spec) atau waktu mulai transaksi (kode).
 - Scraper kadang memilih foto yang salah (poster promo M2, placeholder "image not available" Hot Wheels).
 - Migrasi `down` 000004 sampai 000008 belum pernah dijalankan.
 - Index trigram untuk pencarian, draf yang bisa dibaca siapa pun lewat ID.

@@ -64,6 +64,11 @@ cd frontend && npm install && npm run dev
 
 # Test dan build frontend
 cd frontend && npm test && npm run build
+
+# Update produksi (EC2 i-0126a724165a954d4, https://blister64.ariefusry.me) setelah push ke main.
+# Server tidak punya port masuk: perintah dikirim lewat SSM dan berjalan sebagai root di /opt/blister64.
+# Kredensial AWS berlaku 12 jam, perbarui dengan `aws login --profile blister64`. Detail di docs/deploy.md langkah 10.
+aws ssm send-command --profile blister64 --region ap-southeast-2 --instance-ids i-0126a724165a954d4 \n  --document-name AWS-RunShellScript --parameters 'commands=["cd /opt/blister64 && git pull && BUILDX_BAKE_ENTITLEMENTS_FS=0 docker compose --profile demo --profile tunnel up -d --build"]'
 ```
 
 ---
