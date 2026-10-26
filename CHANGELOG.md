@@ -94,6 +94,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Hitung mundur memakai jam server (offset dari header `Date`), bukan jam HP; waktu berakhir lelang ditulis dalam WIB | `058f52a` |
 | README dengan screenshot, fitur, cara menjalankan, dan atribusi | `d0b7e7e` |
 | Beli langsung model Yahoo Auctions: tetap terbuka selama tawaran di bawah harganya (pemimpin dikembalikan dananya), dan tawaran yang mencapai harga itu langsung membeli di harga tersebut | `c360b92` |
+| Perbaikan: token milik akun yang sudah dihapus (misalnya setelah reset database) kini dianggap sesi berakhir (`/me` 401) dan klien otomatis logout saat situs dibuka | `0f02400` |
 
 ## Infrastruktur: Phase 10 (tanpa deploy)
 
