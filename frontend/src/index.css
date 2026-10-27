@@ -272,7 +272,6 @@
 
 @media (hover: hover) {
   .blister:hover {
-    border-color: var(--color-ink);
     box-shadow: 0 10px 24px -14px rgb(20 33 61 / 0.35);
   }
 }
