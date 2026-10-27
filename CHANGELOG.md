@@ -96,6 +96,7 @@ Blister64 adalah lelang diecast skala 1:64 dan diorama. Penjual memasang lelang,
 | Beli langsung model Yahoo Auctions: tetap terbuka selama tawaran di bawah harganya (pemimpin dikembalikan dananya), dan tawaran yang mencapai harga itu langsung membeli di harga tersebut | `c360b92` |
 | Perbaikan: token milik akun yang sudah dihapus (misalnya setelah reset database) kini dianggap sesi berakhir (`/me` 401) dan klien otomatis logout saat situs dibuka | `0f02400` |
 | Perbaikan UI dari audit antislop: ring fokus keyboard tampil di semua input, placeholder lebih gelap, target sentuh minimal 44px di katalog dan header, foto yang gagal dimuat jatuh ke "Tanpa foto"; tambah `DESIGN.md` | `854d6d7` |
+| Perbaikan: kartu lot tidak lagi memakai border navy saat di-hover, cukup terangkat dengan bayangan | `4fa6672` |
 
 ## Infrastruktur: Phase 10 (tanpa deploy)
 
