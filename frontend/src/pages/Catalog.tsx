@@ -106,7 +106,7 @@ export function Catalog() {
               maxLength={200}
               placeholder={examples[0]}
               aria-label="Pencarian"
-              className="min-w-0 flex-1 rounded-xl border-2 border-ink bg-card px-3 py-2.5 text-base focus:outline-none sm:px-4 sm:py-3 sm:text-lg"
+              className="min-w-0 flex-1 rounded-xl border-2 border-ink bg-card px-3 py-2.5 text-base sm:px-4 sm:py-3 sm:text-lg"
             />
             <Button type="submit" size="lg" icon="search" loading={searching} disabled={loading} className="sm:px-6">
               <span className="max-sm:sr-only">Cari</span>
@@ -116,7 +116,7 @@ export function Catalog() {
             <div className="-mx-4 flex items-center gap-2 overflow-x-auto px-4 text-sm [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
               <span className="shrink-0 font-medium">Contoh:</span>
               {examples.map((ex) => (
-                <button key={ex} type="button" onClick={() => setQuery(ex)} className="press shrink-0 rounded-full bg-card/70 px-3 py-1 text-ink hover:bg-card">
+                <button key={ex} type="button" onClick={() => setQuery(ex)} className="press min-h-11 shrink-0 rounded-full bg-card/70 px-3 text-ink hover:bg-card">
                   {ex}
                 </button>
               ))}
@@ -165,7 +165,7 @@ export function Catalog() {
                 }}
               />
               <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
-                <select value={condition} onChange={(e) => setCondition(e.target.value)} aria-label="Kondisi" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
+                <select value={condition} onChange={(e) => setCondition(e.target.value)} aria-label="Kondisi" className="min-h-11 min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
                   <option value="">Semua kondisi</option>
                   {Object.entries({ ...(category !== "diorama" && conditions), ...(category !== "diecast" && dioramaConditions) }).map(([v, l]) => (
                     <option key={v} value={v}>
@@ -173,7 +173,7 @@ export function Catalog() {
                     </option>
                   ))}
                 </select>
-                <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Urutkan" className="min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
+                <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Urutkan" className="min-h-11 min-w-0 flex-1 rounded-lg border border-line bg-card px-3 py-1.5 sm:flex-none">
                   {Object.entries(sorts).map(([v, l]) => (
                     <option key={v} value={v}>
                       {l}
@@ -190,7 +190,7 @@ export function Catalog() {
                     key={b || "all"}
                     onClick={() => setBrand(b)}
                     aria-pressed={brand === b}
-                    className={`press flex h-10 shrink-0 items-center rounded-full border bg-card px-4 font-semibold ${brand === b ? "border-ink ring-2 ring-ink" : "border-line hover:border-ink"}`}
+                    className={`press flex h-11 shrink-0 items-center rounded-full border bg-card px-4 font-semibold ${brand === b ? "border-ink ring-2 ring-ink" : "border-line hover:border-ink"}`}
                   >
                     {b ? <BrandLogo brand={b} className="h-6 max-w-28" /> : "Semua merek"}
                   </button>

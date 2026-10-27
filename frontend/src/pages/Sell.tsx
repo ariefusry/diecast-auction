@@ -204,7 +204,7 @@ export function Sell() {
             value={form.description}
             onChange={set("description")}
             rows={3}
-            className="w-full rounded-lg border border-line bg-card px-3 py-2.5 focus:border-ink focus:outline-none"
+            className="w-full rounded-lg border border-line bg-card px-3 py-2.5 focus:border-ink"
           />
         </Field>
         <div className="grid gap-4 sm:grid-cols-3">

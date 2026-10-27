@@ -37,7 +37,7 @@ function ConversationList({ selected, onSelect }: { selected: number | null; onS
       <div className="flex gap-2 border-b border-line p-3">
         <label className="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-line bg-card px-2.5 focus-within:border-ink">
           <Icon name="search" className="size-4 shrink-0 text-ink-soft" />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cari nama" aria-label="Cari nama atau lot" className="min-w-0 flex-1 bg-transparent py-2 text-sm focus:outline-none" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cari nama" aria-label="Cari nama atau lot" className="min-w-0 flex-1 bg-transparent py-2 text-sm" />
         </label>
         <select value={unreadOnly ? "unread" : "all"} onChange={(e) => setUnreadOnly(e.target.value === "unread")} aria-label="Tampilkan" className="rounded-lg border border-line bg-card px-2 text-sm">
           <option value="all">Semua</option>
@@ -207,7 +207,7 @@ function ConversationView({ auctionId, conversation, onBack }: { auctionId: numb
           maxLength={1000}
           placeholder="Tulis pesan"
           aria-label="Pesan"
-          className="min-w-0 flex-1 rounded-full border border-line bg-paper px-4 py-2.5 text-base focus:border-ink focus:outline-none"
+          className="min-w-0 flex-1 rounded-full border border-line bg-paper px-4 py-2.5 text-base focus:border-ink"
         />
         <button type="submit" disabled={busy || !draft.trim()} aria-label="Kirim" className="press grid size-11 shrink-0 place-items-center rounded-full bg-track text-white disabled:opacity-40">
           <Icon name="send" className="size-5" />

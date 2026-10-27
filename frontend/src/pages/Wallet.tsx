@@ -112,7 +112,7 @@ export function Wallet() {
               onChange={(e) => setAmount(e.target.value)}
               placeholder="Jumlah lain"
               aria-label="Jumlah"
-              className="min-w-0 flex-1 rounded-lg border border-line px-3 py-2.5 tabular-nums focus:border-ink focus:outline-none"
+              className="min-w-0 flex-1 rounded-lg border border-line px-3 py-2.5 tabular-nums focus:border-ink"
             />
             <Button type="submit" icon="plus" loading={busy} done={done}>
               Isi saldo

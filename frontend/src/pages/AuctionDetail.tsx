@@ -311,7 +311,7 @@ export function AuctionDetail() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="Jumlah lain"
-                  className="w-0 min-w-0 flex-[2] rounded-xl border-2 border-line bg-card px-3 font-display text-xl font-bold tabular-nums placeholder:font-sans placeholder:text-base placeholder:font-medium focus:border-ink focus:outline-none"
+                  className="w-0 min-w-0 flex-[2] rounded-xl border-2 border-line bg-card px-3 font-display text-xl font-bold tabular-nums placeholder:font-sans placeholder:text-base placeholder:font-medium focus:border-ink"
                 />
                 {/* The button names the exact amount it will place, so a tap never surprises. */}
                 <Button type="submit" variant="track" size="lg" icon={buys ? "zap" : "gavel"} loading={busy === "bid"} disabled={tooLow} className="flex-[3] whitespace-nowrap tabular-nums max-sm:px-3 max-sm:text-lg">

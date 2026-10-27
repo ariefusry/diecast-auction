@@ -90,3 +90,19 @@ Migrasi tidak punya perintah terpisah: di-embed dan dijalankan saat API start.
 - 2026-10-26: Jam server dan README. User meminta countdown "disamakan ke WIB"; dijelaskan bahwa zona waktu tidak berpengaruh pada countdown (end_time absolut), masalahnya jam HP yang melenceng. Solusi: `lib/clock.ts` belajar offset dari header `Date` setiap respons API (abaikan selisih < 1,5 detik karena resolusi header per detik), `useNow` memakai `serverNow()`, dan halaman lot menulis "Berakhir <hari, tgl bln jam.menit> WIB" (`endsAtWIB`, `Asia/Jakarta`). Diuji di Playwright dengan `Date.now` dimundurkan 3 menit: countdown tetap sesuai server. README dengan dua screenshot produksi (`docs/screenshots/`). Sebelum repo dibuat public, riwayat git dipindai: tidak ada secret, hanya placeholder `.env.example`; ID akun AWS, ID instance, dan nama bucket ikut terbaca publik (bukan kredensial). Commit `058f52a`, `d0b7e7e`.
 - 2026-10-27: User melaporkan tombol beli langsung hilang saat lelang sudah ada tawaran. Itu aturan lama (CLAUDE.md #7, model eBay), lalu user memilih model Yahoo Auctions: buy-now terbuka selama `current_highest_bid < buy_now_price`, tawaran >= harga buy-now menjadi pembelian di harga itu (opsi "lelang lanjut tapi waktu dipotong" ditolak karena bertabrakan dengan anti-sniping). Implementasi `buyOut` dipakai `BuyNow` dan `Bid`: lock dompet pembeli, penjual, dan pemimpin (`ANY` menghapus duplikat saat pemimpin membeli sendiri), release pemimpin, lalu ledger `buy_now`; `current_highest_bid` dan `highest_bidder_id` diisi harga dan pembeli agar inbox dan halaman lot menampilkan harga yang dibayar. Test race `TestConcurrentBuyNowAndFirstBid` kini mengharapkan selalu terjual ke pembeli. Diuji di browser: lot dengan tawaran Rp300.000 tetap menampilkan Beli langsung Rp500.000, mengetik 650.000 mengubah tombol jadi "Beli Rp500.000" dan lelang selesai di 500.000. Commit `c360b92`.
 - 2026-10-27: Deploy buy-now baru (`984be0e`), lalu reset database produksi atas permintaan user untuk tampil di MagangHub sampai 11 November. Sebelum reset: backup `db-20261026T170908Z.dump` dan foto upload ke S3 (terverifikasi), dan 3 akun non-demo (`ariefusry`, `31usry31`, `meowcca`) dikonfirmasi user boleh dihapus. Volume `blister64_pgdata` dan `blister64_uploads` dihapus, seed ulang (237 aktif, 26 draf, 5 akun demo), lalu semua lot aktif diberi `end_time` bergiliran 2 menit mulai 12 Nov 00.00 WIB (selesai 07.52 WIB) supaya katalog penuh sepanjang 11 November. Jangan reset atau memendekkan lelang sebelum itu.
+
+## 2026-10-27 antislop audit (anti-slop/audit-001-2026-10-27.md)
+
+Diperbaiki: DESIGN.md baru (1), hapus `focus:outline-none` di 7 input (2), placeholder `ink-soft` penuh (3), `Photo.tsx` jatuh ke "Tanpa foto" saat gambar gagal dimuat (4). `npm test` 28 lulus, `npm run build` hijau. Belum di-commit dan belum di-deploy.
+
+Klik-lewat di produksi (kode lama), desktop 1280 dan 375px, tanpa error konsol, tanpa overflow horizontal:
+- Katalog memuat 54 kartu
+- Tab Diorama -> 4 kartu, baris merek hilang; tab Diecast kembali
+- Tombol merek Mini GT -> 42 kartu, `aria-pressed=true`
+- Urutkan Termurah -> daftar dimuat ulang
+- Filter kondisi -> 12 kartu
+- Chip contoh -> mengisi input; tombol Cari aktif setelah muat selesai; Cari -> 11 kartu hasil
+- Tautan Masuk -> /masuk
+- Fokus input pencarian di produksi: `outline-style: none` (bug temuan 2 terkonfirmasi, hilang setelah deploy)
+
+Audit 002 temuan 1 (target sentuh 44px): `min-h-11` pada chip contoh, dropdown Kondisi/Urutkan, tab `Segmented`, tautan header, dan logo (`min-w-11`); tombol merek `h-11`. Diukur di dev server lokal (375, 768, 1024px): tidak ada kontrol di bawah 44px, tanpa overflow horizontal. Header 60px jadi 68px. Fokus input pencarian lokal: outline oranye 1.6px solid. Belum di-commit dan belum di-deploy.

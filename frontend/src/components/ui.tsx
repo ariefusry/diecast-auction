@@ -103,7 +103,7 @@ export function Segmented<T extends string>({
           aria-selected={i === index}
           tabIndex={i === index ? 0 : -1}
           onClick={() => onChange(o.value)}
-          className={`press relative z-10 font-semibold transition-colors duration-200 ${size === "lg" ? "rounded-xl px-1 py-2.5 sm:px-3" : "rounded-full px-4 py-1.5"} ${i === index ? "text-white" : "text-ink-soft hover:text-ink"}`}
+          className={`press relative z-10 font-semibold transition-colors duration-200 ${size === "lg" ? "rounded-xl px-1 py-2.5 sm:px-3" : "min-h-11 rounded-full px-4"} ${i === index ? "text-white" : "text-ink-soft hover:text-ink"}`}
         >
           {o.label}
         </button>
@@ -129,7 +129,7 @@ export function Clock({ label, closing, className = "" }: { label: string; closi
   );
 }
 
-const control = "w-full rounded-lg border border-line bg-card px-3 py-2.5 text-ink placeholder:text-ink-soft/70 focus:border-ink focus:outline-none";
+const control = "w-full rounded-lg border border-line bg-card px-3 py-2.5 text-ink placeholder:text-ink-soft focus:border-ink";
 
 export function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return (

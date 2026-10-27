@@ -6,7 +6,7 @@ import { ChatPanel } from "./ChatPanel";
 import { Icon, type IconName } from "./Icon";
 
 const link = ({ isActive }: { isActive: boolean }) =>
-  `press rounded-full px-2.5 py-1.5 text-[15px] font-semibold sm:text-base sm:px-4 ${isActive ? "bg-ink text-white" : "text-ink-soft hover:text-ink"}`;
+  `press inline-flex min-h-11 items-center rounded-full px-2.5 text-[15px] font-semibold sm:text-base sm:px-4 ${isActive ? "bg-ink text-white" : "text-ink-soft hover:text-ink"}`;
 
 function Badge({ count }: { count: number }) {
   if (count === 0) return null;
@@ -74,7 +74,7 @@ export function Layout() {
     <div className="min-h-screen">
       <header className="material sticky top-0 z-20">
         <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-0.5 gap-y-2 px-4 py-3 sm:gap-x-2">
-          <NavLink to="/" className="press mr-auto">
+          <NavLink to="/" className="press mr-auto flex min-h-11 min-w-11 items-center">
             <img src="/logo-symbol.svg" alt="Blister64" className="h-9 w-auto sm:hidden" />
             <img src="/logo.svg" alt="Blister64" className="hidden h-9 w-auto sm:block" />
           </NavLink>
